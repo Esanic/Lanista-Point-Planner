@@ -1,0 +1,10 @@
+<mat-form-field class="">
+    <mat-label>Välj ras</mat-label>
+    <mat-select [formControl]="chooseRace">
+        @for(race of races; track race){
+            <mat-option [value]="race">
+                {{race}}
+            </mat-option>
+        }
+    </mat-select>
+</mat-form-field>

@@ -1,0 +1,10 @@
+<mat-form-field class="">
+    <mat-label>Välj vapenfärdighet</mat-label>
+    <mat-select [formControl]="chooseWeaponSkill">
+        @for(skill of weaponSkills; track skill){
+            <mat-option [value]="skill">
+                {{skill}}
+            </mat-option>
+        }
+    </mat-select>
+</mat-form-field>
