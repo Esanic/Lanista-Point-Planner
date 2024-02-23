@@ -1,31 +1,27 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { TableService } from '../../../support/services/table.service';
-import { Subscription, firstValueFrom } from 'rxjs';
-import {MatButtonModule} from '@angular/material/button';
+import { firstValueFrom } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { Clipboard } from '@angular/cdk/clipboard'; 
+import { PopoverModule } from '@coreui/angular';
 
 @Component({
   selector: 'app-export-build',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, PopoverModule],
   templateUrl: './export-build.component.html',
   styleUrl: './export-build.component.css'
 })
-export class ExportBuildComponent implements OnDestroy {
+export class ExportBuildComponent {
 
   public points: any;
 
-  private points$: Subscription = new Subscription;
-
-  constructor(private tableService: TableService){}
-  ngOnDestroy(): void {
-    this.points$.unsubscribe
-  }
+  constructor(private tableService: TableService, private clipboard: Clipboard){}
 
   async exportBuild(): Promise<void> {
-
-
     this.points = await firstValueFrom(this.tableService.getPoints());
-    console.log(this.points);
+
+    this.clipboard.copy(JSON.stringify(this.points, null, 2))
   }
 
 }
