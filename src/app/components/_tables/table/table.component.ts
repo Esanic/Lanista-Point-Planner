@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ILevel } from '../../support/interfaces/level';
-import { Race } from '../../support/classes/race';
-import { GlobalService } from '../../support/services/global.service';
-import { TableService } from '../../support/services/table.service';
+import { ILevel } from '../../../support/interfaces/level';
+import { Race } from '../../../support/classes/race';
+import { GlobalService } from '../../../support/services/global.service';
+import { TableService } from '../../../support/services/table.service';
 import { debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { OnlyNumbersDirective } from '../../support/directives/only-numbers.directive';
-import { IRace } from '../../support/interfaces/race';
+import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
+import { IRace } from '../../../support/interfaces/race';
 
 
 @Component({

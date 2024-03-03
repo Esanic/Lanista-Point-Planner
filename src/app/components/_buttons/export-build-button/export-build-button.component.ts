@@ -6,13 +6,13 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { PopoverModule } from '@coreui/angular';
 
 @Component({
-  selector: 'app-export-build',
+  selector: 'app-export-build-button',
   standalone: true,
   imports: [MatButtonModule, PopoverModule],
-  templateUrl: './export-build.component.html',
-  styleUrl: './export-build.component.css'
+  templateUrl: './export-build-button.component.html',
+  styleUrl: './export-build-button.component.css'
 })
-export class ExportBuildComponent {
+export class ExportBuildButtonComponent {
 
   public points: any;
 

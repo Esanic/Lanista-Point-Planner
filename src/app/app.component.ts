@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TableComponent } from './components/table/table.component';
-import { SettingsComponent } from './components/settings/settings.component';
+import { TableComponent } from './components/_tables/table/table.component';
+import { SettingsComponent } from './components/_containers/settings/settings.component';
 import { ApiService } from './support/services/api.service';
 import { GlobalService } from './support/services/global.service';
 import { Stats } from './support/enums/stats.enums';
 import { WeaponSkills } from './support/enums/weapon-skills.enums';
 import { IRace } from './support/interfaces/race';
-import { ArmoryComponent } from './components/armory/armory.component';
+import { ArmoryComponent } from './components/_containers/armory/armory.component';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ import { ArmoryComponent } from './components/armory/armory.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
   private globalRaces = this.globalService.races;
 
@@ -43,9 +43,6 @@ export class AppComponent implements OnInit {
         }
       })
     }
-
-  ngOnInit(): void {
-  }
 
   assignApiData(race: IRace, changes: any): void {
     race.stats = {

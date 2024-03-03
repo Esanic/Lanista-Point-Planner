@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExportBuildComponent } from './export-build.component';
+import { ExportBuildButtonComponent } from './export-build-button.component';
 
 describe('ExportBuildComponent', () => {
-  let component: ExportBuildComponent;
-  let fixture: ComponentFixture<ExportBuildComponent>;
+  let component: ExportBuildButtonComponent;
+  let fixture: ComponentFixture<ExportBuildButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExportBuildComponent]
+      imports: [ExportBuildButtonComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ExportBuildComponent);
+    fixture = TestBed.createComponent(ExportBuildButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
