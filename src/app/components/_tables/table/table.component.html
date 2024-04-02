@@ -1,185 +1,99 @@
 <form [formGroup]="tableForm">
-    <table class="border-2 border-zinc-300">
-        <thead>
-            <tr>
-                <th *ngFor="let header of headers" class="border font-sans w-20 bg-white border-b-2 border-b-zinc-300 first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                    @if(header !== 'VF'){
-                        <div>
-                            {{header}}
-                        </div>
-                    } @else {
-                        @if(weaponSkill === ''){
+
+
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th *ngFor="let header of headers" class="text-center align-middle ">
+                        @if(header !== 'VF'){
                             <div>
                                 {{header}}
                             </div>
                         } @else {
-                            {{weaponSkill}}
+                            @if(weaponSkill === ''){
+                                <div>
+                                    {{header}}
+                                </div>
+                            } @else {
+                                {{weaponSkill}}
+                            }
                         }
-                    }
-                </th>
-            </tr>
-        </thead>
-        
-        <tbody>
-            <ng-container formArrayName="Rows">
-                <tr *ngFor="let level of tableFormArr.controls; let i = index; let l = last" 
-                [formGroupName]="i"
-                class="p-1 border bg-white">
-                    <!-- Levels -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        class="w-20 px-1 font-medium text-center" 
-                        id="level" 
-                        formControlName="level"
-                        readonly />
-                    </td>
-
-                    <!-- Stamina -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="stamina" 
-                        formControlName="stamina"
-                        onlyNumber>
-                    </td>
-
-                    <!-- Strength-->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="strength" 
-                        formControlName="strength"
-                        onlyNumber>
-                    </td>
-
-                   <!-- Endurance -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="endurance" 
-                        formControlName="endurance"
-                        onlyNumber>
-                    </td>
-                   
-                    <!-- Initiative -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="initiative" 
-                        formControlName="initiative"
-                        onlyNumber>
-                    </td>
-
-                    <!-- Dodge -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="dodge" 
-                        formControlName="dodge"
-                        onlyNumber>
-                    </td>
-
-                    <!-- Weapon Skill -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="weaponSkill" 
-                        formControlName="weaponSkill"
-                        onlyNumber>
-                    </td>
-
-                    <!-- Shield -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="shield" 
-                        formControlName="shield"
-                        onlyNumber>
-                    </td>
-
-                    <!-- Learning Capacity -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="learningCapacity" 
-                        formControlName="learningCapacity"
-                        onlyNumber>
-                    </td>
-
-                    <!-- Luck -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="luck" 
-                        formControlName="luck"
-                        onlyNumber>
-                    </td>
-
-                    <!-- Discipline -->
-                    <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        <input
-                        type="text"
-                        class="w-full font-light" 
-                        id="discipline" 
-                        formControlName="discipline"
-                        onlyNumber>
-                    </td>
-                    
-                    <!-- Placed Points-->
-                    @if(level.valid){
-                        <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                            <input
-                            class="w-20 px-1 font-medium text-center" 
-                            id="placedPoints" 
-                            formControlName="placedPoints"
-                            readonly>
-                        </td>
-                    }
-                    @if(level.invalid){
-                        <td class="border first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300 bg-red-400">
-                            <input
-                            class="w-20 px-1 font-medium text-center bg-red-400" 
-                            id="placedPoints" 
-                            formControlName="placedPoints"
-                            readonly>
-                        </td>
-                    }
-
-
-                    
+                    </th>
                 </tr>
-            </ng-container>
-        </tbody>
-        
-        <tfoot>
-            <tr class="p-1 border-2 border-zinc-300 bg-white text-center">
-                @for(attribute of Object.values(this.total); track attribute){
-                    <td class="border px-1 font-medium bg-white first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        {{attribute}}
-                    </td>
-                }
-            </tr>
+            </thead>
+            
+            <tbody>
+                <ng-container formArrayName="rows">
+                    <tr *ngFor="let level of tableFormArr.controls; let i = index; let l = last" 
+                    [formGroupName]="i"
+                    class="">
+                        <!-- Levels -->
+                        <td class="col-1 m-0 p-0">
+                            <input
+                            class="text-center form-control-plaintext p-0 default-cursor" 
+                            id="level" 
+                            formControlName="level"
+                            readonly />
+                        </td>
 
-            <tr class="p-1 border-2 border-zinc-300 bg-white text-center">
-                @for(attribute of Object.values(this.totalWithRaceBonus); track attribute){
-                    <td class="border px-1 font-medium bg-white first:border-r-2 first:border-r-zinc-300 last:border-l-2 last:border-l-zinc-300">
-                        {{attribute}}
-                    </td>
-                }
-            </tr>
-        </tfoot>
-    </table>
+                        @for(column of formNames; track column){
+                            <td class="col-1 m-0 p-0">
+                                <input
+                                type="text"
+                                class="text-center border-0 p-0 m-0 form-control" 
+                                id="stamina" 
+                                [formControlName]="column"
+                                onlyNumber>
+                            </td>
+                        }
+                        
+                        <!-- Placed Points-->
+                        @if(level.valid){
+                            <td class="col-1 p-0 m-0">
+                                <input
+                                class="col-12 text-center form-control-plaintext p-0 m-0 default-cursor" 
+                                id="placedPoints" 
+                                formControlName="placedPoints"
+                                readonly>
+                            </td>
+                        }
+                        @if(level.invalid){
+                            <td class="col-1 p-0 m-0">
+                                <input
+                                class="text-center form-control-plaintext bg-danger-subtle p-0 m-0 default-cursor" 
+                                id="placedPoints" 
+                                formControlName="placedPoints"
+                                readonly>
+                            </td>
+                        }
+    
+    
+                        
+                    </tr>
+                </ng-container>
+            </tbody>
+            
+            <tfoot>
+                <tr class="">
+                    @for(attribute of Object.values(this.total); track 0){
+                        <td class="text-center">
+                            <span class="default-cursor">
+                                {{attribute}}
+                            </span>
+                        </td>
+                    }
+                </tr>
+    
+                <tr class="">
+                    @for(attribute of Object.values(this.totalWithRaceBonus); track 0){
+                        <td class="text-center">
+                            <span class="default-cursor">
+                                {{attribute}}
+                            </span>
+                        </td>
+                    }
+                </tr>
+            </tfoot>
+        </table>
 </form>
-<!-- <div>
-    <button (click)="buttonClick()" class="bg-white">test</button>
-</div> -->
 

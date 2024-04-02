@@ -20,8 +20,6 @@ export class AppComponent {
 
   private globalRaces = this.globalService.races;
 
-  private WeaponSkills = this.globalService.WeaponSkills;
-
   constructor(
     private apiService: ApiService,
     private globalService: GlobalService){

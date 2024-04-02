@@ -1,1 +1,5 @@
-<button mat-stroked-button (click)="importBuild()" >Importera build</button>
+<button class="btn btn-primary" (click)="importBuild()">Importera build</button>
+
+@if(viewImportModal){
+<app-import-modal (closeModal)="closeModal()" (dismissModal)="dismissModal()"></app-import-modal>
+}

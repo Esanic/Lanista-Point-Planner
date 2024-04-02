@@ -1,25 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalService } from '../../../support/services/global.service';
-import {MatSelectModule} from '@angular/material/select'; 
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'select-race',
   standalone: true,
-  imports: [MatSelectModule, FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './select-race.component.html',
-  styleUrl: './select-race.component.css'
+  styleUrl: './select-race.component.css',
 })
-export class SelectRaceComponent {
+export class SelectRaceComponent implements OnDestroy {
   public chooseRace = new FormControl('');
-  public races: string[] = this.global.races.map(race => race.name!);
+  public races: string[] = this.globalService.races.map((race) => race.name!);
 
+  private incomingRace$: Subscription = new Subscription();
+  private internalRace$: Subscription = new Subscription();
 
-  constructor(private global: GlobalService){
-    this.chooseRace.valueChanges.subscribe(race => {
-      if(race)
-        this.global.setChosenRace(race);
-    })
+  constructor(private globalService: GlobalService) {
+    this.incomingRace$ = this.globalService.getChosenRace().subscribe((race) => {
+      this.chooseRace.patchValue(race, { emitEvent: false });
+    });
+
+    this.internalRace$ = this.chooseRace.valueChanges.subscribe((race) => {
+      if (race) this.globalService.setChosenRace(race);
+    });
   }
-
+  ngOnDestroy(): void {
+    this.incomingRace$.unsubscribe();
+    this.internalRace$.unsubscribe();
+  }
 }

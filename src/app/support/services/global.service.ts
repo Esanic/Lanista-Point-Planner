@@ -1,97 +1,123 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Race } from '../classes/race';
 import { IRace } from '../interfaces/race';
 import { WeaponSkills } from '../enums/weapon-skills.enums';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GlobalService {
-
   public defaultRace: IRace = {
-    name: 'Default', 
+    name: 'Default',
     baseWeight: 0,
     damageWithShield: 1,
-    critChances: {baseCrit: 1, baseMaxCrit: 1, maxDamage: 1},
-    stats: {stamina: 1, strength: 1, endurance: 1, initiative: 1, dodge: 1, learningCapacity: 1, luck: 1, discipline: 1},
-    weaponSkills: {axe: 1, sword: 1, mace: 1, stave: 1, shield: 1, spear: 1, chain: 1}
-  }
+    critChances: { baseCrit: 1, baseMaxCrit: 1, maxDamage: 1 },
+    stats: { stamina: 1, strength: 1, endurance: 1, initiative: 1, dodge: 1, learningCapacity: 1, luck: 1, discipline: 1 },
+    weaponSkills: { axe: 1, sword: 1, mace: 1, stave: 1, shield: 1, spear: 1, chain: 1 },
+  };
 
   public human: IRace = {
-    name: 'Människa', 
+    name: 'Människa',
     baseWeight: 5,
     damageWithShield: 0.85,
-    critChances: {baseCrit: 1.05, baseMaxCrit: 1.11, maxDamage: 1.2},
-    stats: {stamina: 1.1, strength: 1.1, endurance: 1.1, initiative: 1.1, dodge: 1.1, learningCapacity: 1.1, luck: 1.1, discipline: 1.1},
-    weaponSkills: {axe: 1.2, sword: 1.2, mace: 1.1, stave: 1.1, shield: 1.1, spear: 1.1, chain: 1.1}
-  }
+    critChances: { baseCrit: 1.05, baseMaxCrit: 1.11, maxDamage: 1.2 },
+    stats: { stamina: 1.1, strength: 1.1, endurance: 1.1, initiative: 1.1, dodge: 1.1, learningCapacity: 1.1, luck: 1.1, discipline: 1.1 },
+    weaponSkills: { axe: 1.2, sword: 1.2, mace: 1.1, stave: 1.1, shield: 1.1, spear: 1.1, chain: 1.1 },
+  };
   public elf: IRace = {
-    name: 'Alv', 
+    name: 'Alv',
     baseWeight: 0,
     damageWithShield: 0.8,
-    critChances: {baseCrit: 1, baseMaxCrit: 1.1, maxDamage: 1.2},
-    stats: {stamina: 0.9, strength: 0.9, endurance: 1.3, initiative: 1.25, dodge: 1.55, learningCapacity: 1.2, luck: 1.1, discipline: 1},
-    weaponSkills: {axe: 1, sword: 1.15, mace: 1, stave: 1.2, shield: 1.25, spear: 1.3, chain: 1}
-  }
+    critChances: { baseCrit: 1, baseMaxCrit: 1.1, maxDamage: 1.2 },
+    stats: { stamina: 0.9, strength: 0.9, endurance: 1.3, initiative: 1.25, dodge: 1.55, learningCapacity: 1.2, luck: 1.1, discipline: 1 },
+    weaponSkills: { axe: 1, sword: 1.15, mace: 1, stave: 1.2, shield: 1.25, spear: 1.3, chain: 1 },
+  };
   public dwarf: IRace = {
-    name: 'Dvärg', 
+    name: 'Dvärg',
     baseWeight: 4,
     damageWithShield: 0.95,
-    critChances: {baseCrit: 1.05, baseMaxCrit: 1.11, maxDamage: 1.2},
-    stats: {stamina: 1.3, strength: 1.2, endurance: 0.9, initiative: 0.85, dodge: 0.6, learningCapacity: 1.1, luck: 1, discipline: 1.2},
-    weaponSkills: {axe: 1.2, sword: 1, mace: 1.2, stave: 0.85, shield: 1.1, spear: 0.9, chain: 1}
-  }
+    critChances: { baseCrit: 1.05, baseMaxCrit: 1.11, maxDamage: 1.2 },
+    stats: { stamina: 1.3, strength: 1.2, endurance: 0.9, initiative: 0.85, dodge: 0.6, learningCapacity: 1.1, luck: 1, discipline: 1.2 },
+    weaponSkills: { axe: 1.2, sword: 1, mace: 1.2, stave: 0.85, shield: 1.1, spear: 0.9, chain: 1 },
+  };
   public orc: IRace = {
-    name: 'Ork', 
+    name: 'Ork',
     baseWeight: 7,
     damageWithShield: 1,
-    critChances: {baseCrit: 1, baseMaxCrit: 1.09, maxDamage: 1.27},
-    stats: {stamina: 1.2, strength: 1.3, endurance: 1, initiative: 0.95, dodge: 0.7, learningCapacity: 0.9, luck: 1.05, discipline: 1.15},
-    weaponSkills: {axe: 1.1, sword: 1, mace: 1.1, stave: 0.85, shield: 0.95, spear: 1, chain: 1.1}
-  }
+    critChances: { baseCrit: 1, baseMaxCrit: 1.09, maxDamage: 1.27 },
+    stats: { stamina: 1.2, strength: 1.3, endurance: 1, initiative: 0.95, dodge: 0.7, learningCapacity: 0.9, luck: 1.05, discipline: 1.15 },
+    weaponSkills: { axe: 1.1, sword: 1, mace: 1.1, stave: 0.85, shield: 0.95, spear: 1, chain: 1.1 },
+  };
   public goblin: IRace = {
-    name: 'Goblin', 
+    name: 'Goblin',
     baseWeight: 2,
     damageWithShield: 0.85,
-    critChances: {baseCrit: 1, baseMaxCrit: 1.08, maxDamage: 1.2},
-    stats: {stamina: 0.85, strength: 1.2, endurance: 1, initiative: 1.1, dodge: 1.3, learningCapacity: 1, luck: 1.2, discipline: 1},
-    weaponSkills: {axe: 1, sword: 0.9, mace: 1.2, stave: 1.15, shield: 1, spear: 1.2, chain: 1.1}
-  }
+    critChances: { baseCrit: 1, baseMaxCrit: 1.08, maxDamage: 1.2 },
+    stats: { stamina: 0.85, strength: 1.2, endurance: 1, initiative: 1.1, dodge: 1.3, learningCapacity: 1, luck: 1.2, discipline: 1 },
+    weaponSkills: { axe: 1, sword: 0.9, mace: 1.2, stave: 1.15, shield: 1, spear: 1.2, chain: 1.1 },
+  };
   public troll: IRace = {
-    name: 'Troll', 
+    name: 'Troll',
     baseWeight: 12,
     damageWithShield: 0.9,
-    critChances: {baseCrit: 1, baseMaxCrit: 1.07, maxDamage: 1.24},
-    stats: {stamina: 1.5, strength: 1.5, endurance: 0.8, initiative: 0.6, dodge: 0.4, learningCapacity: 0.8, luck: 1.15, discipline: 1.05},
-    weaponSkills: {axe: 0.8, sword: 0.7, mace: 0.85, stave: 0.65, shield: 0.8, spear: 0.75, chain: 0.85}
-  }
+    critChances: { baseCrit: 1, baseMaxCrit: 1.07, maxDamage: 1.24 },
+    stats: { stamina: 1.5, strength: 1.5, endurance: 0.8, initiative: 0.6, dodge: 0.4, learningCapacity: 0.8, luck: 1.15, discipline: 1.05 },
+    weaponSkills: { axe: 0.8, sword: 0.7, mace: 0.85, stave: 0.65, shield: 0.8, spear: 0.75, chain: 0.85 },
+  };
   public undead: IRace = {
-    name: 'Odöd', 
+    name: 'Odöd',
     baseWeight: 2,
     damageWithShield: 0.85,
-    critChances: {baseCrit: 1.02, baseMaxCrit: 1.09, maxDamage: 1.2},
-    stats: {stamina: 1.1, strength: 1, endurance: 2, initiative: 0.9, dodge: 1.05, learningCapacity: 0.6, luck: 0.8, discipline: 1.3},
-    weaponSkills: {axe: 1.05, sword: 1.05, mace: 1.05, stave: 1.05, shield: 1.05, spear: 1.05, chain: 1.05}
-  }
+    critChances: { baseCrit: 1.02, baseMaxCrit: 1.09, maxDamage: 1.2 },
+    stats: { stamina: 1.1, strength: 1, endurance: 2, initiative: 0.9, dodge: 1.05, learningCapacity: 0.6, luck: 0.8, discipline: 1.3 },
+    weaponSkills: { axe: 1.05, sword: 1.05, mace: 1.05, stave: 1.05, shield: 1.05, spear: 1.05, chain: 1.05 },
+  };
   public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.goblin, this.troll, this.undead];
 
-  public headers: string[] = ["Grad", "KP", "SB", "UTH", "INI", "UA", "VF", "Sköld", "Inlärning", "Tur", "Disciplin", "Utplacerade Poäng"];
-  
-  public weaponSkills: string[] = ["Yxa", "Svärd", "Hammare", "Stav", "Stickvapen", "Kätting"]
-  public WeaponSkills: number[] = [WeaponSkills.Axe, WeaponSkills.Sword, WeaponSkills.Mace, WeaponSkills.Stave, WeaponSkills.Shield, WeaponSkills.Spear, WeaponSkills.Chain ]
-  
+  public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'Inlärning', 'Tur', 'Disciplin', 'Utplacerade Poäng'];
 
-  public total = {level: 'Total', stamina: "0", strength: "0", endurance: "0", initiative: "0", dodge: "0", weaponSkill: "0", shield: "0", learningCapacity: "0", luck: "0", discipline: "0", placedPoints: "0"};
-  public totalWithRaceBonus = {level: 'Total m. rasbonus', stamina: "0", strength: "0", endurance: "0", initiative: "0", dodge: "0", weaponSkill: "0", shield: "0", learningCapacity: "0", luck: "0", discipline: "0", placedPoints: "0"};
+  public weaponSkills: string[] = ['Yxa', 'Svärd', 'Hammare', 'Stav', 'Stickvapen', 'Kätting'];
+  public WeaponSkills: number[] = [WeaponSkills.Axe, WeaponSkills.Sword, WeaponSkills.Mace, WeaponSkills.Stave, WeaponSkills.Shield, WeaponSkills.Spear, WeaponSkills.Chain];
 
+  public total = {
+    level: 'Total',
+    stamina: '0',
+    strength: '0',
+    endurance: '0',
+    initiative: '0',
+    dodge: '0',
+    weaponSkill: '0',
+    shield: '0',
+    learningCapacity: '0',
+    luck: '0',
+    discipline: '0',
+    placedPoints: '0',
+  };
+
+  public totalWithRaceBonus = {
+    level: 'Total m. rasbonus',
+    stamina: '0',
+    strength: '0',
+    endurance: '0',
+    initiative: '0',
+    dodge: '0',
+    weaponSkill: '0',
+    shield: '0',
+    learningCapacity: '0',
+    luck: '0',
+    discipline: '0',
+    placedPoints: '0',
+  };
+
+  public totals: any[] = [{ level: 'Total' }];
 
   private chosenRace: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private importedStats: Subject<any> = new Subject<any>();
 
-  constructor() { }
+  constructor() {}
 
   setChosenRace(race: string) {
     this.chosenRace.next(race);
@@ -101,11 +127,19 @@ export class GlobalService {
     return this.chosenRace.asObservable();
   }
 
-  setChosenWeaponSkill(skill: string){
+  setChosenWeaponSkill(skill: string) {
     this.chosenWeaponSkill.next(skill);
   }
 
   getChosenWeaponSkill(): Observable<string> {
     return this.chosenWeaponSkill.asObservable();
+  }
+
+  setImportedStats(stats: any) {
+    this.importedStats.next(stats);
+  }
+
+  getImportedStats(): Observable<any> {
+    return this.importedStats.asObservable();
   }
 }

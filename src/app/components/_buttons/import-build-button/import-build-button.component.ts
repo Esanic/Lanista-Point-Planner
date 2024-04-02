@@ -1,16 +1,27 @@
 import { Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { ImportModalComponent } from '../../_modals/import-modal/import-modal.component';
 
 @Component({
   selector: 'app-import-build-button',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [ImportModalComponent],
   templateUrl: './import-build-button.component.html',
-  styleUrl: './import-build-button.component.css'
+  styleUrl: './import-build-button.component.css',
 })
 export class ImportBuildButtonComponent {
-  
-  async importBuild(): Promise<void> {
+  public viewImportModal: boolean = false;
+
+  constructor() {}
+
+  public importBuild(): void {
+    this.viewImportModal = true;
   }
 
+  public closeModal() {
+    this.viewImportModal = false;
+  }
+
+  public dismissModal() {
+    this.viewImportModal = false;
+  }
 }

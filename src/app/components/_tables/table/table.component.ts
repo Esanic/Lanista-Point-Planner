@@ -9,19 +9,19 @@ import { CommonModule } from '@angular/common';
 import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
 import { IRace } from '../../../support/interfaces/race';
 
-
 @Component({
   selector: 'app-table',
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule, CommonModule, OnlyNumbersDirective],
   templateUrl: './table.component.html',
-  styleUrl: './table.component.css'
+  styleUrl: './table.component.scss',
 })
 export class TableComponent {
   public headers: string[] = this.globalService.headers;
-  public character: ILevel[] = []
-  public desiredLevels: number = 25+1;
+  public character: ILevel[] = [];
+  public desiredLevels: number = 25 + 1;
   public tableForm!: FormGroup;
+  public formNames: string[] = ['stamina', 'strength', 'endurance', 'initiative', 'dodge', 'weaponSkill', 'shield', 'learningCapacity', 'luck', 'discipline'];
 
   public race: IRace = this.globalService.defaultRace;
   public weaponSkill: string = '';
@@ -33,81 +33,101 @@ export class TableComponent {
 
   Object = Object;
 
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private tableService: TableService){}
-  
+  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private tableService: TableService) {}
+
   ngOnInit(): void {
     this.createForm();
 
-    this.globalService.getChosenRace().subscribe(race => {
+    this.globalService.getChosenRace().subscribe((race) => {
       this.racePicker(race);
       this.weaponSkillPicker(this.weaponSkill);
-      this.totals.forEach(total => {
+      this.totals.forEach((total) => {
         this.summarizeEachColumn(total);
-      })
-    })
-    
-    this.globalService.getChosenWeaponSkill().subscribe(skill => {
+      });
+    });
+
+    this.globalService.getChosenWeaponSkill().subscribe((skill) => {
       this.weaponSkill = skill;
       this.weaponSkillPicker(this.weaponSkill);
-      this.totals.forEach(total => {
+      this.totals.forEach((total) => {
         this.summarizeEachColumn(total);
-      })
-    })
-    
+      });
+    });
+
     this.addLevels();
     this.addData();
     this.subscribeToEachLevel();
+
+    this.getImportedPoints();
   }
 
   get tableFormArr(): FormArray {
-    return this.tableForm.controls['Rows'] as FormArray;
+    return this.tableForm.controls['rows'] as FormArray;
   }
 
   private createForm(): void {
     this.tableForm = this.formBuilder.group({
-      Rows: this.formBuilder.array([])
-    })
+      rows: this.formBuilder.array([]),
+    });
   }
 
   private addLevels(): void {
-    for(let i = 1; i < this.desiredLevels; i++){
+    for (let i = 1; i < this.desiredLevels; i++) {
       this.character.push({
-        level: i, stamina: 0, strength: 0, endurance: 0, initiative: 0, dodge: 0, weaponSkill: 0, shield: 0, learningCapacity: 0, luck: 0, discipline: 0, placedPoints: 0
-      })
+        level: i,
+        stamina: 0,
+        strength: 0,
+        endurance: 0,
+        initiative: 0,
+        dodge: 0,
+        weaponSkill: 0,
+        shield: 0,
+        learningCapacity: 0,
+        luck: 0,
+        discipline: 0,
+        placedPoints: 0,
+      });
     }
   }
 
-  private addData(): void {
-    this.character.forEach((level) => {
-      this.tableFormArr.push(this.addLevel(level));
-    })
+  private addData(levels?: ILevel[]): void {
+    if (levels) {
+      this.tableFormArr.clear();
+      levels.forEach((level: ILevel) => {
+        this.tableFormArr.push(this.addLevel(level));
+      });
+    } else {
+      this.character.forEach((level) => {
+        this.tableFormArr.push(this.addLevel(level));
+      });
+    }
   }
 
   private subscribeToEachLevel(): void {
-    this.tableFormArr.controls.forEach(control => {
-      control.valueChanges.pipe(debounceTime(200)).subscribe(rowThatChanged => {
+    this.tableFormArr.controls.forEach((control) => {
+      control.valueChanges.pipe(debounceTime(200)).subscribe((rowThatChanged) => {
         this.summarizeEachRow(rowThatChanged, control);
-        this.totals.forEach(total => {
+        this.totals.forEach((total) => {
           this.summarizeEachColumn(total);
-        })
-      })
-    })
+        });
+      });
+    });
   }
 
   private summarizeEachRow(rowThatChanged: any, control: AbstractControl): void {
     let total = 0;
 
-    Object.entries(rowThatChanged).forEach(attribute => {
-      if(attribute[0] !== 'level' && attribute[0] !== 'placedPoints'){
+    Object.entries(rowThatChanged).forEach((attribute) => {
+      if (attribute[0] !== 'level' && attribute[0] !== 'placedPoints') {
         total += this.typeEvaluation(attribute);
       }
-    })
+    });
 
-    control.patchValue({placedPoints: total}, {emitEvent: false, onlySelf: true});
+    control.patchValue({ placedPoints: total }, { emitEvent: false, onlySelf: true });
   }
 
   private summarizeEachColumn(total: any): void {
-    if(total.level === 'Total'){
+    if (total.level === 'Total') {
       let stamina: number = 0;
       let strength: number = 0;
       let endurance: number = 0;
@@ -119,10 +139,23 @@ export class TableComponent {
       let weaponSkill: number = 0;
       let shield: number = 0;
 
-      this.total = {level: 'Total', stamina: "0", strength: "0", endurance: "0", initiative: "0", dodge: "0", weaponSkill: "0", shield: "0", learningCapacity: "0", luck: "0", discipline: "0", placedPoints: ""};
-      this.tableFormArr.controls.forEach(level => {
-        Object.entries(level.value).forEach(attribute => {
-          switch(attribute[0]){
+      this.total = {
+        level: 'Total',
+        stamina: '0',
+        strength: '0',
+        endurance: '0',
+        initiative: '0',
+        dodge: '0',
+        weaponSkill: '0',
+        shield: '0',
+        learningCapacity: '0',
+        luck: '0',
+        discipline: '0',
+        placedPoints: '',
+      };
+      this.tableFormArr.controls.forEach((level) => {
+        Object.entries(level.value).forEach((attribute) => {
+          switch (attribute[0]) {
             case 'stamina':
               stamina += this.typeEvaluation(attribute);
               this.total.stamina = stamina.toFixed();
@@ -164,12 +197,12 @@ export class TableComponent {
               this.total.shield = shield.toFixed();
               break;
           }
-        })
-      })
+        });
+      });
       this.total.placedPoints += (stamina + strength + endurance + initiative + dodge + weaponSkill + shield + learningCapacity + luck + discipline).toFixed();
     }
-      
-    if(total.level === 'Total m. rasbonus'){
+
+    if (total.level === 'Total m. rasbonus') {
       let stamina: number = 0;
       let strength: number = 0;
       let endurance: number = 0;
@@ -181,73 +214,83 @@ export class TableComponent {
       let weaponSkill: number = 0;
       let shield: number = 0;
 
-      this.totalWithRaceBonus = {level: 'Total m. rasbonus', stamina: "0", strength: "0", endurance: "0", initiative: "0", dodge: "0", weaponSkill: "0", shield: "0", learningCapacity: "0", luck: "0", discipline: "0", placedPoints: ""};
-      
-      this.tableFormArr.controls.forEach(level => {
-        Object.entries(level.value).forEach(attribute => {
-          switch(attribute[0]){
+      this.totalWithRaceBonus = {
+        level: 'Total m. rasbonus',
+        stamina: '0',
+        strength: '0',
+        endurance: '0',
+        initiative: '0',
+        dodge: '0',
+        weaponSkill: '0',
+        shield: '0',
+        learningCapacity: '0',
+        luck: '0',
+        discipline: '0',
+        placedPoints: '',
+      };
+
+      this.tableFormArr.controls.forEach((level) => {
+        Object.entries(level.value).forEach((attribute) => {
+          switch (attribute[0]) {
             case 'stamina':
-              stamina += (this.typeEvaluation(attribute)*this.race.stats.stamina);
+              stamina += this.typeEvaluation(attribute) * this.race.stats.stamina;
               this.totalWithRaceBonus.stamina = stamina.toFixed();
               break;
             case 'strength':
-              strength += (this.typeEvaluation(attribute)*this.race.stats.strength);
+              strength += this.typeEvaluation(attribute) * this.race.stats.strength;
               this.totalWithRaceBonus.strength = strength.toFixed();
               break;
             case 'endurance':
-              endurance += (this.typeEvaluation(attribute)*this.race.stats.endurance);
+              endurance += this.typeEvaluation(attribute) * this.race.stats.endurance;
               this.totalWithRaceBonus.endurance = endurance.toFixed();
               break;
             case 'initiative':
-              initiative += (this.typeEvaluation(attribute)*this.race.stats.initiative);
+              initiative += this.typeEvaluation(attribute) * this.race.stats.initiative;
               this.totalWithRaceBonus.initiative = initiative.toFixed();
               break;
             case 'dodge':
-              dodge += (this.typeEvaluation(attribute)*this.race.stats.dodge);
+              dodge += this.typeEvaluation(attribute) * this.race.stats.dodge;
               this.totalWithRaceBonus.dodge = dodge.toFixed();
               break;
             case 'learningCapacity':
-              learningCapacity += (this.typeEvaluation(attribute)*this.race.stats.learningCapacity);
+              learningCapacity += this.typeEvaluation(attribute) * this.race.stats.learningCapacity;
               this.totalWithRaceBonus.learningCapacity = learningCapacity.toFixed();
               break;
             case 'luck':
-              luck += (this.typeEvaluation(attribute)*this.race.stats.luck);
+              luck += this.typeEvaluation(attribute) * this.race.stats.luck;
               this.totalWithRaceBonus.luck = luck.toFixed();
               break;
             case 'discipline':
-              discipline += (this.typeEvaluation(attribute)*this.race.stats.discipline);
+              discipline += this.typeEvaluation(attribute) * this.race.stats.discipline;
               this.totalWithRaceBonus.discipline = discipline.toFixed();
               break;
             case 'weaponSkill':
-              weaponSkill += this.typeEvaluation(attribute)*this.weaponSkillMultiplier;
+              weaponSkill += this.typeEvaluation(attribute) * this.weaponSkillMultiplier;
               this.totalWithRaceBonus.weaponSkill = weaponSkill.toFixed();
               break;
             case 'shield':
-              shield += (this.typeEvaluation(attribute)*this.race.weaponSkills.shield);
+              shield += this.typeEvaluation(attribute) * this.race.weaponSkills.shield;
               this.totalWithRaceBonus.shield = shield.toFixed();
               break;
           }
-        })
-      })
-  
+        });
+      });
+
       this.totalWithRaceBonus.placedPoints += (stamina + strength + endurance + initiative + dodge + weaponSkill + shield + learningCapacity + luck + discipline).toFixed();
     }
 
     this.setCurrentPoints();
   }
-  
-  private typeEvaluation(attributeToEvaluate: any): number{
-    if(typeof attributeToEvaluate[1] === 'string')
-      return +attributeToEvaluate[1];
 
-    if(typeof attributeToEvaluate[1] === 'number')
-      return attributeToEvaluate[1];
-    else
-      return 0;
+  private typeEvaluation(attributeToEvaluate: any): number {
+    if (typeof attributeToEvaluate[1] === 'string') return +attributeToEvaluate[1];
+
+    if (typeof attributeToEvaluate[1] === 'number') return attributeToEvaluate[1];
+    else return 0;
   }
-  
+
   private addLevel(level: ILevel): FormGroup {
-    if(level.level === 1){
+    if (level.level === 1) {
       return this.formBuilder.group({
         level: [level.level],
         stamina: [level.stamina],
@@ -260,10 +303,9 @@ export class TableComponent {
         learningCapacity: [level.learningCapacity],
         luck: [level.luck],
         discipline: [level.discipline],
-        placedPoints: [level.placedPoints, [Validators.max(150)]]
-      })
-    }
-    else {
+        placedPoints: [level.placedPoints, [Validators.max(150)]],
+      });
+    } else {
       return this.formBuilder.group({
         level: [level.level],
         stamina: [level.stamina],
@@ -276,13 +318,13 @@ export class TableComponent {
         learningCapacity: [level.learningCapacity],
         luck: [level.luck],
         discipline: [level.discipline],
-        placedPoints: [level.placedPoints, [Validators.max(20)]]
-      })
+        placedPoints: [level.placedPoints, [Validators.max(20)]],
+      });
     }
   }
 
   private racePicker(race: string): void {
-    switch(race) {
+    switch (race) {
       case 'Människa':
         this.race = this.globalService.human;
         break;
@@ -305,9 +347,9 @@ export class TableComponent {
         this.race = this.globalService.undead;
     }
   }
-  
+
   private weaponSkillPicker(weaponSkill: string): void {
-    switch(weaponSkill){
+    switch (weaponSkill) {
       case 'Yxa':
         this.weaponSkillMultiplier = this.race.weaponSkills.axe;
         break;
@@ -324,36 +366,42 @@ export class TableComponent {
         this.weaponSkillMultiplier = this.race.weaponSkills.spear;
         break;
       case 'Kätting':
-        this.weaponSkillMultiplier = this.race.weaponSkills.chain;  
+        this.weaponSkillMultiplier = this.race.weaponSkills.chain;
     }
   }
 
-  private setCurrentPoints (): void {
+  private setCurrentPoints(): void {
     let arrOfLevels: any[] = [];
-    this.tableFormArr.controls.forEach(control => {
+    this.tableFormArr.controls.forEach((control) => {
       let level = {
-          level: control.value.level,
-          stamina: control.value.stamina,
-          strength: control.value.strength,
-          endurance: control.value.endurance,
-          initiative: control.value.initiative,
-          dodge: control.value.dodge,
-          weaponSkill: control.value.weaponSkill,
-          shield: control.value.shield,
-          learningCapacity: control.value.learningCapacity,
-          luck: control.value.luck,
-          discipline: control.value.discipline,
-      }
+        level: control.value.level,
+        stamina: control.value.stamina,
+        strength: control.value.strength,
+        endurance: control.value.endurance,
+        initiative: control.value.initiative,
+        dodge: control.value.dodge,
+        weaponSkill: control.value.weaponSkill,
+        shield: control.value.shield,
+        learningCapacity: control.value.learningCapacity,
+        luck: control.value.luck,
+        discipline: control.value.discipline,
+        placedPoints: control.value.placedPoints,
+      };
       arrOfLevels.push(level);
-    })
-    
+    });
+
     const wholeExport = {
       race: this.race.name,
       weaponSkill: this.weaponSkill,
-      levels: arrOfLevels
-    }
+      levels: arrOfLevels,
+    };
 
     this.tableService.setPoints(wholeExport);
   }
 
+  private getImportedPoints(): void {
+    this.globalService.getImportedStats().subscribe((levels) => {
+      this.addData(levels);
+    });
+  }
 }

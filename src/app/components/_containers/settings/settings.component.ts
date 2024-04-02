@@ -13,7 +13,4 @@ import { ImportBuildButtonComponent } from '../../_buttons/import-build-button/i
 })
 export class SettingsComponent {
 
-  public exportBuild(){
-
-  }
 }

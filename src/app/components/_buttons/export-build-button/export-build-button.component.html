@@ -1,7 +1,2 @@
-<button mat-stroked-button (click)="exportBuild()" [cPopover]="copied" cPopoverPlacement="right" [cPopoverTrigger]="'click'">Exportera build</button>
-
-<ng-template #copied>
-<div class="popover-body">
-    Kopierat!
-</div>
-</ng-template>
+<!-- <button mat-stroked-button (click)="exportBuild()" [cPopover]="copied" cPopoverPlacement="right" [cPopoverTrigger]="'click'">Exportera build</button> -->
+<button class="btn btn-primary" (click)="exportBuild()" placement="end" ngbPopover="Kopierat!">Exportera build</button>
