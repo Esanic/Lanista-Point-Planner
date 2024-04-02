@@ -8,6 +8,8 @@ import { debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
 import { IRace } from '../../../support/interfaces/race';
+import { BuildService } from '../../../support/services/build.service';
+import { IBuild } from '../../../support/interfaces/build';
 
 @Component({
   selector: 'app-table',
@@ -33,7 +35,7 @@ export class TableComponent {
 
   Object = Object;
 
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private tableService: TableService) {}
+  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private buildService: BuildService) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -371,7 +373,7 @@ export class TableComponent {
   }
 
   private setCurrentPoints(): void {
-    let arrOfLevels: any[] = [];
+    let arrOfLevels: ILevel[] = [];
     this.tableFormArr.controls.forEach((control) => {
       let level = {
         level: control.value.level,
@@ -390,18 +392,21 @@ export class TableComponent {
       arrOfLevels.push(level);
     });
 
-    const wholeExport = {
+    const build: IBuild = {
       race: this.race.name,
       weaponSkill: this.weaponSkill,
       levels: arrOfLevels,
     };
 
-    this.tableService.setPoints(wholeExport);
+    this.buildService.setBuildFromTable(build);
   }
 
   private getImportedPoints(): void {
     this.globalService.getImportedStats().subscribe((levels) => {
+      //Need to add levels as well in order to support custom level intervals
+      // this.addLevels(levels.length);
       this.addData(levels);
+      this.subscribeToEachLevel();
     });
   }
 }

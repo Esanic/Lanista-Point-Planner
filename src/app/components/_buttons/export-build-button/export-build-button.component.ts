@@ -4,6 +4,8 @@ import { firstValueFrom } from 'rxjs';
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { IBuild } from '../../../support/interfaces/build';
+import { BuildService } from '../../../support/services/build.service';
 @Component({
   selector: 'app-export-build-button',
   standalone: true,
@@ -12,13 +14,13 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './export-build-button.component.css',
 })
 export class ExportBuildButtonComponent {
-  public points: any;
+  private build: IBuild = {} as IBuild;
 
-  constructor(private tableService: TableService, private clipboard: Clipboard) {}
+  constructor(private buildService: BuildService, private clipboard: Clipboard) {}
 
   async exportBuild(): Promise<void> {
-    this.points = await firstValueFrom(this.tableService.getPoints());
+    this.build = await firstValueFrom(this.buildService.getBuildFromTable());
 
-    this.clipboard.copy(JSON.stringify(this.points, null, 2));
+    this.clipboard.copy(JSON.stringify(this.build, null, 2));
   }
 }

@@ -1,0 +1,6 @@
+<label class="form-label" for="raceSelector">Välj sparad build</label>
+<select class="form-select" name="raceSelector" [formControl]="selectBuild">
+  @for(build of builds; track build){
+  <option [value]="build.name">{{ build.name }}</option>
+  }
+</select>
