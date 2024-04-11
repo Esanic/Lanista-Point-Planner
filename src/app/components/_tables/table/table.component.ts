@@ -40,7 +40,7 @@ export class TableComponent {
   ngOnInit(): void {
     this.createForm();
 
-    this.globalService.getChosenRace().subscribe((race) => {
+    this.buildService.getChosenRace().subscribe((race) => {
       this.racePicker(race);
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
@@ -48,7 +48,7 @@ export class TableComponent {
       });
     });
 
-    this.globalService.getChosenWeaponSkill().subscribe((skill) => {
+    this.buildService.getChosenWeaponSkill().subscribe((skill) => {
       this.weaponSkill = skill;
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
@@ -398,11 +398,11 @@ export class TableComponent {
       levels: arrOfLevels,
     };
 
-    this.buildService.setBuildFromTable(build);
+    this.buildService.setStatsFromTable(build);
   }
 
   private getImportedPoints(): void {
-    this.globalService.getImportedStats().subscribe((levels) => {
+    this.buildService.getImportedStats().subscribe((levels) => {
       //Need to add levels as well in order to support custom level intervals
       // this.addLevels(levels.length);
       this.addData(levels);

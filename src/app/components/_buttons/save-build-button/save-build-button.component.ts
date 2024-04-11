@@ -16,7 +16,7 @@ export class SaveBuildButtonComponent {
   constructor(private buildService: BuildService) {}
 
   public async saveBuild(): Promise<void> {
-    this.build = await firstValueFrom(this.buildService.getBuildFromTable());
+    this.build = await firstValueFrom(this.buildService.getStatsFromTable());
 
     if (this.build.race === 'Default' && this.build.weaponSkill === '') {
       return;

@@ -16,7 +16,7 @@ export class SelectBuildComponent {
 
   public builds: IBuild[] = [];
 
-  constructor(private globalService: GlobalService, private buildService: BuildService) {
+  constructor(private buildService: BuildService) {
     this.getBuildsFromLocalStorage();
 
     this.selectBuild.valueChanges.subscribe((value) => {
@@ -25,9 +25,9 @@ export class SelectBuildComponent {
       if (selectedBuild != undefined) {
         this.buildService.setSelectedBuild(selectedBuild);
 
-        this.globalService.setChosenRace(selectedBuild.race);
-        this.globalService.setChosenWeaponSkill(selectedBuild.weaponSkill);
-        this.globalService.setImportedStats(selectedBuild.levels);
+        this.buildService.setChosenRace(selectedBuild.race);
+        this.buildService.setChosenWeaponSkill(selectedBuild.weaponSkill);
+        this.buildService.setImportedStats(selectedBuild.levels);
       }
     });
 

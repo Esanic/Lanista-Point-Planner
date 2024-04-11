@@ -113,33 +113,5 @@ export class GlobalService {
 
   public totals: any[] = [{ level: 'Total' }];
 
-  private chosenRace: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  private importedStats: Subject<any> = new Subject<any>();
-
   constructor() {}
-
-  setChosenRace(race: string) {
-    this.chosenRace.next(race);
-  }
-
-  getChosenRace(): Observable<string> {
-    return this.chosenRace.asObservable();
-  }
-
-  setChosenWeaponSkill(skill: string) {
-    this.chosenWeaponSkill.next(skill);
-  }
-
-  getChosenWeaponSkill(): Observable<string> {
-    return this.chosenWeaponSkill.asObservable();
-  }
-
-  setImportedStats(stats: any) {
-    this.importedStats.next(stats);
-  }
-
-  getImportedStats(): Observable<any> {
-    return this.importedStats.asObservable();
-  }
 }
