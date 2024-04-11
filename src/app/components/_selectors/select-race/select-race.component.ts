@@ -17,6 +17,7 @@ export class SelectRaceComponent implements OnDestroy {
 
   private incomingRace$: Subscription = new Subscription();
   private internalRace$: Subscription = new Subscription();
+  private wipeData$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private globalService: GlobalService) {
     this.incomingRace$ = this.buildService.getChosenRace().subscribe((race) => {
@@ -25,6 +26,10 @@ export class SelectRaceComponent implements OnDestroy {
 
     this.internalRace$ = this.chooseRace.valueChanges.subscribe((race) => {
       if (race) this.buildService.setChosenRace(race);
+    });
+
+    this.wipeData$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chooseRace.patchValue(null, { emitEvent: false });
     });
   }
 

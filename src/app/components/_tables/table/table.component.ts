@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ILevel } from '../../../support/interfaces/level';
 import { Race } from '../../../support/classes/race';
 import { GlobalService } from '../../../support/services/global.service';
 import { TableService } from '../../../support/services/table.service';
-import { debounceTime } from 'rxjs';
+import { Subscription, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
 import { IRace } from '../../../support/interfaces/race';
@@ -18,7 +18,7 @@ import { IBuild } from '../../../support/interfaces/build';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
-export class TableComponent {
+export class TableComponent implements OnInit, OnDestroy {
   public headers: string[] = this.globalService.headers;
   public character: ILevel[] = [];
   public desiredLevels: number = 25 + 1;
@@ -35,12 +35,18 @@ export class TableComponent {
 
   Object = Object;
 
+  private getRace$: Subscription = new Subscription();
+  private getWeaponSkill$: Subscription = new Subscription();
+  private importPoints$: Subscription = new Subscription();
+  private wipeTable$: Subscription = new Subscription();
+  private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeTable$];
+
   constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private buildService: BuildService) {}
 
   ngOnInit(): void {
     this.createForm();
 
-    this.buildService.getChosenRace().subscribe((race) => {
+    this.getRace$ = this.buildService.getChosenRace().subscribe((race) => {
       this.racePicker(race);
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
@@ -48,7 +54,7 @@ export class TableComponent {
       });
     });
 
-    this.buildService.getChosenWeaponSkill().subscribe((skill) => {
+    this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((skill) => {
       this.weaponSkill = skill;
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
@@ -60,7 +66,19 @@ export class TableComponent {
     this.addData();
     this.subscribeToEachLevel();
 
-    this.getImportedPoints();
+    this.importPoints$ = this.buildService.getImportedStats().subscribe((levels) => {
+      this.getImportedPoints(levels);
+    });
+
+    this.wipeTable$ = this.buildService.listenWipeData().subscribe(() => {
+      this.wipeTable();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
   }
 
   get tableFormArr(): FormArray {
@@ -401,12 +419,18 @@ export class TableComponent {
     this.buildService.setStatsFromTable(build);
   }
 
-  private getImportedPoints(): void {
-    this.buildService.getImportedStats().subscribe((levels) => {
-      //Need to add levels as well in order to support custom level intervals
-      // this.addLevels(levels.length);
-      this.addData(levels);
-      this.subscribeToEachLevel();
-    });
+  private getImportedPoints(levels: any): void {
+    //TODO Need to add levels as well in order to support custom level intervals
+    // this.addLevels(levels.length);
+    this.addData(levels);
+    this.subscribeToEachLevel();
+  }
+
+  private wipeTable(): void {
+    this.tableFormArr.clear();
+    this.addData();
+    this.subscribeToEachLevel();
+    this.total = this.globalService.total;
+    this.totalWithRaceBonus = this.globalService.totalWithRaceBonus;
   }
 }

@@ -30,6 +30,6 @@ export class DeleteBuildButtonComponent {
     localStorage.setItem('builds', JSON.stringify(builds));
 
     this.buildService.emitUpdateBuildList('');
-    //Make sure to remove data from race, weaponskill and table
+    this.buildService.emitWipeData('');
   }
 }

@@ -17,6 +17,7 @@ export class SelectWeaponSkillComponent implements OnDestroy {
 
   private incomingWeaponSkill$: Subscription = new Subscription();
   private internalWeaponSkill$: Subscription = new Subscription();
+  private wipeData$: Subscription = new Subscription();
 
   constructor(private globalService: GlobalService, private buildService: BuildService) {
     this.incomingWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
@@ -25,6 +26,10 @@ export class SelectWeaponSkillComponent implements OnDestroy {
 
     this.internalWeaponSkill$ = this.chooseWeaponSkill.valueChanges.subscribe((weaponSkill) => {
       if (weaponSkill) this.buildService.setChosenWeaponSkill(weaponSkill);
+    });
+
+    this.wipeData$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chooseWeaponSkill.patchValue(null, { emitEvent: false });
     });
   }
 
