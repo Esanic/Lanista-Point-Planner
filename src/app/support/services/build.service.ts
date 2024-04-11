@@ -7,11 +7,13 @@ import { IBuild } from '../interfaces/build';
 })
 export class BuildService {
   private selectedBuild: Subject<IBuild> = new Subject<IBuild>();
-  private points: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
+  private buildFromTable: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
 
   private chosenRace: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private importedStats: Subject<any> = new Subject<any>();
+
+  private updateBuildListEmit: Subject<any> = new Subject<any>();
 
   constructor() {}
 
@@ -24,11 +26,19 @@ export class BuildService {
   }
 
   public setBuildFromTable(build: IBuild): void {
-    this.points.next(build);
+    this.buildFromTable.next(build);
   }
 
   public getBuildFromTable(): Observable<IBuild> {
-    return this.points.asObservable();
+    return this.buildFromTable.asObservable();
+  }
+
+  public emitUpdateBuildList(event: any) {
+    this.updateBuildListEmit.next(event);
+  }
+
+  public listenToUpdateBuildList(): Observable<any> {
+    return this.updateBuildListEmit.asObservable();
   }
 
   setChosenRace(race: string) {

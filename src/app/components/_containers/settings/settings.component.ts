@@ -5,11 +5,12 @@ import { ExportBuildButtonComponent } from '../../_buttons/export-build-button/e
 import { ImportBuildButtonComponent } from '../../_buttons/import-build-button/import-build-button.component';
 import { SelectBuildComponent } from '../../_selectors/select-build/select-build.component';
 import { SaveBuildButtonComponent } from '../../_buttons/save-build-button/save-build-button.component';
+import { DeleteBuildButtonComponent } from '../../_buttons/delete-build-button/delete-build-button.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [SelectRaceComponent, SelectWeaponSkillComponent, ExportBuildButtonComponent, ImportBuildButtonComponent, SelectBuildComponent, SaveBuildButtonComponent],
+  imports: [SelectRaceComponent, SelectWeaponSkillComponent, ExportBuildButtonComponent, ImportBuildButtonComponent, SelectBuildComponent, SaveBuildButtonComponent, DeleteBuildButtonComponent],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
 })

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { TableService } from '../../../support/services/table.service';
 import { firstValueFrom } from 'rxjs';
 import { IBuild } from '../../../support/interfaces/build';
+import { BuildService } from '../../../support/services/build.service';
 
 @Component({
   selector: 'app-save-build-button',
@@ -13,10 +13,10 @@ import { IBuild } from '../../../support/interfaces/build';
 export class SaveBuildButtonComponent {
   private build: IBuild = {} as IBuild;
 
-  constructor(private tableService: TableService) {}
+  constructor(private buildService: BuildService) {}
 
   public async saveBuild(): Promise<void> {
-    this.build = await firstValueFrom(this.tableService.getPoints());
+    this.build = await firstValueFrom(this.buildService.getBuildFromTable());
 
     if (this.build.race === 'Default' && this.build.weaponSkill === '') {
       return;
@@ -28,5 +28,7 @@ export class SaveBuildButtonComponent {
     builds.push(this.build);
 
     localStorage.setItem('builds', JSON.stringify(builds));
+
+    this.buildService.emitUpdateBuildList('');
   }
 }

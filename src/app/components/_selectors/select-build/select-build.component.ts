@@ -17,7 +17,7 @@ export class SelectBuildComponent {
   public builds: IBuild[] = [];
 
   constructor(private globalService: GlobalService, private buildService: BuildService) {
-    this.builds = JSON.parse(localStorage.getItem('builds')!);
+    this.getBuildsFromLocalStorage();
 
     this.selectBuild.valueChanges.subscribe((value) => {
       const selectedBuild = this.builds.find((build) => build.name === value);
@@ -30,5 +30,13 @@ export class SelectBuildComponent {
         this.globalService.setImportedStats(selectedBuild.levels);
       }
     });
+
+    this.buildService.listenToUpdateBuildList().subscribe(() => {
+      this.getBuildsFromLocalStorage();
+    });
+  }
+
+  private getBuildsFromLocalStorage(): void {
+    this.builds = JSON.parse(localStorage.getItem('builds')!);
   }
 }
