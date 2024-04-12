@@ -1,0 +1,13 @@
+<ng-template #modalContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Namnge build</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <input type="text" class="form-control" id="buildName" placeholder="Namn på din build..." [formControl]="buildName" />
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close()">Spara</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Avbryt</button>
+  </div>
+</ng-template>

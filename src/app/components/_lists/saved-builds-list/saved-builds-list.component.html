@@ -1,0 +1,12 @@
+<div class="list-group overflow-auto" style="max-height: 14.5rem">
+  @for(build of builds; track build){
+  <div class="list-group-item">
+    <div class="d-flex w-100 justify-content-between">
+      <div class="col-10" type="button" (click)="selectBuild(build)">{{ build.name }}</div>
+      <button type="button" class="btn btn-sm btn-outline-danger border-0" (click)="deleteBuild(build)">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </div>
+  }
+</div>
