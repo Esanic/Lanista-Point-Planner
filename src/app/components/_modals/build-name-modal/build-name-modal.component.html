@@ -5,9 +5,12 @@
   </div>
   <div class="modal-body">
     <input type="text" class="form-control" id="buildName" placeholder="Namn på din build..." [formControl]="buildName" />
+    @if(!buildName.valid){
+    <small class="text-danger">Namnet är upptaget</small>
+    }
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="modal.close()">Spara</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close()" [disabled]="!buildName.valid">Spara</button>
     <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Avbryt</button>
   </div>
 </ng-template>

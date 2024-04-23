@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TableComponent } from './components/_tables/table/table.component';
 import { SettingsComponent } from './components/_containers/settings/settings.component';
@@ -8,20 +8,24 @@ import { Stats } from './support/enums/stats.enums';
 import { WeaponSkills } from './support/enums/weapon-skills.enums';
 import { IRace } from './support/interfaces/race';
 import { ArmoryComponent } from './components/_containers/armory/armory.component';
+import { StorageService } from './support/services/storage.service';
+import { BuildsComponent } from './components/_containers/builds/builds/builds.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TableComponent, SettingsComponent, ArmoryComponent],
+  imports: [RouterOutlet, TableComponent, SettingsComponent, ArmoryComponent, BuildsComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private globalRaces = this.globalService.races;
 
-  constructor(private apiService: ApiService, private globalService: GlobalService) {
-    if (JSON.parse(localStorage.getItem('builds')!) === null) {
-      localStorage.setItem('builds', JSON.stringify([]));
+  constructor(private apiService: ApiService, private globalService: GlobalService, private storageService: StorageService) {}
+
+  ngOnInit(): void {
+    if (this.storageService.getBuilds === null) {
+      this.storageService.setBuilds([]);
     }
 
     this.apiService.getRaces().subscribe({

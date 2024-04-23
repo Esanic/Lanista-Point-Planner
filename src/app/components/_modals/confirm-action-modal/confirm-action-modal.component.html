@@ -1,0 +1,13 @@
+<ng-template #modalContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ texts.title }}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>{{ texts.body }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">{{ texts.cancel }}</button>
+    <button type="button" class="btn btn-primary" ngbAutoFocus (click)="modal.close()">{{ texts.confirm }}</button>
+  </div>
+</ng-template>

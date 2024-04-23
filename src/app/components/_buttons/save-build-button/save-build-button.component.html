@@ -1,4 +1,4 @@
-<button class="btn btn-primary" (click)="openBuildNameModal()">
+<button class="btn btn-primary" (click)="openBuildNameModal(updateBuild)" placement="end" ngbPopover="Uppdaterade builden!" #updateBuild="ngbPopover" triggers="manual">
   <i class="bi bi-floppy me-1"></i>
   Spara build
 </button>

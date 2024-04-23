@@ -4,6 +4,8 @@ import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { GlobalService } from '../../../support/services/global.service';
 import { TableService } from '../../../support/services/table.service';
 import { BuildService } from '../../../support/services/build.service';
+import { first, firstValueFrom } from 'rxjs';
+import { IBuild } from '../../../support/interfaces/build';
 
 @Component({
   selector: 'app-import-modal',
@@ -27,13 +29,17 @@ export class ImportModalComponent implements AfterViewInit {
     this.openModal(this.modalContent);
 
     this.modal.result.then(
-      (resolved) => {
+      async (resolved) => {
         if (this.jsonString.value !== null) {
           const jsonObject = JSON.parse(this.jsonString.value);
-          console.log(jsonObject);
           this.buildService.setChosenRace(jsonObject.race);
           this.buildService.setChosenWeaponSkill(jsonObject.weaponSkill);
           this.buildService.setImportedStats(jsonObject.levels);
+          this.buildService.setAmountOfLevels(jsonObject.levels.length);
+
+          // this.buildService.setSelectedBuild({} as IBuild);
+
+          this.buildService.emitDeselectBuild('');
         }
         this.closeModal.emit(resolved);
       },

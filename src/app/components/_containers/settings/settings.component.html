@@ -1,18 +1,8 @@
-<div class="d-flex flex-column justify-content-between bg-white p-5">
-  <h2>Inställningar</h2>
-  <select-race class="my-3"></select-race>
-  <select-weapon-skill class="my-3"></select-weapon-skill>
+<div class="d-flex flex-column justify-content-between bg-white p-4">
+  <h3>Inställningar</h3>
+  <select-race class="my-2"></select-race>
+  <select-weapon-skill class="my-2"></select-weapon-skill>
+  <app-level-input class="my-2"></app-level-input>
   <hr />
-
-  <div class="d-flex flex-row justify-content-between my-3">
-    <h5 class="my-auto">Sparade builds</h5>
-    <app-save-build-button></app-save-build-button>
-  </div>
-  <app-saved-builds-list class="my-3"></app-saved-builds-list>
-
-  <hr />
-  <div class="d-flex flex-row justify-content-between my-3">
-    <app-export-build-button></app-export-build-button>
-    <app-import-build-button></app-import-build-button>
-  </div>
+  <div><app-wipe-button></app-wipe-button></div>
 </div>

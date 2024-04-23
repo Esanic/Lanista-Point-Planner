@@ -19,7 +19,9 @@ export class BuildNameModalComponent {
   @ViewChild('modalContent') modalContent!: ElementRef<any>;
   private modal!: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private buildService: BuildService) {}
+  constructor(private modalService: NgbModal, private buildService: BuildService) {
+    this.buildName.valueChanges.subscribe(() => this.evaluateBuildName());
+  }
 
   ngAfterViewInit(): void {
     this.openModal(this.modalContent);
@@ -35,6 +37,14 @@ export class BuildNameModalComponent {
   }
 
   public openModal(modalContent: any): void {
-    this.modal = this.modalService.open(modalContent, { ariaLabelledBy: 'modal-basic-title', size: 'lg' });
+    this.modal = this.modalService.open(modalContent, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  public evaluateBuildName(): void {
+    const builds = JSON.parse(localStorage.getItem('builds')!);
+
+    if (builds.some((build: any) => build.name === this.buildName.value)) {
+      this.buildName.setErrors({ duplicate: true });
+    }
   }
 }

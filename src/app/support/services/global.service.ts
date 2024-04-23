@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Race } from '../classes/race';
 import { IRace } from '../interfaces/race';
 import { WeaponSkills } from '../enums/weapon-skills.enums';
+import { IBuild } from '../interfaces/build';
 
 @Injectable({
   providedIn: 'root',

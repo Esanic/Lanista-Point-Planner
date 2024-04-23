@@ -7,11 +7,14 @@ import { IBuild } from '../interfaces/build';
 })
 export class BuildService {
   private selectedBuild: Subject<IBuild> = new Subject<IBuild>();
+  private deslectBuildEmit: Subject<any> = new Subject<any>();
+  private selectedBuildVariable: IBuild = {} as IBuild;
 
   private buildFromTable: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
 
   private chosenRace: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private chosenLevels: Subject<number> = new Subject<number>();
   private importedStats: Subject<any> = new Subject<any>();
 
   private updateBuildListEmit: Subject<any> = new Subject<any>();
@@ -19,13 +22,27 @@ export class BuildService {
 
   constructor() {}
 
-  //* Selector *//
+  //* Select build *//
   public setSelectedBuild(build: IBuild): void {
     this.selectedBuild.next(build);
+    this.selectedBuildVariable = build;
   }
 
   public getSelectedBuild(): Observable<IBuild> {
     return this.selectedBuild.asObservable();
+  }
+
+  public getSelectedBuildVar(): IBuild {
+    return this.selectedBuildVariable;
+  }
+
+  public emitDeselectBuild(event: any): void {
+    this.deslectBuildEmit.next(event);
+    this.selectedBuildVariable = {} as IBuild;
+  }
+
+  public listenDeselectBuild(): Observable<any> {
+    return this.deslectBuildEmit.asObservable();
   }
 
   //* Update Build-List from localStorage *//
@@ -55,7 +72,7 @@ export class BuildService {
     return this.importedStats.asObservable();
   }
 
-  //* Set and Gets from race, weaponskill and table *//
+  //* Set and Gets from race, weaponskill, levels and table *//
   public setChosenRace(race: string) {
     this.chosenRace.next(race);
   }
@@ -78,5 +95,13 @@ export class BuildService {
 
   public getStatsFromTable(): Observable<IBuild> {
     return this.buildFromTable.asObservable();
+  }
+
+  public setAmountOfLevels(levels: number): void {
+    this.chosenLevels.next(levels);
+  }
+
+  public getAmountOfLevels(): Observable<number> {
+    return this.chosenLevels.asObservable();
   }
 }

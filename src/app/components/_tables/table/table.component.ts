@@ -20,10 +20,12 @@ import { IBuild } from '../../../support/interfaces/build';
 })
 export class TableComponent implements OnInit, OnDestroy {
   public headers: string[] = this.globalService.headers;
-  public character: ILevel[] = [];
+  public levels: ILevel[] = [];
   public desiredLevels: number = 25 + 1;
   public tableForm!: FormGroup;
   public formNames: string[] = ['stamina', 'strength', 'endurance', 'initiative', 'dodge', 'weaponSkill', 'shield', 'learningCapacity', 'luck', 'discipline'];
+
+  public build: IBuild = {} as IBuild;
 
   public race: IRace = this.globalService.defaultRace;
   public weaponSkill: string = '';
@@ -37,6 +39,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   private getRace$: Subscription = new Subscription();
   private getWeaponSkill$: Subscription = new Subscription();
+  private getLevels$: Subscription = new Subscription();
   private importPoints$: Subscription = new Subscription();
   private wipeTable$: Subscription = new Subscription();
   private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeTable$];
@@ -62,7 +65,17 @@ export class TableComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.addLevels();
+    this.getLevels$ = this.buildService.getAmountOfLevels().subscribe((levels) => {
+      const saveBuild = this.build;
+
+      this.wipeLevels();
+      this.addLevels(levels + 1);
+      this.addData(saveBuild.levels, true);
+      this.subscribeToEachLevel();
+      this.setCurrentPoints();
+    });
+
+    this.addLevels(25 + 1);
     this.addData();
     this.subscribeToEachLevel();
 
@@ -91,9 +104,10 @@ export class TableComponent implements OnInit, OnDestroy {
     });
   }
 
-  private addLevels(): void {
-    for (let i = 1; i < this.desiredLevels; i++) {
-      this.character.push({
+  //TODO: Refactor this to make it more generic in order to support custom level intervals
+  private addLevels(levels: number): void {
+    for (let i = 1; i < levels; i++) {
+      this.levels.push({
         level: i,
         stamina: 0,
         strength: 0,
@@ -110,14 +124,48 @@ export class TableComponent implements OnInit, OnDestroy {
     }
   }
 
-  private addData(levels?: ILevel[]): void {
+  private addData(levels?: ILevel[], amountOfLevelsChanged?: boolean): void {
+    //* If levels is defined, then we are importing data from a build
     if (levels) {
-      this.tableFormArr.clear();
-      levels.forEach((level: ILevel) => {
-        this.tableFormArr.push(this.addLevel(level));
-      });
+      //* If amountOfLevelsChanged is true, then we are importing data from a build with a different amount of levels
+      if (amountOfLevelsChanged) {
+        //* If the imported levels are less than the current levels, then we need to add the missing levels
+        if (levels.length < this.levels.length) {
+          const missingLevels = this.levels.length - levels.length;
+
+          for (let i = 0; i < missingLevels; i++) {
+            levels.push({
+              level: levels.length + 1,
+              stamina: 0,
+              strength: 0,
+              endurance: 0,
+              initiative: 0,
+              dodge: 0,
+              weaponSkill: 0,
+              shield: 0,
+              learningCapacity: 0,
+              luck: 0,
+              discipline: 0,
+              placedPoints: 0,
+            });
+          }
+        }
+        //* If the imported levels are more than the current levels, then we need to remove the extra levels
+        if (levels.length > this.levels.length) {
+          levels = levels.slice(0, this.levels.length);
+        }
+
+        levels.forEach((level: ILevel) => {
+          this.tableFormArr.push(this.addLevel(level));
+        });
+      } else {
+        this.tableFormArr.clear();
+        levels.forEach((level: ILevel) => {
+          this.tableFormArr.push(this.addLevel(level));
+        });
+      }
     } else {
-      this.character.forEach((level) => {
+      this.levels.forEach((level) => {
         this.tableFormArr.push(this.addLevel(level));
       });
     }
@@ -390,6 +438,7 @@ export class TableComponent implements OnInit, OnDestroy {
     }
   }
 
+  //TODO: Build this object in service instead
   private setCurrentPoints(): void {
     let arrOfLevels: ILevel[] = [];
     this.tableFormArr.controls.forEach((control) => {
@@ -417,6 +466,7 @@ export class TableComponent implements OnInit, OnDestroy {
     };
 
     this.buildService.setStatsFromTable(build);
+    this.build = build;
   }
 
   private getImportedPoints(levels: any): void {
@@ -424,13 +474,20 @@ export class TableComponent implements OnInit, OnDestroy {
     // this.addLevels(levels.length);
     this.addData(levels);
     this.subscribeToEachLevel();
+    this.summarizeEachColumn(this.total);
+    this.summarizeEachColumn(this.totalWithRaceBonus);
   }
 
   private wipeTable(): void {
     this.tableFormArr.clear();
     this.addData();
     this.subscribeToEachLevel();
-    this.total = this.globalService.total;
-    this.totalWithRaceBonus = this.globalService.totalWithRaceBonus;
+    this.summarizeEachColumn(this.total);
+    this.summarizeEachColumn(this.totalWithRaceBonus);
+  }
+
+  private wipeLevels(): void {
+    this.tableFormArr.clear();
+    this.levels = [];
   }
 }
