@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TableComponent } from './components/_tables/table/table.component';
 import { SettingsComponent } from './components/_containers/settings/settings.component';
@@ -8,39 +8,44 @@ import { Stats } from './support/enums/stats.enums';
 import { WeaponSkills } from './support/enums/weapon-skills.enums';
 import { IRace } from './support/interfaces/race';
 import { ArmoryComponent } from './components/_containers/armory/armory.component';
+import { StorageService } from './support/services/storage.service';
+import { BuildsComponent } from './components/_containers/builds/builds/builds.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TableComponent, SettingsComponent, ArmoryComponent],
+  imports: [RouterOutlet, TableComponent, SettingsComponent, ArmoryComponent, BuildsComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
-
+export class AppComponent implements OnInit {
   private globalRaces = this.globalService.races;
 
-  constructor(
-    private apiService: ApiService,
-    private globalService: GlobalService){
-      this.apiService.getRaces().subscribe({
-        next: res => {
-          const human = res.races[0].bonuses;
-          const elf = res.races[1].bonuses;
-          const dwarf = res.races[2].bonuses;
-          const orc = res.races[3].bonuses;
-          const troll = res.races[4].bonuses;
-          const goblin = res.races[5].bonuses;
-          const undead = res.races[6].bonuses;
-  
-          const races: any[] = [human, elf, dwarf, orc, troll, goblin, undead]
-  
-          this.globalRaces.forEach((race, index) => {
-            this.assignApiData(race, races[index]);
-          })
-        }
-      })
+  constructor(private apiService: ApiService, private globalService: GlobalService, private storageService: StorageService) {}
+
+  ngOnInit(): void {
+    if (this.storageService.getBuilds === null) {
+      this.storageService.setBuilds([]);
     }
+
+    this.apiService.getRaces().subscribe({
+      next: (res) => {
+        const human = res.races[0].bonuses;
+        const elf = res.races[1].bonuses;
+        const dwarf = res.races[2].bonuses;
+        const orc = res.races[3].bonuses;
+        const troll = res.races[4].bonuses;
+        const goblin = res.races[5].bonuses;
+        const undead = res.races[6].bonuses;
+
+        const races: any[] = [human, elf, dwarf, orc, troll, goblin, undead];
+
+        this.globalRaces.forEach((race, index) => {
+          this.assignApiData(race, races[index]);
+        });
+      },
+    });
+  }
 
   assignApiData(race: IRace, changes: any): void {
     race.stats = {
@@ -52,7 +57,7 @@ export class AppComponent {
       learningCapacity: changes.stats.find((stat: any) => stat.type === Stats.LearningCapacity).value,
       luck: changes.stats.find((stat: any) => stat.type === Stats.Luck).value,
       discipline: changes.stats.find((stat: any) => stat.type === Stats.Discipline).value,
-    }
+    };
 
     race.weaponSkills = {
       axe: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Axe).value,
@@ -62,6 +67,6 @@ export class AppComponent {
       shield: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Shield).value,
       spear: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Spear).value,
       chain: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Chain).value,
-    }
+    };
   }
 }

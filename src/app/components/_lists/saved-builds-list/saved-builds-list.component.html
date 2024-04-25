@@ -1,0 +1,24 @@
+<div class="list-group overflow-auto" style="max-height: 14.5rem">
+  @if(builds.length === 0){
+  <div class="list-group-item text-center">
+    <p class="mb-0">Inga sparade builds</p>
+  </div>
+  }@else{ @for(build of builds; track build){
+  <div class="list-group-item" [ngClass]="selectedBuildName === build.name ? 'active' : null">
+    <div class="d-flex w-100 justify-content-between">
+      <div class="col-10" type="button" (click)="selectBuild(build)">{{ build.name }}</div>
+      <button type="button" class="btn btn-sm btn-outline-danger border-0" [ngClass]="selectedBuildName === build.name ? 'btn-outline-light' : null" (click)="openDeleteConfirmModal(build)">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </div>
+  } }
+</div>
+
+@if(viewOpenDeleteConfirmModal){
+<app-confirm-action-modal
+  [texts]="{ title: 'Bekräfta borttagning av build', body: 'Är du säker på att du vill ta bort build?', confirm: 'Ja', cancel: 'Avbryt' }"
+  (dismissModal)="dismissDeleteConfirmModal()"
+  (closeModal)="closeDeleteConfirmModal()"
+></app-confirm-action-modal>
+}

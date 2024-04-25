@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ILevel } from '../../../support/interfaces/level';
 import { Race } from '../../../support/classes/race';
 import { GlobalService } from '../../../support/services/global.service';
 import { TableService } from '../../../support/services/table.service';
-import { debounceTime } from 'rxjs';
+import { Subscription, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
 import { IRace } from '../../../support/interfaces/race';
+import { BuildService } from '../../../support/services/build.service';
+import { IBuild } from '../../../support/interfaces/build';
 
 @Component({
   selector: 'app-table',
@@ -16,12 +18,14 @@ import { IRace } from '../../../support/interfaces/race';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
-export class TableComponent {
+export class TableComponent implements OnInit, OnDestroy {
   public headers: string[] = this.globalService.headers;
-  public character: ILevel[] = [];
+  public levels: ILevel[] = [];
   public desiredLevels: number = 25 + 1;
   public tableForm!: FormGroup;
   public formNames: string[] = ['stamina', 'strength', 'endurance', 'initiative', 'dodge', 'weaponSkill', 'shield', 'learningCapacity', 'luck', 'discipline'];
+
+  public build: IBuild = {} as IBuild;
 
   public race: IRace = this.globalService.defaultRace;
   public weaponSkill: string = '';
@@ -33,12 +37,19 @@ export class TableComponent {
 
   Object = Object;
 
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private tableService: TableService) {}
+  private getRace$: Subscription = new Subscription();
+  private getWeaponSkill$: Subscription = new Subscription();
+  private getLevels$: Subscription = new Subscription();
+  private importPoints$: Subscription = new Subscription();
+  private wipeTable$: Subscription = new Subscription();
+  private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeTable$];
+
+  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private buildService: BuildService) {}
 
   ngOnInit(): void {
     this.createForm();
 
-    this.globalService.getChosenRace().subscribe((race) => {
+    this.getRace$ = this.buildService.getChosenRace().subscribe((race) => {
       this.racePicker(race);
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
@@ -46,7 +57,7 @@ export class TableComponent {
       });
     });
 
-    this.globalService.getChosenWeaponSkill().subscribe((skill) => {
+    this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((skill) => {
       this.weaponSkill = skill;
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
@@ -54,11 +65,33 @@ export class TableComponent {
       });
     });
 
-    this.addLevels();
+    this.getLevels$ = this.buildService.getAmountOfLevels().subscribe((levels) => {
+      const saveBuild = this.build;
+
+      this.wipeLevels();
+      this.addLevels(levels + 1);
+      this.addData(saveBuild.levels, true);
+      this.subscribeToEachLevel();
+      this.setCurrentPoints();
+    });
+
+    this.addLevels(25 + 1);
     this.addData();
     this.subscribeToEachLevel();
 
-    this.getImportedPoints();
+    this.importPoints$ = this.buildService.getImportedStats().subscribe((levels) => {
+      this.getImportedPoints(levels);
+    });
+
+    this.wipeTable$ = this.buildService.listenWipeData().subscribe(() => {
+      this.wipeTable();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
   }
 
   get tableFormArr(): FormArray {
@@ -71,9 +104,10 @@ export class TableComponent {
     });
   }
 
-  private addLevels(): void {
-    for (let i = 1; i < this.desiredLevels; i++) {
-      this.character.push({
+  //TODO: Refactor this to make it more generic in order to support custom level intervals
+  private addLevels(levels: number): void {
+    for (let i = 1; i < levels; i++) {
+      this.levels.push({
         level: i,
         stamina: 0,
         strength: 0,
@@ -90,14 +124,48 @@ export class TableComponent {
     }
   }
 
-  private addData(levels?: ILevel[]): void {
+  private addData(levels?: ILevel[], amountOfLevelsChanged?: boolean): void {
+    //* If levels is defined, then we are importing data from a build
     if (levels) {
-      this.tableFormArr.clear();
-      levels.forEach((level: ILevel) => {
-        this.tableFormArr.push(this.addLevel(level));
-      });
+      //* If amountOfLevelsChanged is true, then we are importing data from a build with a different amount of levels
+      if (amountOfLevelsChanged) {
+        //* If the imported levels are less than the current levels, then we need to add the missing levels
+        if (levels.length < this.levels.length) {
+          const missingLevels = this.levels.length - levels.length;
+
+          for (let i = 0; i < missingLevels; i++) {
+            levels.push({
+              level: levels.length + 1,
+              stamina: 0,
+              strength: 0,
+              endurance: 0,
+              initiative: 0,
+              dodge: 0,
+              weaponSkill: 0,
+              shield: 0,
+              learningCapacity: 0,
+              luck: 0,
+              discipline: 0,
+              placedPoints: 0,
+            });
+          }
+        }
+        //* If the imported levels are more than the current levels, then we need to remove the extra levels
+        if (levels.length > this.levels.length) {
+          levels = levels.slice(0, this.levels.length);
+        }
+
+        levels.forEach((level: ILevel) => {
+          this.tableFormArr.push(this.addLevel(level));
+        });
+      } else {
+        this.tableFormArr.clear();
+        levels.forEach((level: ILevel) => {
+          this.tableFormArr.push(this.addLevel(level));
+        });
+      }
     } else {
-      this.character.forEach((level) => {
+      this.levels.forEach((level) => {
         this.tableFormArr.push(this.addLevel(level));
       });
     }
@@ -370,8 +438,9 @@ export class TableComponent {
     }
   }
 
+  //TODO: Build this object in service instead
   private setCurrentPoints(): void {
-    let arrOfLevels: any[] = [];
+    let arrOfLevels: ILevel[] = [];
     this.tableFormArr.controls.forEach((control) => {
       let level = {
         level: control.value.level,
@@ -390,18 +459,35 @@ export class TableComponent {
       arrOfLevels.push(level);
     });
 
-    const wholeExport = {
+    const build: IBuild = {
       race: this.race.name,
       weaponSkill: this.weaponSkill,
       levels: arrOfLevels,
     };
 
-    this.tableService.setPoints(wholeExport);
+    this.buildService.setStatsFromTable(build);
+    this.build = build;
   }
 
-  private getImportedPoints(): void {
-    this.globalService.getImportedStats().subscribe((levels) => {
-      this.addData(levels);
-    });
+  private getImportedPoints(levels: any): void {
+    //TODO Need to add levels as well in order to support custom level intervals
+    // this.addLevels(levels.length);
+    this.addData(levels);
+    this.subscribeToEachLevel();
+    this.summarizeEachColumn(this.total);
+    this.summarizeEachColumn(this.totalWithRaceBonus);
+  }
+
+  private wipeTable(): void {
+    this.tableFormArr.clear();
+    this.addData();
+    this.subscribeToEachLevel();
+    this.summarizeEachColumn(this.total);
+    this.summarizeEachColumn(this.totalWithRaceBonus);
+  }
+
+  private wipeLevels(): void {
+    this.tableFormArr.clear();
+    this.levels = [];
   }
 }

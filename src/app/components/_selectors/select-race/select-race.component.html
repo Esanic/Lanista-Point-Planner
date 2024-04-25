@@ -1,17 +1,6 @@
-<!-- <mat-form-field class="">
-    <mat-label>Välj ras</mat-label>
-    <mat-select [formControl]="chooseRace">
-        @for(race of races; track race){
-            <mat-option [value]="race">
-                {{race}}
-            </mat-option>
-        }
-    </mat-select>
-</mat-form-field> -->
-
 <label class="form-label" for="raceSelector">Välj ras</label>
 <select class="form-select" name="raceSelector" [formControl]="chooseRace">
-    @for(race of races; track race){
-        <option [value]="race">{{race}}</option>
-    }
+  @for(race of races; track race){
+  <option [value]="race">{{ race }}</option>
+  }
 </select>
