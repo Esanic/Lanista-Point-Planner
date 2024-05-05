@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BuildService } from '../../../support/services/build.service';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-level-input',
@@ -19,8 +19,8 @@ export class LevelInputComponent implements OnInit, OnDestroy {
 
   constructor(private buildService: BuildService) {}
 
-  ngOnInit() {
-    this.levels.setValue(25);
+  async ngOnInit() {
+    this.levels.setValue(await firstValueFrom(this.buildService.getAmountOfLevels()), { emitEvent: false });
 
     this.levels$ = this.levels.valueChanges.subscribe((value) => {
       if (value < 1) {
@@ -29,7 +29,6 @@ export class LevelInputComponent implements OnInit, OnDestroy {
       if (value > 45) {
         value = 45;
       }
-
       this.buildService.setAmountOfLevels(value);
     });
 

@@ -65,7 +65,7 @@ export class TableComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.getLevels$ = this.buildService.getAmountOfLevels().subscribe((levels) => {
+    this.getLevels$ = this.buildService.getAmountOfLevelsSubject().subscribe((levels) => {
       const saveBuild = this.build;
 
       this.wipeLevels();

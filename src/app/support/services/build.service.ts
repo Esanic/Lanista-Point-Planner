@@ -14,7 +14,8 @@ export class BuildService {
 
   private chosenRace: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  private chosenLevels: Subject<number> = new Subject<number>();
+  private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);
+  private chosenLevelsSubject: Subject<number> = new Subject<number>();
   private importedStats: Subject<any> = new Subject<any>();
 
   private updateBuildListEmit: Subject<any> = new Subject<any>();
@@ -99,9 +100,14 @@ export class BuildService {
 
   public setAmountOfLevels(levels: number): void {
     this.chosenLevels.next(levels);
+    this.chosenLevelsSubject.next(levels);
   }
 
   public getAmountOfLevels(): Observable<number> {
     return this.chosenLevels.asObservable();
+  }
+
+  public getAmountOfLevelsSubject(): Observable<number> {
+    return this.chosenLevelsSubject.asObservable();
   }
 }
