@@ -5,3 +5,10 @@ input:focus {
 .default-cursor {
     cursor: default;
 }
+
+
+th:first-child, td:first-child
+{
+  position:sticky;
+  left:0px;
+}

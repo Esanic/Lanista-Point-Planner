@@ -1,20 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TableComponent } from './components/_tables/table/table.component';
-import { SettingsComponent } from './components/_containers/settings/settings.component';
 import { ApiService } from './support/services/api.service';
 import { GlobalService } from './support/services/global.service';
 import { Stats } from './support/enums/stats.enums';
 import { WeaponSkills } from './support/enums/weapon-skills.enums';
 import { IRace } from './support/interfaces/race';
-import { ArmoryComponent } from './components/_containers/armory/armory.component';
 import { StorageService } from './support/services/storage.service';
-import { BuildsComponent } from './components/_containers/builds/builds/builds.component';
+import { DesktopViewComponent } from './components/_views/desktop-view/desktop-view.component';
+import { MobileViewComponent } from './components/_views/mobile-view/mobile-view.component';
+import { TabletViewComponent } from './components/_views/tablet-view/tablet-view.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TableComponent, SettingsComponent, ArmoryComponent, BuildsComponent],
+  imports: [RouterOutlet, DesktopViewComponent, MobileViewComponent, TabletViewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -47,7 +46,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  assignApiData(race: IRace, changes: any): void {
+  private assignApiData(race: IRace, changes: any): void {
     race.stats = {
       stamina: changes.stats.find((stat: any) => stat.type === Stats.Stamina).value,
       strength: changes.stats.find((stat: any) => stat.type === Stats.Strength).value,

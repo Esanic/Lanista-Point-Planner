@@ -1,8 +1,12 @@
-<div class="d-flex flex-row justify-content-between">
-  <div class="d-flex flex-column col-3 m-5">
-    <app-settings class="mb-3"></app-settings>
-    <app-builds></app-builds>
-  </div>
-  <app-table class="col-6 m-5"></app-table>
-  <app-armory class="col-3 m-5"></app-armory>
+<!-- Desktop view -->
+<div class="d-none d-lg-block">
+  <app-desktop-view></app-desktop-view>
+</div>
+
+<!-- Tablet view-->
+<div class="d-none d-md-block d-lg-none"></div>
+
+<!-- Mobile view -->
+<div class="d-md-none">
+  <app-mobile-view></app-mobile-view>
 </div>

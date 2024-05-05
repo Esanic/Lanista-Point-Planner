@@ -1,99 +1,73 @@
 <form [formGroup]="tableForm">
+  <div class="table-responseive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th *ngFor="let header of headers" class="text-center align-middle">
+            @if(header !== 'VF'){
+            <div>
+              {{ header }}
+            </div>
+            } @else { @if(weaponSkill === ''){
+            <div>
+              {{ header }}
+            </div>
+            } @else {
+            {{ weaponSkill }}
+            } }
+          </th>
+        </tr>
+      </thead>
 
+      <tbody>
+        <ng-container formArrayName="rows">
+          <tr *ngFor="let level of tableFormArr.controls; let i = index; let l = last" [formGroupName]="i" class="">
+            <!-- Levels -->
+            <td class="col-1 m-0 p-0 position-sticky">
+              <input class="form-control-plaintext text-center p-0 default-cursor" id="level" formControlName="level" readonly />
+            </td>
 
-        <table class="table table-bordered table-sm">
-            <thead>
-                <tr>
-                    <th *ngFor="let header of headers" class="text-center align-middle ">
-                        @if(header !== 'VF'){
-                            <div>
-                                {{header}}
-                            </div>
-                        } @else {
-                            @if(weaponSkill === ''){
-                                <div>
-                                    {{header}}
-                                </div>
-                            } @else {
-                                {{weaponSkill}}
-                            }
-                        }
-                    </th>
-                </tr>
-            </thead>
-            
-            <tbody>
-                <ng-container formArrayName="rows">
-                    <tr *ngFor="let level of tableFormArr.controls; let i = index; let l = last" 
-                    [formGroupName]="i"
-                    class="">
-                        <!-- Levels -->
-                        <td class="col-1 m-0 p-0">
-                            <input
-                            class="text-center form-control-plaintext p-0 default-cursor" 
-                            id="level" 
-                            formControlName="level"
-                            readonly />
-                        </td>
+            @for(column of formNames; track column){
+            <td class="col-1 m-0 p-0">
+              <input type="text" class="form-control text-center border-0 p-0 m-0" [id]="column" [formControlName]="column" onlyNumber />
+            </td>
+            }
 
-                        @for(column of formNames; track column){
-                            <td class="col-1 m-0 p-0">
-                                <input
-                                type="text"
-                                class="text-center border-0 p-0 m-0 form-control" 
-                                id="stamina" 
-                                [formControlName]="column"
-                                onlyNumber>
-                            </td>
-                        }
-                        
-                        <!-- Placed Points-->
-                        @if(level.valid){
-                            <td class="col-1 p-0 m-0">
-                                <input
-                                class="col-12 text-center form-control-plaintext p-0 m-0 default-cursor" 
-                                id="placedPoints" 
-                                formControlName="placedPoints"
-                                readonly>
-                            </td>
-                        }
-                        @if(level.invalid){
-                            <td class="col-1 p-0 m-0">
-                                <input
-                                class="text-center form-control-plaintext bg-danger-subtle p-0 m-0 default-cursor" 
-                                id="placedPoints" 
-                                formControlName="placedPoints"
-                                readonly>
-                            </td>
-                        }
-    
-    
-                        
-                    </tr>
-                </ng-container>
-            </tbody>
-            
-            <tfoot>
-                <tr class="">
-                    @for(attribute of Object.values(this.total); track 0){
-                        <td class="text-center">
-                            <span class="default-cursor">
-                                {{attribute}}
-                            </span>
-                        </td>
-                    }
-                </tr>
-    
-                <tr class="">
-                    @for(attribute of Object.values(this.totalWithRaceBonus); track 0){
-                        <td class="text-center">
-                            <span class="default-cursor">
-                                {{attribute}}
-                            </span>
-                        </td>
-                    }
-                </tr>
-            </tfoot>
-        </table>
+            <!-- Placed Points-->
+            @if(level.valid){
+            <td class="col-1 p-0 m-0">
+              <input class="col-12 text-center form-control-plaintext p-0 m-0 default-cursor" id="placedPoints" formControlName="placedPoints" readonly />
+            </td>
+            } @if(level.invalid){
+            <td class="col-1 p-0 m-0">
+              <input class="text-center form-control-plaintext bg-danger-subtle p-0 m-0 default-cursor" id="placedPoints" formControlName="placedPoints" readonly />
+            </td>
+            }
+          </tr>
+        </ng-container>
+      </tbody>
+
+      <tfoot>
+        <tr class="">
+          @for(attribute of Object.values(this.total); track 0){
+          <td class="text-center">
+            <span class="default-cursor">
+              {{ attribute }}
+            </span>
+          </td>
+          }
+        </tr>
+
+        <tr class="">
+          @for(attribute of Object.values(this.totalWithRaceBonus); track 0){
+          <td class="text-center">
+            <span class="default-cursor">
+              {{ attribute }}
+            </span>
+          </td>
+          }
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 </form>
-
