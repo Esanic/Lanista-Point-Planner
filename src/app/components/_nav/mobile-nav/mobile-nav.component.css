@@ -1,0 +1,7 @@
+.armory-button-icon, .settings-button-icon {
+  background-image: url('/assets/icons/armor.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  padding:8px;
+}
