@@ -413,6 +413,9 @@ export class TableComponent implements OnInit, OnDestroy {
         break;
       case 'Odöd':
         this.race = this.globalService.undead;
+        break;
+      case 'Salamanth':
+        this.race = this.globalService.salamanth;
     }
   }
 

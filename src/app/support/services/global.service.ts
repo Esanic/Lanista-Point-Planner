@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
-
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Race } from '../classes/race';
 import { IRace } from '../interfaces/race';
 import { WeaponSkills } from '../enums/weapon-skills.enums';
-import { IBuild } from '../interfaces/build';
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +71,16 @@ export class GlobalService {
     stats: { stamina: 1.1, strength: 1, endurance: 2, initiative: 0.9, dodge: 1.05, learningCapacity: 0.6, luck: 0.8, discipline: 1.3 },
     weaponSkills: { axe: 1.05, sword: 1.05, mace: 1.05, stave: 1.05, shield: 1.05, spear: 1.05, chain: 1.05 },
   };
-  public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.goblin, this.troll, this.undead];
+
+  public salamanth: IRace = {
+    name: 'Salamanth',
+    baseWeight: 2,
+    damageWithShield: 0.85,
+    critChances: { baseCrit: 1.02, baseMaxCrit: 1.09, maxDamage: 1.2 },
+    stats: { stamina: 1.1, strength: 1, endurance: 2, initiative: 0.9, dodge: 1.05, learningCapacity: 0.6, luck: 0.8, discipline: 1.3 },
+    weaponSkills: { axe: 1.05, sword: 1.05, mace: 1.05, stave: 1.05, shield: 1.05, spear: 1.05, chain: 1.05 },
+  };
+  public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.goblin, this.troll, this.undead, this.salamanth];
 
   public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'Inlärning', 'Tur', 'Disciplin', 'Utplacerade Poäng'];
 

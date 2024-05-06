@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
 
     this.apiService.getRaces().subscribe({
       next: (res) => {
+        console.log(res);
         const human = res.races[0].bonuses;
         const elf = res.races[1].bonuses;
         const dwarf = res.races[2].bonuses;
@@ -35,12 +36,15 @@ export class AppComponent implements OnInit {
         const troll = res.races[4].bonuses;
         const goblin = res.races[5].bonuses;
         const undead = res.races[6].bonuses;
+        const salamanth = res.races[7].bonuses;
 
-        const races: any[] = [human, elf, dwarf, orc, troll, goblin, undead];
+        const races: any[] = [human, elf, dwarf, orc, troll, goblin, undead, salamanth];
 
         this.globalRaces.forEach((race, index) => {
           this.assignApiData(race, races[index]);
         });
+
+        console.log(salamanth);
       },
     });
   }

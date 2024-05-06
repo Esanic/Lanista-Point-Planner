@@ -16,7 +16,7 @@ export class SelectRaceComponent implements OnDestroy {
   public races: string[] = this.globalService.races.map((race) => race.name!);
 
   private incomingRace$: Subscription = new Subscription();
-  private internalRace$: Subscription = new Subscription();
+  private localRace$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private globalService: GlobalService) {
@@ -24,7 +24,7 @@ export class SelectRaceComponent implements OnDestroy {
       this.chooseRace.patchValue(race, { emitEvent: false });
     });
 
-    this.internalRace$ = this.chooseRace.valueChanges.subscribe((race) => {
+    this.localRace$ = this.chooseRace.valueChanges.subscribe((race) => {
       if (race) this.buildService.setChosenRace(race);
     });
 
@@ -35,6 +35,7 @@ export class SelectRaceComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.incomingRace$.unsubscribe();
-    this.internalRace$.unsubscribe();
+    this.localRace$.unsubscribe();
+    this.wipeData$.unsubscribe();
   }
 }
