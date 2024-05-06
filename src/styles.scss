@@ -7,3 +7,11 @@ html, body {
     background-image:url(assets/images/bg.jpg);
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.armory-button-icon {
+    background-image: url(assets/icons/armor.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    padding:8px;
+  }
