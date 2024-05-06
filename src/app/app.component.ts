@@ -23,8 +23,8 @@ export class AppComponent implements OnInit {
   constructor(private apiService: ApiService, private globalService: GlobalService, private storageService: StorageService) {}
 
   ngOnInit(): void {
-    if (this.storageService.getBuilds === null) {
-      this.storageService.setBuilds([]);
+    if (localStorage.getItem('builds') === null) {
+      localStorage.setItem('builds', JSON.stringify([]));
     }
 
     this.apiService.getRaces().subscribe({
