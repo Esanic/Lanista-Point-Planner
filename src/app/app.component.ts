@@ -5,7 +5,6 @@ import { GlobalService } from './support/services/global.service';
 import { Stats } from './support/enums/stats.enums';
 import { WeaponSkills } from './support/enums/weapon-skills.enums';
 import { IRace } from './support/interfaces/race';
-import { StorageService } from './support/services/storage.service';
 import { DesktopViewComponent } from './components/_views/desktop-view/desktop-view.component';
 import { MobileViewComponent } from './components/_views/mobile-view/mobile-view.component';
 import { TabletViewComponent } from './components/_views/tablet-view/tablet-view.component';
@@ -20,7 +19,7 @@ import { TabletViewComponent } from './components/_views/tablet-view/tablet-view
 export class AppComponent implements OnInit {
   private globalRaces = this.globalService.races;
 
-  constructor(private apiService: ApiService, private globalService: GlobalService, private storageService: StorageService) {}
+  constructor(private apiService: ApiService, private globalService: GlobalService) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('builds') === null) {
