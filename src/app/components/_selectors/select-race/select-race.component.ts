@@ -25,7 +25,11 @@ export class SelectRaceComponent implements OnDestroy {
     });
 
     this.localRace$ = this.chooseRace.valueChanges.subscribe((race) => {
-      if (race) this.buildService.setChosenRace(race);
+      if (race) {
+        this.buildService.setChosenRace(race);
+        this.buildService.emitDeselectBuild({});
+        this.buildService.emitWipeTable({});
+      }
     });
 
     this.wipeData$ = this.buildService.listenWipeData().subscribe(() => {

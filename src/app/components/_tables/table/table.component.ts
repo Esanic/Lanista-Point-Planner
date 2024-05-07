@@ -41,8 +41,9 @@ export class TableComponent implements OnInit, OnDestroy {
   private getWeaponSkill$: Subscription = new Subscription();
   private getLevels$: Subscription = new Subscription();
   private importPoints$: Subscription = new Subscription();
+  private wipeData$: Subscription = new Subscription();
   private wipeTable$: Subscription = new Subscription();
-  private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeTable$];
+  private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeData$, this.wipeTable$, this.getLevels$];
 
   constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private buildService: BuildService) {}
 
@@ -83,7 +84,11 @@ export class TableComponent implements OnInit, OnDestroy {
       this.getImportedPoints(levels);
     });
 
-    this.wipeTable$ = this.buildService.listenWipeData().subscribe(() => {
+    this.wipeData$ = this.buildService.listenWipeData().subscribe(() => {
+      this.wipeTable();
+    });
+
+    this.wipeTable$ = this.buildService.listenToWipeTable().subscribe(() => {
       this.wipeTable();
     });
   }

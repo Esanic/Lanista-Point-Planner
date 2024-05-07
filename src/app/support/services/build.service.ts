@@ -20,6 +20,7 @@ export class BuildService {
 
   private updateBuildListEmit: Subject<any> = new Subject<any>();
   private wipeDataEmit: Subject<any> = new Subject<any>();
+  private wipeTableEmit: Subject<any> = new Subject<any>();
 
   constructor() {}
 
@@ -64,12 +65,20 @@ export class BuildService {
     return this.wipeDataEmit.asObservable();
   }
 
+  public emitWipeTable(event: any): void {
+    this.wipeTableEmit.next(event);
+  }
+
+  public listenToWipeTable(): Observable<any> {
+    return this.wipeTableEmit.asObservable();
+  }
+
   //* Imported Stats *//
-  setImportedStats(stats: any) {
+  public setImportedStats(stats: any) {
     this.importedStats.next(stats);
   }
 
-  getImportedStats(): Observable<any> {
+  public getImportedStats(): Observable<any> {
     return this.importedStats.asObservable();
   }
 

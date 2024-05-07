@@ -25,7 +25,11 @@ export class SelectWeaponSkillComponent implements OnDestroy {
     });
 
     this.internalWeaponSkill$ = this.chooseWeaponSkill.valueChanges.subscribe((weaponSkill) => {
-      if (weaponSkill) this.buildService.setChosenWeaponSkill(weaponSkill);
+      if (weaponSkill) {
+        this.buildService.setChosenWeaponSkill(weaponSkill);
+        this.buildService.emitDeselectBuild({});
+        this.buildService.emitWipeTable({});
+      }
     });
 
     this.wipeData$ = this.buildService.listenWipeData().subscribe(() => {
