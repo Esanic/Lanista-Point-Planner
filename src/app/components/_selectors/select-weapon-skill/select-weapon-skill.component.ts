@@ -40,5 +40,6 @@ export class SelectWeaponSkillComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.incomingWeaponSkill$.unsubscribe();
     this.internalWeaponSkill$.unsubscribe();
+    this.wipeData$.unsubscribe();
   }
 }

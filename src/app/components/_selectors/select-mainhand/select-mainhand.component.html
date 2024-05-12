@@ -1,1 +1,6 @@
-<p>select-mainhand works!</p>
+<label class="form-label" for="raceSelector">Mainhand</label>
+<select class="form-select" name="raceSelector" [formControl]="chosenMainhand">
+  @for(weapon of weaponArray; track weapon){
+  <option [value]="weapon.name">{{ weapon.name }}</option>
+  }
+</select>
