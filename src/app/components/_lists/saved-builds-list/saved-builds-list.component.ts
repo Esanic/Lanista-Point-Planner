@@ -30,6 +30,8 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.builds = this.storageService.getBuilds();
 
+    this.selectBuildUponInit();
+
     this.listenToUpdateBuildList$ = this.buildService.listenToUpdateBuildList().subscribe((buildName) => {
       this.builds = this.storageService.getBuilds();
       if (buildName !== '') {
@@ -50,6 +52,13 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
     this.listenToUpdateBuildList$.unsubscribe();
     this.listenWipeData$.unsubscribe();
     this.deselectBuild$.unsubscribe();
+  }
+
+  private selectBuildUponInit() {
+    let selectedBuild = this.buildService.getSelectedBuildVar();
+    if (selectedBuild !== ({} as IBuild)) {
+      this.selectBuild(selectedBuild);
+    }
   }
 
   public selectBuild(build: IBuild, updateList?: boolean): void {
