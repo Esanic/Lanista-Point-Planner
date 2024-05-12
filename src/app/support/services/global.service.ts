@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IRace } from '../interfaces/race';
 import { WeaponSkills } from '../enums/weapon-skills.enums';
+import { Weapon } from '../interfaces/weapon';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,6 @@ export class GlobalService {
     stats: { stamina: 1, strength: 1, endurance: 1, initiative: 1, dodge: 1, learningCapacity: 1, luck: 1, discipline: 1 },
     weaponSkills: { axe: 1, sword: 1, mace: 1, stave: 1, shield: 1, spear: 1, chain: 1 },
   };
-
   public human: IRace = {
     name: 'Människa',
     baseWeight: 5,
@@ -71,7 +71,6 @@ export class GlobalService {
     stats: { stamina: 1.1, strength: 1, endurance: 2, initiative: 0.9, dodge: 1.05, learningCapacity: 0.6, luck: 0.8, discipline: 1.3 },
     weaponSkills: { axe: 1.05, sword: 1.05, mace: 1.05, stave: 1.05, shield: 1.05, spear: 1.05, chain: 1.05 },
   };
-
   public salamanth: IRace = {
     name: 'Salamanth',
     baseWeight: 2,
@@ -80,12 +79,20 @@ export class GlobalService {
     stats: { stamina: 1.1, strength: 1, endurance: 2, initiative: 0.9, dodge: 1.05, learningCapacity: 0.6, luck: 0.8, discipline: 1.3 },
     weaponSkills: { axe: 1.05, sword: 1.05, mace: 1.05, stave: 1.05, shield: 1.05, spear: 1.05, chain: 1.05 },
   };
+
   public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.goblin, this.troll, this.undead, this.salamanth];
 
   public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'INL', 'Tur', 'DISC', 'Utplacerade Poäng'];
-
   public weaponSkills: string[] = ['Yxa', 'Svärd', 'Hammare', 'Stav', 'Stickvapen', 'Kätting'];
   public WeaponSkills: number[] = [WeaponSkills.Axe, WeaponSkills.Sword, WeaponSkills.Mace, WeaponSkills.Stave, WeaponSkills.Shield, WeaponSkills.Spear, WeaponSkills.Chain];
+
+  public axe: Weapon[] = [];
+  public sword: Weapon[] = [];
+  public mace: Weapon[] = [];
+  public stave: Weapon[] = [];
+  public shield: Weapon[] = [];
+  public spear: Weapon[] = [];
+  public chain: Weapon[] = [];
 
   public total = {
     level: 'Total',

@@ -8,6 +8,7 @@ import { IRace } from './support/interfaces/race';
 import { DesktopViewComponent } from './components/_views/desktop-view/desktop-view.component';
 import { MobileViewComponent } from './components/_views/mobile-view/mobile-view.component';
 import { TabletViewComponent } from './components/_views/tablet-view/tablet-view.component';
+import { Weapon } from './support/interfaces/weapon';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,6 @@ export class AppComponent implements OnInit {
 
     this.apiService.getRaces().subscribe({
       next: (res) => {
-        console.log(res);
         const human = res.races[0].bonuses;
         const elf = res.races[1].bonuses;
         const dwarf = res.races[2].bonuses;
@@ -43,9 +43,20 @@ export class AppComponent implements OnInit {
         this.globalRaces.forEach((race, index) => {
           this.assignApiData(race, races[index]);
         });
-
-        console.log(salamanth);
       },
+    });
+
+    this.apiService.getWeapons().subscribe({
+      next: (res) => {
+        const weapons: Weapon[] = res;
+
+        weapons.forEach((weapon: Weapon) => {
+          this.assignWeaponToArray(weapon);
+        });
+
+        console.log(this.globalService.axe);
+      },
+      error: (err) => {},
     });
   }
 
@@ -70,5 +81,38 @@ export class AppComponent implements OnInit {
       spear: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Spear).value,
       chain: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Chain).value,
     };
+  }
+
+  private assignWeaponToArray(weapon: Weapon): void {
+    switch (weapon.type) {
+      case WeaponSkills.Axe: {
+        this.globalService.axe.push(weapon);
+        break;
+      }
+      case WeaponSkills.Sword: {
+        this.globalService.sword.push(weapon);
+        break;
+      }
+      case WeaponSkills.Mace: {
+        this.globalService.mace.push(weapon);
+        break;
+      }
+      case WeaponSkills.Stave: {
+        this.globalService.stave.push(weapon);
+        break;
+      }
+      case WeaponSkills.Shield: {
+        this.globalService.shield.push(weapon);
+        break;
+      }
+      case WeaponSkills.Spear: {
+        this.globalService.spear.push(weapon);
+        break;
+      }
+      case WeaponSkills.Chain: {
+        this.globalService.chain.push(weapon);
+        break;
+      }
+    }
   }
 }
