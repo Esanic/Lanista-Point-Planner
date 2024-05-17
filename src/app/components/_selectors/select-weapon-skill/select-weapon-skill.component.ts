@@ -27,7 +27,7 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.incomingWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
       if (this.chosenRace) {
-        this.chooseWeaponSkill.patchValue(this.attachRaceBonusToWeaponSkill(weaponSkill, this.chosenRace), { emitEvent: false });
+        this.chooseWeaponSkill.patchValue(this.attachRaceBonusToWeaponSkill(weaponSkill.split(' ')[0], this.chosenRace), { emitEvent: false });
       } else {
         this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
       }
