@@ -49,6 +49,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.createForm();
 
     this.getRace$ = this.buildService.getChosenRace().subscribe((race) => {
+      this.race = race;
       this.racePicker(race.name);
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
@@ -494,5 +495,41 @@ export class TableComponent implements OnInit, OnDestroy {
   private wipeLevels(): void {
     this.tableFormArr.clear();
     this.levels = [];
+  }
+
+  public getRaceBonusFromWeaponSkill(weaponSkill: string, race: IRace): number {
+    return this.globalService.selectRaceBonusFromWeaponSkill(weaponSkill, race);
+  }
+
+  public getRaceBonusFromStats(stat: string, race: IRace): number {
+    switch (stat) {
+      case 'KP': {
+        return Math.round((race.stats.stamina - 1) * 100);
+      }
+      case 'SB': {
+        return Math.round((race.stats.strength - 1) * 100);
+      }
+      case 'UTH': {
+        return Math.round((race.stats.endurance - 1) * 100);
+      }
+      case 'INI': {
+        return Math.round((race.stats.initiative - 1) * 100);
+      }
+      case 'UA': {
+        return Math.round((race.stats.dodge - 1) * 100);
+      }
+      case 'INL': {
+        return Math.round((race.stats.learningCapacity - 1) * 100);
+      }
+      case 'Tur': {
+        return Math.round((race.stats.luck - 1) * 100);
+      }
+      case 'Disc': {
+        return Math.round((race.stats.discipline - 1) * 100);
+      }
+      default: {
+        return 0;
+      }
+    }
   }
 }

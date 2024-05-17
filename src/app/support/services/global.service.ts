@@ -148,4 +148,33 @@ export class GlobalService {
       }
     }
   }
+
+  public selectRaceBonusFromWeaponSkill(weaponSkill: string, race: IRace): number {
+    switch (weaponSkill) {
+      case 'Yxa': {
+        return Math.round((race.weaponSkills.axe - 1) * 100);
+      }
+      case 'Svärd': {
+        return Math.round((race.weaponSkills.sword - 1) * 100);
+      }
+      case 'Hammare': {
+        return Math.round((race.weaponSkills.mace - 1) * 100);
+      }
+      case 'Stav': {
+        return Math.round((race.weaponSkills.stave - 1) * 100);
+      }
+      case 'Sköld': {
+        return Math.round((race.weaponSkills.shield - 1) * 100);
+      }
+      case 'Stickvapen': {
+        return Math.round((race.weaponSkills.spear - 1) * 100);
+      }
+      case 'Kätting': {
+        return Math.round((race.weaponSkills.chain - 1) * 100);
+      }
+      default: {
+        return 0;
+      }
+    }
+  }
 }
