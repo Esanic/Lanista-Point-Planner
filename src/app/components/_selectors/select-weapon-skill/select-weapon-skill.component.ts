@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalService } from '../../../support/services/global.service';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,7 @@ import { BuildService } from '../../../support/services/build.service';
   templateUrl: './select-weapon-skill.component.html',
   styleUrl: './select-weapon-skill.component.css',
 })
-export class SelectWeaponSkillComponent implements OnDestroy {
+export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
   public chooseWeaponSkill = new FormControl('');
   public weaponSkills: string[] = this.globalService.weaponSkills;
 
@@ -19,7 +19,8 @@ export class SelectWeaponSkillComponent implements OnDestroy {
   private internalWeaponSkill$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
-  constructor(private globalService: GlobalService, private buildService: BuildService) {
+  constructor(private globalService: GlobalService, private buildService: BuildService) {}
+  ngOnInit(): void {
     this.incomingWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
       this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
     });
@@ -40,5 +41,6 @@ export class SelectWeaponSkillComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.incomingWeaponSkill$.unsubscribe();
     this.internalWeaponSkill$.unsubscribe();
+    this.wipeData$.unsubscribe();
   }
 }
