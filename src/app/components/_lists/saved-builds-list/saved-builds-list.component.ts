@@ -56,8 +56,8 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
   }
 
   private selectBuildUponInit() {
-    let selectedBuild = this.buildService.getSelectedBuildVar();
-    if (selectedBuild !== ({} as IBuild)) {
+    const selectedBuild: IBuild | null = this.buildService.getSelectedBuildVar();
+    if (selectedBuild) {
       this.selectBuild(selectedBuild);
     }
   }

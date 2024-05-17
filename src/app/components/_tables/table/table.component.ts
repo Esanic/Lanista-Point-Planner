@@ -25,7 +25,8 @@ export class TableComponent implements OnInit, OnDestroy {
 
   public build: IBuild = {} as IBuild;
 
-  public race: IRace = this.globalService.defaultRace;
+  // public race: IRace = this.globalService.defaultRace;
+  public race: IRace = {} as IRace;
   public weaponSkill: string = '';
   public weaponSkillMultiplier: number = 1;
 

@@ -8,7 +8,7 @@
             @if(header !== 'VF'){
             <div>
               {{ header }}
-              @if(race && weaponSkill && (header !== 'Grad' && header !== 'Utplacerade Poäng')){
+              @if(race.stats && weaponSkill && header !== 'Grad' && header !== 'Utplacerade Poäng'){
               <div class="race-bonus-text">({{ getRaceBonusFromStats(header, race) }}%)</div>
 
               }
@@ -17,10 +17,12 @@
             <div>
               {{ header }}
             </div>
-            } @else {
+            } @else { @if(race.weaponSkills && weaponSkill){
             {{ weaponSkill }}
             <div class="race-bonus-text">({{ getRaceBonusFromWeaponSkill(weaponSkill, race) }}%)</div>
-            } }
+            } @else {
+            {{ weaponSkill }}
+            } } }
           </th>
         </tr>
       </thead>
