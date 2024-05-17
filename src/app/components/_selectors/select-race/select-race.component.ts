@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalService } from '../../../support/services/global.service';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { IRace } from '../../../support/interfaces/race';
   templateUrl: './select-race.component.html',
   styleUrl: './select-race.component.css',
 })
-export class SelectRaceComponent implements OnDestroy {
+export class SelectRaceComponent implements OnInit, OnDestroy {
   public chooseRace = new FormControl('');
   public races: string[] = this.globalService.races.map((race) => race.name!);
 
@@ -20,7 +20,9 @@ export class SelectRaceComponent implements OnDestroy {
   private localRace$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private globalService: GlobalService) {
+  constructor(private buildService: BuildService, private globalService: GlobalService) {}
+
+  ngOnInit(): void {
     this.incomingRace$ = this.buildService.getChosenRace().subscribe((race) => {
       this.chooseRace.patchValue(race.name, { emitEvent: false });
     });
