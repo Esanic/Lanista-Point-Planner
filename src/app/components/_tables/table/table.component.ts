@@ -1,9 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ILevel } from '../../../support/interfaces/level';
-import { Race } from '../../../support/classes/race';
 import { GlobalService } from '../../../support/services/global.service';
-import { TableService } from '../../../support/services/table.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
@@ -479,8 +477,6 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   private getImportedPoints(levels: any): void {
-    //TODO Need to add levels as well in order to support custom level intervals
-    // this.addLevels(levels.length);
     this.addData(levels);
     this.subscribeToEachLevel();
     this.summarizeEachColumn(this.total);
