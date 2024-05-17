@@ -1,6 +1,6 @@
 <form [formGroup]="tableForm">
   <div class="table-responseive">
-    <table class="table table-bordered">
+    <table class="table table-bordered" style="border-collapse: separate; border-spacing: 0">
       <thead>
         <tr>
           <th *ngFor="let header of headers" class="text-center align-middle">
@@ -48,9 +48,9 @@
       </tbody>
 
       <tfoot>
-        <tr class="">
+        <tr>
           @for(attribute of Object.values(this.total); track 0){
-          <td class="text-center">
+          <td class="text-center fw-bold" style="border-top: 1px solid black !important">
             <span class="default-cursor">
               {{ attribute }}
             </span>
@@ -60,7 +60,7 @@
 
         <tr class="">
           @for(attribute of Object.values(this.totalWithRaceBonus); track 0){
-          <td class="text-center">
+          <td class="text-center fw-bold">
             <span class="default-cursor">
               {{ attribute }}
             </span>

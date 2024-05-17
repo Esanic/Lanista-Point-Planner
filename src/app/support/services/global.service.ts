@@ -71,7 +71,6 @@ export class GlobalService {
     stats: { stamina: 1.1, strength: 1, endurance: 2, initiative: 0.9, dodge: 1.05, learningCapacity: 0.6, luck: 0.8, discipline: 1.3 },
     weaponSkills: { axe: 1.05, sword: 1.05, mace: 1.05, stave: 1.05, shield: 1.05, spear: 1.05, chain: 1.05 },
   };
-
   public salamanth: IRace = {
     name: 'Salamanth',
     baseWeight: 2,

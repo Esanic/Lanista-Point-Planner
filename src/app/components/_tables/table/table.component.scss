@@ -6,9 +6,20 @@ input:focus {
     cursor: default;
 }
 
+table th {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+table td {
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
 
 th:first-child, td:first-child
 {
   position:sticky;
   left:0px;
+  border-right: 1px solid black !important;
 }
