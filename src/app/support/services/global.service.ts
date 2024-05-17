@@ -14,7 +14,6 @@ export class GlobalService {
     stats: { stamina: 1, strength: 1, endurance: 1, initiative: 1, dodge: 1, learningCapacity: 1, luck: 1, discipline: 1 },
     weaponSkills: { axe: 1, sword: 1, mace: 1, stave: 1, shield: 1, spear: 1, chain: 1 },
   };
-
   public human: IRace = {
     name: 'Människa',
     baseWeight: 5,
