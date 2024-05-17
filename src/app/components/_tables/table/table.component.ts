@@ -51,7 +51,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.createForm();
 
     this.getRace$ = this.buildService.getChosenRace().subscribe((race) => {
-      this.racePicker(race);
+      this.racePicker(race.name);
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
         this.summarizeEachColumn(total);
@@ -197,7 +197,7 @@ export class TableComponent implements OnInit, OnDestroy {
       }
     });
 
-    control.patchValue({ placedPoints: total + (rowThatChanged.level === 1 ? '/150' : '/20') }, { emitEvent: false, onlySelf: true });
+    control.patchValue({ placedPoints: total }, { emitEvent: false, onlySelf: true });
   }
 
   private summarizeEachColumn(total: any): void {
@@ -377,7 +377,7 @@ export class TableComponent implements OnInit, OnDestroy {
         learningCapacity: [level.learningCapacity],
         luck: [level.luck],
         discipline: [level.discipline],
-        placedPoints: [level.placedPoints + '/150', [Validators.max(150)]],
+        placedPoints: [level.placedPoints, [Validators.max(150)]],
       });
     } else {
       return this.formBuilder.group({
@@ -392,7 +392,7 @@ export class TableComponent implements OnInit, OnDestroy {
         learningCapacity: [level.learningCapacity],
         luck: [level.luck],
         discipline: [level.discipline],
-        placedPoints: [level.placedPoints + '/20', [Validators.max(20)]],
+        placedPoints: [level.placedPoints, [Validators.max(20)]],
       });
     }
   }

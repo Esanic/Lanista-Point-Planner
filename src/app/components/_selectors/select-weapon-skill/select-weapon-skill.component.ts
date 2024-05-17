@@ -15,6 +15,7 @@ import { IRace } from '../../../support/interfaces/race';
 export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
   public chooseWeaponSkill = new FormControl('');
   public weaponSkills: string[] = this.globalService.weaponSkills;
+  private chosenRace: IRace = {} as IRace;
 
   private incomingWeaponSkill$: Subscription = new Subscription();
   private internalWeaponSkill$: Subscription = new Subscription();
@@ -22,15 +23,21 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
   private wipeData$: Subscription = new Subscription();
 
   constructor(private globalService: GlobalService, private buildService: BuildService) {}
+
   ngOnInit(): void {
     this.incomingWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
-      this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
+      if (this.chosenRace) {
+        this.chooseWeaponSkill.patchValue(this.attachRaceBonusToWeaponSkill(weaponSkill, this.chosenRace), { emitEvent: false });
+      } else {
+        this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
+      }
     });
 
-    this.selectedRace$ = this.buildService.getChosenRace().subscribe((race: string) => {
+    this.selectedRace$ = this.buildService.getChosenRace().subscribe((race: IRace) => {
+      this.chosenRace = race;
       this.weaponSkills = this.globalService.weaponSkills;
 
-      switch (race) {
+      switch (race.name) {
         case 'Människa': {
           this.weaponSkills = this.weaponSkills.map((weaponSkill: string) => {
             return this.attachRaceBonusToWeaponSkill(weaponSkill, this.globalService.human);

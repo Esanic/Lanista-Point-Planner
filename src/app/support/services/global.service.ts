@@ -115,7 +115,37 @@ export class GlobalService {
     placedPoints: '0',
   };
 
-  public totals: any[] = [{ level: 'Total' }];
-
   constructor() {}
+
+  public selectRaceFromRaceName(raceName: string): IRace {
+    switch (raceName) {
+      case 'Människa': {
+        return this.human;
+      }
+      case 'Alv': {
+        return this.elf;
+      }
+      case 'Dvärg': {
+        return this.dwarf;
+      }
+      case 'Ork': {
+        return this.orc;
+      }
+      case 'Goblin': {
+        return this.goblin;
+      }
+      case 'Troll': {
+        return this.troll;
+      }
+      case 'Odöd': {
+        return this.undead;
+      }
+      case 'Salamanth': {
+        return this.salamanth;
+      }
+      default: {
+        return this.defaultRace;
+      }
+    }
+  }
 }

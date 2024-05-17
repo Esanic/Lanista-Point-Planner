@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBuild } from '../interfaces/build';
+import { IRace } from '../interfaces/race';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class BuildService {
 
   private buildFromTable: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
 
-  private chosenRace: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private chosenRace: BehaviorSubject<IRace> = new BehaviorSubject<IRace>({} as IRace);
   private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);
   private chosenLevelsSubject: Subject<number> = new Subject<number>();
@@ -83,11 +84,11 @@ export class BuildService {
   }
 
   //* Set and Gets from race, weaponskill, levels and table *//
-  public setChosenRace(race: string) {
+  public setChosenRace(race: IRace) {
     this.chosenRace.next(race);
   }
 
-  public getChosenRace(): Observable<string> {
+  public getChosenRace(): Observable<IRace> {
     return this.chosenRace.asObservable();
   }
 

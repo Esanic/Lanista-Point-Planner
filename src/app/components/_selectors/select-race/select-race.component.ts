@@ -3,6 +3,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalService } from '../../../support/services/global.service';
 import { Subscription } from 'rxjs';
 import { BuildService } from '../../../support/services/build.service';
+import { IRace } from '../../../support/interfaces/race';
 
 @Component({
   selector: 'select-race',
@@ -21,11 +22,13 @@ export class SelectRaceComponent implements OnDestroy {
 
   constructor(private buildService: BuildService, private globalService: GlobalService) {
     this.incomingRace$ = this.buildService.getChosenRace().subscribe((race) => {
-      this.chooseRace.patchValue(race, { emitEvent: false });
+      this.chooseRace.patchValue(race.name, { emitEvent: false });
     });
 
-    this.localRace$ = this.chooseRace.valueChanges.subscribe((race) => {
-      if (race) {
+    this.localRace$ = this.chooseRace.valueChanges.subscribe((raceName) => {
+      const race = this.globalService.selectRaceFromRaceName(raceName!);
+
+      if (raceName) {
         this.buildService.setChosenRace(race);
         this.buildService.emitDeselectBuild({});
         this.buildService.emitWipeTable({});
