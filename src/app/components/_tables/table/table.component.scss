@@ -6,9 +6,32 @@ input:focus {
     cursor: default;
 }
 
+.race-bonus-text {
+    font-size: 11px;
+    color: #a3a4a6;
+    font-weight: normal
+
+}
+
+table th {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid black;
+  border-right: 1px solid #e0e0e0;
+}
+
+table td {
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
 
 th:first-child, td:first-child
 {
   position:sticky;
   left:0px;
+  border-right: 1px solid black !important;
+}
+
+th:last-child, td:last-child
+{
+  border-left: 1px solid black !important;
 }

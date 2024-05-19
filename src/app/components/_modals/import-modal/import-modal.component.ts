@@ -2,10 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild, 
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalService } from '../../../support/services/global.service';
-import { TableService } from '../../../support/services/table.service';
 import { BuildService } from '../../../support/services/build.service';
-import { first, firstValueFrom } from 'rxjs';
-import { IBuild } from '../../../support/interfaces/build';
 
 @Component({
   selector: 'app-import-modal',
@@ -23,7 +20,7 @@ export class ImportModalComponent implements AfterViewInit {
   @ViewChild('modalContent') modalContent!: ElementRef<any>;
   modal!: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private buildService: BuildService) {}
+  constructor(private modalService: NgbModal, private buildService: BuildService, private globalService: GlobalService) {}
 
   ngAfterViewInit(): void {
     this.openModal(this.modalContent);
@@ -32,12 +29,10 @@ export class ImportModalComponent implements AfterViewInit {
       async (resolved) => {
         if (this.jsonString.value !== null) {
           const jsonObject = JSON.parse(this.jsonString.value);
-          this.buildService.setChosenRace(jsonObject.race);
+          this.buildService.setChosenRace(this.globalService.selectRaceFromRaceName(jsonObject.race));
           this.buildService.setChosenWeaponSkill(jsonObject.weaponSkill);
           this.buildService.setImportedStats(jsonObject.levels);
           this.buildService.setAmountOfLevels(jsonObject.levels.length);
-
-          // this.buildService.setSelectedBuild({} as IBuild);
 
           this.buildService.emitDeselectBuild('');
         }

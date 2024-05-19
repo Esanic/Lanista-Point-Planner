@@ -1,20 +1,28 @@
 <form [formGroup]="tableForm">
   <div class="table-responseive">
-    <table class="table table-bordered">
+    <table class="table table-bordered" style="border-collapse: separate; border-spacing: 0">
       <thead>
         <tr>
           <th *ngFor="let header of headers" class="text-center align-middle">
+            <!-- If header is not VF -->
             @if(header !== 'VF'){
             <div>
               {{ header }}
+              @if(race.stats && weaponSkill && header !== 'Grad' && header !== 'Utplacerade Poäng'){
+              <div class="race-bonus-text">({{ getRaceBonusFromStats(header, race) }}%)</div>
+
+              }
             </div>
             } @else { @if(weaponSkill === ''){
             <div>
               {{ header }}
             </div>
+            } @else { @if(race.weaponSkills && weaponSkill){
+            {{ weaponSkill }}
+            <div class="race-bonus-text">({{ getRaceBonusFromWeaponSkill(weaponSkill, race) }}%)</div>
             } @else {
             {{ weaponSkill }}
-            } }
+            } } }
           </th>
         </tr>
       </thead>
@@ -36,11 +44,11 @@
             <!-- Placed Points-->
             @if(level.valid){
             <td class="col-1 p-0 m-0">
-              <input class="col-12 text-center form-control-plaintext p-0 m-0 default-cursor" id="placedPoints" formControlName="placedPoints" readonly />
+              <div class="col-12 text-center p-0 m-0 default-cursor">{{ level.value.placedPoints }}/{{ level.value.level === 1 ? "150" : "20" }}</div>
             </td>
             } @if(level.invalid){
-            <td class="col-1 p-0 m-0">
-              <input class="text-center form-control-plaintext bg-danger-subtle p-0 m-0 default-cursor" id="placedPoints" formControlName="placedPoints" readonly />
+            <td class="col-1 p-0 m-0 bg-danger-subtle">
+              <div class="col-12 text-center p-0 m-0 default-cursor">{{ level.value.placedPoints }}/{{ level.value.level === 1 ? "150" : "20" }}</div>
             </td>
             }
           </tr>
@@ -48,9 +56,9 @@
       </tbody>
 
       <tfoot>
-        <tr class="">
+        <tr>
           @for(attribute of Object.values(this.total); track 0){
-          <td class="text-center">
+          <td class="text-center fw-bold" style="border-top: 1px solid black !important">
             <span class="default-cursor">
               {{ attribute }}
             </span>
@@ -60,7 +68,7 @@
 
         <tr class="">
           @for(attribute of Object.values(this.totalWithRaceBonus); track 0){
-          <td class="text-center">
+          <td class="text-center fw-bold">
             <span class="default-cursor">
               {{ attribute }}
             </span>

@@ -1,9 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ILevel } from '../../../support/interfaces/level';
-import { Race } from '../../../support/classes/race';
 import { GlobalService } from '../../../support/services/global.service';
-import { TableService } from '../../../support/services/table.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
@@ -27,7 +25,8 @@ export class TableComponent implements OnInit, OnDestroy {
 
   public build: IBuild = {} as IBuild;
 
-  public race: IRace = this.globalService.defaultRace;
+  // public race: IRace = this.globalService.defaultRace;
+  public race: IRace = {} as IRace;
   public weaponSkill: string = '';
   public weaponSkillMultiplier: number = 1;
 
@@ -51,7 +50,8 @@ export class TableComponent implements OnInit, OnDestroy {
     this.createForm();
 
     this.getRace$ = this.buildService.getChosenRace().subscribe((race) => {
-      this.racePicker(race);
+      this.race = race;
+      this.racePicker(race.name);
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
         this.summarizeEachColumn(total);
@@ -59,7 +59,7 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((skill) => {
-      this.weaponSkill = skill;
+      this.weaponSkill = skill.split(' ')[0];
       this.weaponSkillPicker(this.weaponSkill);
       this.totals.forEach((total) => {
         this.summarizeEachColumn(total);
@@ -85,6 +85,7 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.wipeData$ = this.buildService.listenWipeData().subscribe(() => {
+      this.race = {} as IRace;
       this.wipeTable();
     });
 
@@ -304,48 +305,50 @@ export class TableComponent implements OnInit, OnDestroy {
 
       this.tableFormArr.controls.forEach((level) => {
         Object.entries(level.value).forEach((attribute) => {
-          switch (attribute[0]) {
-            case 'stamina':
-              stamina += this.typeEvaluation(attribute) * this.race.stats.stamina;
-              this.totalWithRaceBonus.stamina = stamina.toFixed();
-              break;
-            case 'strength':
-              strength += this.typeEvaluation(attribute) * this.race.stats.strength;
-              this.totalWithRaceBonus.strength = strength.toFixed();
-              break;
-            case 'endurance':
-              endurance += this.typeEvaluation(attribute) * this.race.stats.endurance;
-              this.totalWithRaceBonus.endurance = endurance.toFixed();
-              break;
-            case 'initiative':
-              initiative += this.typeEvaluation(attribute) * this.race.stats.initiative;
-              this.totalWithRaceBonus.initiative = initiative.toFixed();
-              break;
-            case 'dodge':
-              dodge += this.typeEvaluation(attribute) * this.race.stats.dodge;
-              this.totalWithRaceBonus.dodge = dodge.toFixed();
-              break;
-            case 'learningCapacity':
-              learningCapacity += this.typeEvaluation(attribute) * this.race.stats.learningCapacity;
-              this.totalWithRaceBonus.learningCapacity = learningCapacity.toFixed();
-              break;
-            case 'luck':
-              luck += this.typeEvaluation(attribute) * this.race.stats.luck;
-              this.totalWithRaceBonus.luck = luck.toFixed();
-              break;
-            case 'discipline':
-              discipline += this.typeEvaluation(attribute) * this.race.stats.discipline;
-              this.totalWithRaceBonus.discipline = discipline.toFixed();
-              break;
-            case 'weaponSkill':
-              weaponSkill += this.typeEvaluation(attribute) * this.weaponSkillMultiplier;
-              this.totalWithRaceBonus.weaponSkill = weaponSkill.toFixed();
-              break;
-            case 'shield':
-              shield += this.typeEvaluation(attribute) * this.race.weaponSkills.shield;
-              this.totalWithRaceBonus.shield = shield.toFixed();
-              break;
-          }
+          if (this.race.stats) {
+            switch (attribute[0]) {
+              case 'stamina':
+                stamina += this.typeEvaluation(attribute) * this.race.stats.stamina;
+                this.totalWithRaceBonus.stamina = stamina.toFixed();
+                break;
+              case 'strength':
+                strength += this.typeEvaluation(attribute) * this.race.stats.strength;
+                this.totalWithRaceBonus.strength = strength.toFixed();
+                break;
+              case 'endurance':
+                endurance += this.typeEvaluation(attribute) * this.race.stats.endurance;
+                this.totalWithRaceBonus.endurance = endurance.toFixed();
+                break;
+              case 'initiative':
+                initiative += this.typeEvaluation(attribute) * this.race.stats.initiative;
+                this.totalWithRaceBonus.initiative = initiative.toFixed();
+                break;
+              case 'dodge':
+                dodge += this.typeEvaluation(attribute) * this.race.stats.dodge;
+                this.totalWithRaceBonus.dodge = dodge.toFixed();
+                break;
+              case 'learningCapacity':
+                learningCapacity += this.typeEvaluation(attribute) * this.race.stats.learningCapacity;
+                this.totalWithRaceBonus.learningCapacity = learningCapacity.toFixed();
+                break;
+              case 'luck':
+                luck += this.typeEvaluation(attribute) * this.race.stats.luck;
+                this.totalWithRaceBonus.luck = luck.toFixed();
+                break;
+              case 'discipline':
+                discipline += this.typeEvaluation(attribute) * this.race.stats.discipline;
+                this.totalWithRaceBonus.discipline = discipline.toFixed();
+                break;
+              case 'weaponSkill':
+                weaponSkill += this.typeEvaluation(attribute) * this.weaponSkillMultiplier;
+                this.totalWithRaceBonus.weaponSkill = weaponSkill.toFixed();
+                break;
+              case 'shield':
+                shield += this.typeEvaluation(attribute) * this.race.weaponSkills.shield;
+                this.totalWithRaceBonus.shield = shield.toFixed();
+                break;
+            }
+          } else '0';
         });
       });
 
@@ -425,25 +428,27 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   private weaponSkillPicker(weaponSkill: string): void {
-    switch (weaponSkill) {
-      case 'Yxa':
-        this.weaponSkillMultiplier = this.race.weaponSkills.axe;
-        break;
-      case 'Svärd':
-        this.weaponSkillMultiplier = this.race.weaponSkills.sword;
-        break;
-      case 'Hammare':
-        this.weaponSkillMultiplier = this.race.weaponSkills.mace;
-        break;
-      case 'Stav':
-        this.weaponSkillMultiplier = this.race.weaponSkills.stave;
-        break;
-      case 'Stickvapen':
-        this.weaponSkillMultiplier = this.race.weaponSkills.spear;
-        break;
-      case 'Kätting':
-        this.weaponSkillMultiplier = this.race.weaponSkills.chain;
-    }
+    if (this.race.weaponSkills) {
+      switch (weaponSkill) {
+        case 'Yxa':
+          this.weaponSkillMultiplier = this.race.weaponSkills.axe;
+          break;
+        case 'Svärd':
+          this.weaponSkillMultiplier = this.race.weaponSkills.sword;
+          break;
+        case 'Hammare':
+          this.weaponSkillMultiplier = this.race.weaponSkills.mace;
+          break;
+        case 'Stav':
+          this.weaponSkillMultiplier = this.race.weaponSkills.stave;
+          break;
+        case 'Stickvapen':
+          this.weaponSkillMultiplier = this.race.weaponSkills.spear;
+          break;
+        case 'Kätting':
+          this.weaponSkillMultiplier = this.race.weaponSkills.chain;
+      }
+    } else '0';
   }
 
   //TODO: Build this object in service instead
@@ -478,8 +483,6 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   private getImportedPoints(levels: any): void {
-    //TODO Need to add levels as well in order to support custom level intervals
-    // this.addLevels(levels.length);
     this.addData(levels);
     this.subscribeToEachLevel();
     this.summarizeEachColumn(this.total);
@@ -497,5 +500,41 @@ export class TableComponent implements OnInit, OnDestroy {
   private wipeLevels(): void {
     this.tableFormArr.clear();
     this.levels = [];
+  }
+
+  public getRaceBonusFromWeaponSkill(weaponSkill: string, race: IRace): number {
+    return this.globalService.selectRaceBonusFromWeaponSkill(weaponSkill, race);
+  }
+
+  public getRaceBonusFromStats(stat: string, race: IRace): number {
+    switch (stat) {
+      case 'KP': {
+        return Math.round((race.stats.stamina - 1) * 100);
+      }
+      case 'SB': {
+        return Math.round((race.stats.strength - 1) * 100);
+      }
+      case 'UTH': {
+        return Math.round((race.stats.endurance - 1) * 100);
+      }
+      case 'INI': {
+        return Math.round((race.stats.initiative - 1) * 100);
+      }
+      case 'UA': {
+        return Math.round((race.stats.dodge - 1) * 100);
+      }
+      case 'INL': {
+        return Math.round((race.stats.learningCapacity - 1) * 100);
+      }
+      case 'Tur': {
+        return Math.round((race.stats.luck - 1) * 100);
+      }
+      case 'Disc': {
+        return Math.round((race.stats.discipline - 1) * 100);
+      }
+      default: {
+        return 0;
+      }
+    }
   }
 }

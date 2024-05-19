@@ -79,8 +79,7 @@ export class GlobalService {
     stats: { stamina: 1.1, strength: 1, endurance: 2, initiative: 0.9, dodge: 1.05, learningCapacity: 0.6, luck: 0.8, discipline: 1.3 },
     weaponSkills: { axe: 1.05, sword: 1.05, mace: 1.05, stave: 1.05, shield: 1.05, spear: 1.05, chain: 1.05 },
   };
-
-  public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.goblin, this.troll, this.undead, this.salamanth];
+  public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.troll, this.goblin, this.undead, this.salamanth];
 
   public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'INL', 'Tur', 'DISC', 'Utplacerade Poäng'];
   public weaponSkills: string[] = ['Yxa', 'Svärd', 'Hammare', 'Stav', 'Stickvapen', 'Kätting'];
@@ -124,7 +123,66 @@ export class GlobalService {
     placedPoints: '0',
   };
 
-  public totals: any[] = [{ level: 'Total' }];
-
   constructor() {}
+
+  public selectRaceFromRaceName(raceName: string): IRace {
+    switch (raceName) {
+      case 'Människa': {
+        return this.human;
+      }
+      case 'Alv': {
+        return this.elf;
+      }
+      case 'Dvärg': {
+        return this.dwarf;
+      }
+      case 'Ork': {
+        return this.orc;
+      }
+      case 'Goblin': {
+        return this.goblin;
+      }
+      case 'Troll': {
+        return this.troll;
+      }
+      case 'Odöd': {
+        return this.undead;
+      }
+      case 'Salamanth': {
+        return this.salamanth;
+      }
+      default: {
+        return this.defaultRace;
+      }
+    }
+  }
+
+  public selectRaceBonusFromWeaponSkill(weaponSkill: string, race: IRace): number {
+    switch (weaponSkill) {
+      case 'Yxa': {
+        return Math.round((race.weaponSkills.axe - 1) * 100);
+      }
+      case 'Svärd': {
+        return Math.round((race.weaponSkills.sword - 1) * 100);
+      }
+      case 'Hammare': {
+        return Math.round((race.weaponSkills.mace - 1) * 100);
+      }
+      case 'Stav': {
+        return Math.round((race.weaponSkills.stave - 1) * 100);
+      }
+      case 'Sköld': {
+        return Math.round((race.weaponSkills.shield - 1) * 100);
+      }
+      case 'Stickvapen': {
+        return Math.round((race.weaponSkills.spear - 1) * 100);
+      }
+      case 'Kätting': {
+        return Math.round((race.weaponSkills.chain - 1) * 100);
+      }
+      default: {
+        return 0;
+      }
+    }
+  }
 }
