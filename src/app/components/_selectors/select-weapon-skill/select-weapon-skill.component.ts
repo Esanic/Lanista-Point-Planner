@@ -26,7 +26,6 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedRace$ = this.buildService.getChosenRace().subscribe((race: IRace) => {
-      console.log(this.chooseWeaponSkill.value);
       let selectedWeaponSkill: string = '';
       if (this.chooseWeaponSkill.value !== '' && this.chooseWeaponSkill.value !== null) {
         selectedWeaponSkill = this.chooseWeaponSkill.value.split(' ')[0];
@@ -60,7 +59,6 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
       if (weaponSkill) {
         this.buildService.setChosenWeaponSkill(weaponSkill);
         this.buildService.emitDeselectBuild({});
-        this.buildService.emitWipeTable({});
       }
     });
 

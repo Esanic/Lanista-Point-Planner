@@ -33,7 +33,6 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
       if (raceName) {
         this.buildService.setChosenRace(race);
         this.buildService.emitDeselectBuild({});
-        this.buildService.emitWipeTable({});
       }
     });
 
