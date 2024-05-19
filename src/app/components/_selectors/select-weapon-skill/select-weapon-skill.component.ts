@@ -26,6 +26,11 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedRace$ = this.buildService.getChosenRace().subscribe((race: IRace) => {
+      let selectedWeaponSkill: string = '';
+      if (this.chooseWeaponSkill.value !== '' && this.chooseWeaponSkill.value !== null) {
+        selectedWeaponSkill = this.chooseWeaponSkill.value;
+      }
+
       this.selectedRace = race;
       this.weaponSkills = this.globalService.weaponSkills;
 
@@ -33,11 +38,13 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
         this.weaponSkills = this.weaponSkills.map((weaponSkill: string) => {
           return `${weaponSkill} (${this.globalService.selectRaceBonusFromWeaponSkill(weaponSkill, race)}%)`;
         });
+
+        this.chooseWeaponSkill.patchValue(`${selectedWeaponSkill} (${this.globalService.selectRaceBonusFromWeaponSkill(selectedWeaponSkill, race)}%)`, { emitEvent: false });
       }
     });
 
     this.incomingWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
-      if (this.selectedRace) {
+      if (this.selectedRace.weaponSkills) {
         if (weaponSkill.split(' ').length >= 2) {
           this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
         } else {
