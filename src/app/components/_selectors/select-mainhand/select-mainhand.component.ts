@@ -4,6 +4,7 @@ import { BuildService } from '../../../support/services/build.service';
 import { Subscription } from 'rxjs';
 import { Weapon } from '../../../support/interfaces/weapon';
 import { GlobalService } from '../../../support/services/global.service';
+import { ArmoryService } from '../../../support/services/armory.service';
 
 @Component({
   selector: 'app-select-mainhand',
@@ -15,28 +16,43 @@ import { GlobalService } from '../../../support/services/global.service';
 export class SelectMainhandComponent implements OnInit, OnDestroy {
   public chosenMainhand = new FormControl('');
 
+  public viewLegendEquipment: boolean = false;
+
   public weaponArray: Weapon[] = [];
 
   private chosenWeaponSkill$: Subscription = new Subscription();
+  private viewLegendEquipment$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private globalService: GlobalService) {}
-
-  //TODO: Make select weapon skill component emit the chosen weapon skill as a number instead of string.
+  constructor(private buildService: BuildService, private globalService: GlobalService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
-      this.selectWeaponArray(weaponSkill);
+      this.selectWeaponArray(weaponSkill.split(' ')[0]);
+    });
+
+    this.viewLegendEquipment$ = this.armoryService.getLegendEquipmentViewStatus().subscribe((legendEquipmentViewStatus) => {
+      this.viewLegendEquipment = legendEquipmentViewStatus;
     });
   }
 
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.chosenWeaponSkill$.unsubscribe();
+    this.viewLegendEquipment$.unsubscribe();
   }
 
   private selectWeaponArray(weaponSkill: string): void {
     switch (weaponSkill) {
       case 'Yxa': {
-        this.weaponArray = this.globalService.axe;
+        console.log();
+        this.weaponArray = this.globalService.axe.map((axe) => {
+          if (this.viewLegendEquipment && axe.requires_legend) {
+            return axe;
+          } else if (!this.viewLegendEquipment && !axe.requires_legend) {
+            return axe;
+          } else {
+            return {} as Weapon;
+          }
+        });
         break;
       }
       case 'Svärd': {
@@ -55,7 +71,7 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
         this.weaponArray = this.globalService.shield;
         break;
       }
-      case 'Spjut': {
+      case 'Stickvapen': {
         this.weaponArray = this.globalService.spear;
         break;
       }
