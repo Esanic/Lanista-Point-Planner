@@ -85,6 +85,7 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.wipeData$ = this.buildService.listenWipeData().subscribe(() => {
+      this.weaponSkill = this.globalService.headers[6];
       this.race = {} as IRace;
       this.wipeTable();
     });
