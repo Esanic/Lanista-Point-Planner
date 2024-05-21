@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IRace } from '../interfaces/race';
-import { WeaponSkills } from '../enums/weapon-skills.enums';
-import { Weapon } from '../interfaces/weapon';
+import { weaponSkillsNum } from '../enums/weapon-skills.enums';
+import { IWeapon } from '../interfaces/weapon';
 
 @Injectable({
   providedIn: 'root',
@@ -83,15 +83,15 @@ export class GlobalService {
 
   public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'INL', 'Tur', 'DISC', 'Utplacerade Poäng'];
   public weaponSkills: string[] = ['Yxa', 'Svärd', 'Hammare', 'Stav', 'Stickvapen', 'Kätting'];
-  public WeaponSkills: number[] = [WeaponSkills.Axe, WeaponSkills.Sword, WeaponSkills.Mace, WeaponSkills.Stave, WeaponSkills.Shield, WeaponSkills.Spear, WeaponSkills.Chain];
+  public WeaponSkills: number[] = [weaponSkillsNum.Axe, weaponSkillsNum.Sword, weaponSkillsNum.Mace, weaponSkillsNum.Stave, weaponSkillsNum.Shield, weaponSkillsNum.Spear, weaponSkillsNum.Chain];
 
-  public axe: Weapon[] = [];
-  public sword: Weapon[] = [];
-  public mace: Weapon[] = [];
-  public stave: Weapon[] = [];
-  public shield: Weapon[] = [];
-  public spear: Weapon[] = [];
-  public chain: Weapon[] = [];
+  public axe: IWeapon[] = [];
+  public sword: IWeapon[] = [];
+  public mace: IWeapon[] = [];
+  public stave: IWeapon[] = [];
+  public shield: IWeapon[] = [];
+  public spear: IWeapon[] = [];
+  public chain: IWeapon[] = [];
 
   public total = {
     level: 'Total',

@@ -11,7 +11,6 @@ import { ArmoryService } from '../../../support/services/armory.service';
 export class LegendEquipmentSwitchComponent {
   constructor(private armoryService: ArmoryService) {}
   toggleLegendEquipment(event: any) {
-    console.log(event);
     this.armoryService.setLegendEquipmentViewStatus(event.originalTarget.checked);
   }
 }

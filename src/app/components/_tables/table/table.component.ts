@@ -186,6 +186,7 @@ export class TableComponent implements OnInit, OnDestroy {
         });
       });
     });
+    this.setCurrentPoints();
   }
 
   private summarizeEachRow(rowThatChanged: any, control: AbstractControl): void {
@@ -355,7 +356,7 @@ export class TableComponent implements OnInit, OnDestroy {
       this.totalWithRaceBonus.placedPoints += (stamina + strength + endurance + initiative + dodge + weaponSkill + shield + learningCapacity + luck + discipline).toFixed();
     }
 
-    this.setCurrentPoints();
+    // this.setCurrentPoints();
   }
 
   private typeEvaluation(attributeToEvaluate: any): number {

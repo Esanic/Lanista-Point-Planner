@@ -3,12 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { ApiService } from './support/services/api.service';
 import { GlobalService } from './support/services/global.service';
 import { Stats } from './support/enums/stats.enums';
-import { WeaponSkills } from './support/enums/weapon-skills.enums';
+import { weaponSkillsNum } from './support/enums/weapon-skills.enums';
 import { IRace } from './support/interfaces/race';
 import { DesktopViewComponent } from './components/_views/desktop-view/desktop-view.component';
 import { MobileViewComponent } from './components/_views/mobile-view/mobile-view.component';
 import { TabletViewComponent } from './components/_views/tablet-view/tablet-view.component';
-import { Weapon } from './support/interfaces/weapon';
+import { IWeapon } from './support/interfaces/weapon';
 
 @Component({
   selector: 'app-root',
@@ -48,9 +48,9 @@ export class AppComponent implements OnInit {
 
     this.apiService.getWeapons().subscribe({
       next: (res) => {
-        const weapons: Weapon[] = res;
+        const weapons: IWeapon[] = res;
 
-        weapons.forEach((weapon: Weapon) => {
+        weapons.forEach((weapon: IWeapon) => {
           this.assignWeaponToArray(weapon);
         });
 
@@ -73,43 +73,43 @@ export class AppComponent implements OnInit {
     };
 
     race.weaponSkills = {
-      axe: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Axe).value,
-      sword: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Sword).value,
-      mace: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Mace).value,
-      stave: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Stave).value,
-      shield: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Shield).value,
-      spear: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Spear).value,
-      chain: changes.weapon_skills.find((skill: any) => skill.type === WeaponSkills.Chain).value,
+      axe: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Axe).value,
+      sword: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Sword).value,
+      mace: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Mace).value,
+      stave: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Stave).value,
+      shield: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Shield).value,
+      spear: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Spear).value,
+      chain: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Chain).value,
     };
   }
 
-  private assignWeaponToArray(weapon: Weapon): void {
+  private assignWeaponToArray(weapon: IWeapon): void {
     switch (weapon.type) {
-      case WeaponSkills.Axe: {
+      case weaponSkillsNum.Axe: {
         this.globalService.axe.push(weapon);
         break;
       }
-      case WeaponSkills.Sword: {
+      case weaponSkillsNum.Sword: {
         this.globalService.sword.push(weapon);
         break;
       }
-      case WeaponSkills.Mace: {
+      case weaponSkillsNum.Mace: {
         this.globalService.mace.push(weapon);
         break;
       }
-      case WeaponSkills.Stave: {
+      case weaponSkillsNum.Stave: {
         this.globalService.stave.push(weapon);
         break;
       }
-      case WeaponSkills.Shield: {
+      case weaponSkillsNum.Shield: {
         this.globalService.shield.push(weapon);
         break;
       }
-      case WeaponSkills.Spear: {
+      case weaponSkillsNum.Spear: {
         this.globalService.spear.push(weapon);
         break;
       }
-      case WeaponSkills.Chain: {
+      case weaponSkillsNum.Chain: {
         this.globalService.chain.push(weapon);
         break;
       }
