@@ -49,11 +49,20 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
 
     this.chosenMainhand.valueChanges.subscribe((mainhand) => {
       const chosenWeapon = this.weaponArray.find((weapon) => weapon.name === mainhand);
-      console.log(chosenWeapon);
+      let bonusToAdd: IBonus = {
+        stamina: 0,
+        strength: 0,
+        endurance: 0,
+        initiative: 0,
+        dodge: 0,
+        learningCapacity: 0,
+        luck: 0,
+        discipline: 0,
+        weaponSkill: 0,
+        shield: 0,
+      } as IBonus;
 
       chosenWeapon!.bonuses.forEach((bonus) => {
-        let bonusToAdd: IBonus = {} as IBonus;
-
         if (
           bonus.type.toLowerCase() === 'axe' ||
           bonus.type.toLowerCase() === 'sword' ||
@@ -115,11 +124,6 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
             bonusToAdd.discipline += bonus.additive;
             break;
           }
-          // this case needs to be expanded into each weapon skill
-          case 'weaponskill': {
-            bonusToAdd.weaponSkill += bonus.additive;
-            break;
-          }
           case 'shield': {
             bonusToAdd.shield += bonus.additive;
             break;
@@ -129,6 +133,9 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
           }
         }
       });
+      this.armoryService.addBonus(bonusToAdd);
+      console.log(1);
+      this.armoryService.emitBonusesHaveBeenAdded({});
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Host, HostListener, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './support/services/api.service';
 import { GlobalService } from './support/services/global.service';
@@ -20,12 +20,16 @@ import { IWeapon } from './support/interfaces/weapon';
 export class AppComponent implements OnInit {
   private globalRaces = this.globalService.races;
 
+  public screenWidth: number = 0;
+
   constructor(private apiService: ApiService, private globalService: GlobalService) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('builds') === null) {
       localStorage.setItem('builds', JSON.stringify([]));
     }
+
+    this.screenWidth = window.innerWidth;
 
     this.apiService.getRaces().subscribe({
       next: (res) => {
@@ -114,5 +118,10 @@ export class AppComponent implements OnInit {
         break;
       }
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.screenWidth = event.target.innerWidth;
   }
 }

@@ -8,6 +8,7 @@ import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.d
 import { IRace } from '../../../support/interfaces/race';
 import { BuildService } from '../../../support/services/build.service';
 import { IBuild } from '../../../support/interfaces/build';
+import { ArmoryService } from '../../../support/services/armory.service';
 
 @Component({
   selector: 'app-table',
@@ -42,9 +43,10 @@ export class TableComponent implements OnInit, OnDestroy {
   private importPoints$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
   private wipeTable$: Subscription = new Subscription();
-  private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeData$, this.wipeTable$, this.getLevels$];
+  private addBonus$: Subscription = new Subscription();
+  private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeData$, this.wipeTable$, this.getLevels$, this.addBonus$];
 
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private buildService: BuildService) {}
+  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -64,6 +66,22 @@ export class TableComponent implements OnInit, OnDestroy {
       this.totals.forEach((total) => {
         this.summarizeEachColumn(total);
       });
+    });
+
+    this.addBonus$ = this.armoryService.listenBonusesHaveBeenAdded().subscribe(() => {
+      //Why recieving 3 times?
+      const bonuses = this.armoryService.getBonuses();
+
+      this.totalWithRaceBonus.stamina = (parseInt(this.totalWithRaceBonus.stamina) + bonuses.stamina).toFixed();
+      this.totalWithRaceBonus.strength = (parseInt(this.totalWithRaceBonus.strength) + bonuses.strength).toFixed();
+      this.totalWithRaceBonus.endurance = (parseInt(this.totalWithRaceBonus.endurance) + bonuses.endurance).toFixed();
+      this.totalWithRaceBonus.initiative = (parseInt(this.totalWithRaceBonus.initiative) + bonuses.initiative).toFixed();
+      this.totalWithRaceBonus.dodge = (parseInt(this.totalWithRaceBonus.dodge) + bonuses.dodge).toFixed();
+      this.totalWithRaceBonus.learningCapacity = (parseInt(this.totalWithRaceBonus.learningCapacity) + bonuses.learningCapacity).toFixed();
+      this.totalWithRaceBonus.luck = (parseInt(this.totalWithRaceBonus.luck) + bonuses.luck).toFixed();
+      this.totalWithRaceBonus.discipline = (parseInt(this.totalWithRaceBonus.discipline) + bonuses.discipline).toFixed();
+      this.totalWithRaceBonus.weaponSkill = (parseInt(this.totalWithRaceBonus.weaponSkill) + bonuses.weaponSkill).toFixed();
+      this.totalWithRaceBonus.shield = (parseInt(this.totalWithRaceBonus.shield) + bonuses.shield).toFixed();
     });
 
     this.getLevels$ = this.buildService.getAmountOfLevelsSubject().subscribe((levels) => {

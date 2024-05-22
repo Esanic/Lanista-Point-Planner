@@ -1,14 +1,14 @@
 <!-- Desktop view -->
-<div class="d-none d-xxl-block">
-  <app-desktop-view></app-desktop-view>
-</div>
+@if(screenWidth > 1200){
+<app-desktop-view></app-desktop-view>
+}
 
 <!-- Tablet view-->
-<div class="d-none d-md-block d-xxl-none">
-  <app-tablet-view></app-tablet-view>
-</div>
+@if(screenWidth > 768 && screenWidth < 1200){
+<app-tablet-view></app-tablet-view>
+}
 
 <!-- Mobile view -->
-<div class="d-md-none">
-  <app-mobile-view></app-mobile-view>
-</div>
+@if(screenWidth < 768){
+<app-mobile-view></app-mobile-view>
+}
