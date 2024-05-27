@@ -3,26 +3,39 @@
     <table class="table table-bordered" style="border-collapse: separate; border-spacing: 0">
       <thead>
         <tr>
+          <!-- prettier-ignore -->
           <th *ngFor="let header of headers" class="text-center align-middle">
-            <!-- If header is not VF -->
+            <!-- If header is not VF, use header -->
             @if(header !== 'VF'){
-            <div>
-              {{ header }}
-              @if(race.stats && weaponSkill && header !== 'Grad' && header !== 'Utplacerade Poäng'){
-              <div class="race-bonus-text">({{ getRaceBonusFromStats(header, race) }}%)</div>
-
-              }
-            </div>
-            } @else { @if(weaponSkill === ''){
-            <div>
-              {{ header }}
-            </div>
-            } @else { @if(race.weaponSkills && weaponSkill){
-            {{ weaponSkill }}
-            <div class="race-bonus-text">({{ getRaceBonusFromWeaponSkill(weaponSkill, race) }}%)</div>
-            } @else {
-            {{ weaponSkill }}
-            } } }
+              <div>
+                {{ header }}
+                
+                <!-- If header is not Grad, Utplacerade Poäng, and has stats, show -->
+                @if(race.stats && weaponSkill && header !== 'Grad' && header !== 'Utplacerade Poäng'){
+                  <div class="race-bonus-text">({{ getRaceBonusFromStats(header, race) }}%)</div>
+                }
+              </div>
+            } 
+            @else { 
+              <!-- If header is VF, show weaponSkill -->
+              <!-- If weaponSkill is not set, show header -->
+              @if(weaponSkill === ''){
+                <div>
+                  {{ header }}
+                </div>
+              } 
+              @else { 
+                <!-- If race is selected, has weaponSkills bonuses applied and weaponSkill is set -->
+                @if(race.weaponSkills && weaponSkill){
+                  {{ weaponSkill }}
+                  <div class="race-bonus-text">({{ getRaceBonusFromWeaponSkill(weaponSkill, race) }}%)</div>
+                } 
+                @else {
+                  <!-- If no race is selected, just show weaponSkill -->
+                  {{ weaponSkill }}
+                } 
+              } 
+            }
           </th>
         </tr>
       </thead>
@@ -57,6 +70,9 @@
 
       <tfoot>
         <tr>
+          <td class="text-center fw-bold" style="border-top: 1px solid black !important">
+            <span class="default-cursor">Totalt</span>
+          </td>
           @for(attribute of Object.values(this.total); track 0){
           <td class="text-center fw-bold" style="border-top: 1px solid black !important">
             <span class="default-cursor">
@@ -64,9 +80,15 @@
             </span>
           </td>
           }
+          <td class="text-center fw-bold" style="border-top: 1px solid black !important">
+            <span class="default-cursor">{{ totalPlacedPoints }}</span>
+          </td>
         </tr>
 
-        <tr class="">
+        <tr>
+          <td class="text-center fw-bold">
+            <span class="default-cursor">Total m. bonus</span>
+          </td>
           @for(attribute of Object.values(this.totalWithRaceBonus); track 0){
           <td class="text-center fw-bold">
             <span class="default-cursor">
@@ -74,6 +96,9 @@
             </span>
           </td>
           }
+          <td class="text-center fw-bold">
+            <span class="default-cursor">{{ totalWithRaceBonusPlacedPoints }}</span>
+          </td>
         </tr>
       </tfoot>
     </table>

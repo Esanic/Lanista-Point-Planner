@@ -3,6 +3,7 @@ import { IRace } from '../interfaces/race';
 import { weaponSkillsNum } from '../enums/weapon-skills.enums';
 import { IWeapon } from '../interfaces/weapon';
 import { IEquipmentBonus } from '../interfaces/bonus';
+import { ITotal } from '../interfaces/total';
 
 @Injectable({
   providedIn: 'root',
@@ -94,35 +95,59 @@ export class GlobalService {
   public spear: IWeapon[] = [];
   public chain: IWeapon[] = [];
 
-  public total = {
-    level: 'Total',
-    stamina: '0',
-    strength: '0',
-    endurance: '0',
-    initiative: '0',
-    dodge: '0',
-    weaponSkill: '0',
-    shield: '0',
-    learningCapacity: '0',
-    luck: '0',
-    discipline: '0',
-    placedPoints: '0',
+  public total: ITotal = {
+    stamina: 0,
+    strength: 0,
+    endurance: 0,
+    initiative: 0,
+    dodge: 0,
+    weaponSkill: 0,
+    shield: 0,
+    learningCapacity: 0,
+    luck: 0,
+    discipline: 0,
   };
 
-  public totalWithRaceBonus = {
-    level: 'Total m. rasbonus',
-    stamina: '0',
-    strength: '0',
-    endurance: '0',
-    initiative: '0',
-    dodge: '0',
-    weaponSkill: '0',
-    shield: '0',
-    learningCapacity: '0',
-    luck: '0',
-    discipline: '0',
-    placedPoints: '0',
+  public totalWithRaceBonus: ITotal = {
+    stamina: 0,
+    strength: 0,
+    endurance: 0,
+    initiative: 0,
+    dodge: 0,
+    weaponSkill: 0,
+    shield: 0,
+    learningCapacity: 0,
+    luck: 0,
+    discipline: 0,
   };
+
+  // public total = {
+  //   stamina: '0',
+  //   strength: '0',
+  //   endurance: '0',
+  //   initiative: '0',
+  //   dodge: '0',
+  //   weaponSkill: '0',
+  //   shield: '0',
+  //   learningCapacity: '0',
+  //   luck: '0',
+  //   discipline: '0',
+  //   placedPoints: '0',
+  // };
+
+  // public totalWithRaceBonus = {
+  //   stamina: '0',
+  //   strength: '0',
+  //   endurance: '0',
+  //   initiative: '0',
+  //   dodge: '0',
+  //   weaponSkill: '0',
+  //   shield: '0',
+  //   learningCapacity: '0',
+  //   luck: '0',
+  //   discipline: '0',
+  //   placedPoints: '0',
+  // };
 
   public equipmentBonuses: IEquipmentBonus = {
     mainhand: {

@@ -32,7 +32,9 @@ export class TableComponent implements OnInit, OnDestroy {
   public weaponSkillMultiplier: number = 1;
 
   public total = this.globalService.total;
+  public totalPlacedPoints = 0;
   public totalWithRaceBonus = this.globalService.totalWithRaceBonus;
+  public totalWithRaceBonusPlacedPoints = 0;
   private totals: any[] = [this.total, this.totalWithRaceBonus];
 
   Object = Object;
@@ -200,9 +202,9 @@ export class TableComponent implements OnInit, OnDestroy {
   private summarizeEachRow(rowThatChanged: any, control: AbstractControl): void {
     let total = 0;
 
-    Object.entries(rowThatChanged).forEach((attribute) => {
+    Object.entries(rowThatChanged).forEach((attribute: any[]) => {
       if (attribute[0] !== 'level' && attribute[0] !== 'placedPoints') {
-        total += this.typeEvaluation(attribute);
+        total += parseInt(attribute[1]);
       }
     });
 
@@ -210,192 +212,90 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   private summarizeEachColumn(total: any): void {
-    if (total.level === 'Total') {
-      let stamina: number = 0;
-      let strength: number = 0;
-      let endurance: number = 0;
-      let initiative: number = 0;
-      let dodge: number = 0;
-      let learningCapacity: number = 0;
-      let luck: number = 0;
-      let discipline: number = 0;
-      let weaponSkill: number = 0;
-      let shield: number = 0;
+    this.total = { ...this.globalService.total };
+    this.totalWithRaceBonus = { ...this.globalService.totalWithRaceBonus };
 
-      this.total = {
-        level: 'Total',
-        stamina: '0',
-        strength: '0',
-        endurance: '0',
-        initiative: '0',
-        dodge: '0',
-        weaponSkill: '0',
-        shield: '0',
-        learningCapacity: '0',
-        luck: '0',
-        discipline: '0',
-        placedPoints: '',
-      };
-      this.tableFormArr.controls.forEach((level) => {
-        Object.entries(level.value).forEach((attribute) => {
-          switch (attribute[0]) {
-            case 'stamina':
-              stamina += this.typeEvaluation(attribute);
-              this.total.stamina = stamina.toFixed();
-              break;
-            case 'strength':
-              strength += this.typeEvaluation(attribute);
-              this.total.strength = strength.toFixed();
-              break;
-            case 'endurance':
-              endurance += this.typeEvaluation(attribute);
-              this.total.endurance = endurance.toFixed();
-              break;
-            case 'initiative':
-              initiative += this.typeEvaluation(attribute);
-              this.total.initiative = initiative.toFixed();
-              break;
-            case 'dodge':
-              dodge += this.typeEvaluation(attribute);
-              this.total.dodge = dodge.toFixed();
-              break;
-            case 'learningCapacity':
-              learningCapacity += this.typeEvaluation(attribute);
-              this.total.learningCapacity = learningCapacity.toFixed();
-              break;
-            case 'luck':
-              luck += this.typeEvaluation(attribute);
-              this.total.luck = luck.toFixed();
-              break;
-            case 'discipline':
-              discipline += this.typeEvaluation(attribute);
-              this.total.discipline = discipline.toFixed();
-              break;
-            case 'weaponSkill':
-              weaponSkill += this.typeEvaluation(attribute);
-              this.total.weaponSkill = weaponSkill.toFixed();
-              break;
-            case 'shield':
-              shield += this.typeEvaluation(attribute);
-              this.total.shield = shield.toFixed();
-              break;
-          }
-        });
+    this.tableFormArr.controls.forEach((level) => {
+      Object.entries(level.value).forEach((attribute: any[]) => {
+        switch (attribute[0]) {
+          case 'stamina':
+            this.total.stamina += Math.round(parseInt(attribute[1]));
+
+            this.race.stats
+              ? (this.totalWithRaceBonus.stamina += Math.round(parseInt(attribute[1]) * this.race.stats.stamina))
+              : (this.totalWithRaceBonus.stamina += Math.round(parseInt(attribute[1])));
+            break;
+          case 'strength':
+            this.total.strength += Math.round(parseInt(attribute[1]));
+
+            this.race.stats
+              ? (this.totalWithRaceBonus.strength += Math.round(parseInt(attribute[1]) * this.race.stats.strength))
+              : (this.totalWithRaceBonus.strength += Math.round(parseInt(attribute[1])));
+            break;
+          case 'endurance':
+            this.total.endurance += Math.round(parseInt(attribute[1]));
+
+            this.race.stats
+              ? (this.totalWithRaceBonus.endurance += Math.round(parseInt(attribute[1]) * this.race.stats.endurance))
+              : (this.totalWithRaceBonus.endurance += Math.round(parseInt(attribute[1])));
+            break;
+          case 'initiative':
+            this.total.initiative += Math.round(parseInt(attribute[1]));
+
+            this.race.stats
+              ? (this.totalWithRaceBonus.initiative += Math.round(parseInt(attribute[1]) * this.race.stats.initiative))
+              : (this.totalWithRaceBonus.initiative += Math.round(parseInt(attribute[1])));
+            break;
+          case 'dodge':
+            this.total.dodge += Math.round(parseInt(attribute[1]));
+
+            this.race.stats ? (this.totalWithRaceBonus.dodge += Math.round(parseInt(attribute[1]) * this.race.stats.dodge)) : (this.totalWithRaceBonus.dodge += Math.round(parseInt(attribute[1])));
+            break;
+          case 'learningCapacity':
+            this.total.learningCapacity += Math.round(parseInt(attribute[1]));
+
+            this.race.stats
+              ? (this.totalWithRaceBonus.learningCapacity += Math.round(parseInt(attribute[1]) * this.race.stats.learningCapacity))
+              : (this.totalWithRaceBonus.learningCapacity += Math.round(parseInt(attribute[1])));
+            break;
+          case 'luck':
+            this.total.luck += Math.round(parseInt(attribute[1]));
+
+            this.race.stats ? (this.totalWithRaceBonus.luck += Math.round(parseInt(attribute[1]) * this.race.stats.luck)) : (this.totalWithRaceBonus.luck += Math.round(parseInt(attribute[1])));
+            break;
+          case 'discipline':
+            this.total.discipline += Math.round(parseInt(attribute[1]));
+
+            this.race.stats
+              ? (this.totalWithRaceBonus.discipline += Math.round(parseInt(attribute[1]) * this.race.stats.discipline))
+              : (this.totalWithRaceBonus.discipline += Math.round(parseInt(attribute[1])));
+            break;
+          case 'weaponSkill':
+            this.total.weaponSkill += Math.round(parseInt(attribute[1]));
+
+            this.race.stats
+              ? (this.totalWithRaceBonus.weaponSkill += Math.round(parseInt(attribute[1]) * this.weaponSkillMultiplier))
+              : (this.totalWithRaceBonus.weaponSkill += Math.round(parseInt(attribute[1])));
+            break;
+          case 'shield':
+            this.total.shield += Math.round(parseInt(attribute[1]));
+
+            this.race.stats
+              ? (this.totalWithRaceBonus.shield += Math.round(parseInt(attribute[1]) * this.race.weaponSkills.shield))
+              : (this.totalWithRaceBonus.shield += Math.round(parseInt(attribute[1])));
+            break;
+        }
       });
-      this.total.placedPoints += (stamina + strength + endurance + initiative + dodge + weaponSkill + shield + learningCapacity + luck + discipline).toFixed();
-    }
+    });
 
-    if (total.level === 'Total m. rasbonus') {
-      let stamina: number = 0;
-      let strength: number = 0;
-      let endurance: number = 0;
-      let initiative: number = 0;
-      let dodge: number = 0;
-      let learningCapacity: number = 0;
-      let luck: number = 0;
-      let discipline: number = 0;
-      let weaponSkill: number = 0;
-      let shield: number = 0;
+    this.totalPlacedPoints = Object.values(this.total).reduce((acc, curr) => acc + curr, 0);
 
-      this.totalWithRaceBonus = {
-        level: 'Total m. rasbonus',
-        stamina: '0',
-        strength: '0',
-        endurance: '0',
-        initiative: '0',
-        dodge: '0',
-        weaponSkill: '0',
-        shield: '0',
-        learningCapacity: '0',
-        luck: '0',
-        discipline: '0',
-        placedPoints: '',
-      };
+    const bonuses = this.armoryService.getBonuses();
+    Object.keys(this.totalWithRaceBonus).forEach((key) => {
+      this.totalWithRaceBonus[key] += bonuses[key];
+    });
 
-      this.tableFormArr.controls.forEach((level) => {
-        Object.entries(level.value).forEach((attribute) => {
-          if (this.race.stats) {
-            switch (attribute[0]) {
-              case 'stamina':
-                stamina += this.typeEvaluation(attribute) * this.race.stats.stamina;
-                this.totalWithRaceBonus.stamina = stamina.toFixed();
-                break;
-              case 'strength':
-                strength += this.typeEvaluation(attribute) * this.race.stats.strength;
-                this.totalWithRaceBonus.strength = strength.toFixed();
-                break;
-              case 'endurance':
-                endurance += this.typeEvaluation(attribute) * this.race.stats.endurance;
-                this.totalWithRaceBonus.endurance = endurance.toFixed();
-                break;
-              case 'initiative':
-                initiative += this.typeEvaluation(attribute) * this.race.stats.initiative;
-                this.totalWithRaceBonus.initiative = initiative.toFixed();
-                break;
-              case 'dodge':
-                dodge += this.typeEvaluation(attribute) * this.race.stats.dodge;
-                this.totalWithRaceBonus.dodge = dodge.toFixed();
-                break;
-              case 'learningCapacity':
-                learningCapacity += this.typeEvaluation(attribute) * this.race.stats.learningCapacity;
-                this.totalWithRaceBonus.learningCapacity = learningCapacity.toFixed();
-                break;
-              case 'luck':
-                luck += this.typeEvaluation(attribute) * this.race.stats.luck;
-                this.totalWithRaceBonus.luck = luck.toFixed();
-                break;
-              case 'discipline':
-                discipline += this.typeEvaluation(attribute) * this.race.stats.discipline;
-                this.totalWithRaceBonus.discipline = discipline.toFixed();
-                break;
-              case 'weaponSkill':
-                weaponSkill += this.typeEvaluation(attribute) * this.weaponSkillMultiplier;
-                this.totalWithRaceBonus.weaponSkill = weaponSkill.toFixed();
-                break;
-              case 'shield':
-                shield += this.typeEvaluation(attribute) * this.race.weaponSkills.shield;
-                this.totalWithRaceBonus.shield = shield.toFixed();
-                break;
-            }
-          } else '0';
-        });
-      });
-
-      const bonuses = this.armoryService.getBonuses();
-
-      this.totalWithRaceBonus.stamina = (parseInt(this.totalWithRaceBonus.stamina) + bonuses.stamina).toFixed();
-      this.totalWithRaceBonus.strength = (parseInt(this.totalWithRaceBonus.strength) + bonuses.strength).toFixed();
-      this.totalWithRaceBonus.endurance = (parseInt(this.totalWithRaceBonus.endurance) + bonuses.endurance).toFixed();
-      this.totalWithRaceBonus.initiative = (parseInt(this.totalWithRaceBonus.initiative) + bonuses.initiative).toFixed();
-      this.totalWithRaceBonus.dodge = (parseInt(this.totalWithRaceBonus.dodge) + bonuses.dodge).toFixed();
-      this.totalWithRaceBonus.learningCapacity = (parseInt(this.totalWithRaceBonus.learningCapacity) + bonuses.learningCapacity).toFixed();
-      this.totalWithRaceBonus.luck = (parseInt(this.totalWithRaceBonus.luck) + bonuses.luck).toFixed();
-      this.totalWithRaceBonus.discipline = (parseInt(this.totalWithRaceBonus.discipline) + bonuses.discipline).toFixed();
-      this.totalWithRaceBonus.weaponSkill = (parseInt(this.totalWithRaceBonus.weaponSkill) + bonuses.weaponSkill).toFixed();
-      this.totalWithRaceBonus.shield = (parseInt(this.totalWithRaceBonus.shield) + bonuses.shield).toFixed();
-
-      this.totalWithRaceBonus.placedPoints = (
-        parseInt(this.totalWithRaceBonus.stamina) +
-        parseInt(this.totalWithRaceBonus.strength) +
-        parseInt(this.totalWithRaceBonus.endurance) +
-        parseInt(this.totalWithRaceBonus.initiative) +
-        parseInt(this.totalWithRaceBonus.dodge) +
-        parseInt(this.totalWithRaceBonus.weaponSkill) +
-        parseInt(this.totalWithRaceBonus.shield) +
-        parseInt(this.totalWithRaceBonus.learningCapacity) +
-        parseInt(this.totalWithRaceBonus.luck) +
-        parseInt(this.totalWithRaceBonus.discipline)
-      ).toFixed();
-    }
-
-    // this.setCurrentPoints();
-  }
-
-  private typeEvaluation(attributeToEvaluate: any): number {
-    if (typeof attributeToEvaluate[1] === 'string') return +attributeToEvaluate[1];
-
-    if (typeof attributeToEvaluate[1] === 'number') return attributeToEvaluate[1];
-    else return 0;
+    this.totalWithRaceBonusPlacedPoints = Object.values(this.totalWithRaceBonus).reduce((acc, curr) => acc + curr, 0);
   }
 
   private addLevel(level: ILevel): FormGroup {
