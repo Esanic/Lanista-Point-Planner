@@ -69,19 +69,9 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.addBonus$ = this.armoryService.listenBonusesHaveBeenAdded().subscribe(() => {
-      //Why recieving 3 times?
-      const bonuses = this.armoryService.getBonuses();
-
-      this.totalWithRaceBonus.stamina = (parseInt(this.totalWithRaceBonus.stamina) + bonuses.stamina).toFixed();
-      this.totalWithRaceBonus.strength = (parseInt(this.totalWithRaceBonus.strength) + bonuses.strength).toFixed();
-      this.totalWithRaceBonus.endurance = (parseInt(this.totalWithRaceBonus.endurance) + bonuses.endurance).toFixed();
-      this.totalWithRaceBonus.initiative = (parseInt(this.totalWithRaceBonus.initiative) + bonuses.initiative).toFixed();
-      this.totalWithRaceBonus.dodge = (parseInt(this.totalWithRaceBonus.dodge) + bonuses.dodge).toFixed();
-      this.totalWithRaceBonus.learningCapacity = (parseInt(this.totalWithRaceBonus.learningCapacity) + bonuses.learningCapacity).toFixed();
-      this.totalWithRaceBonus.luck = (parseInt(this.totalWithRaceBonus.luck) + bonuses.luck).toFixed();
-      this.totalWithRaceBonus.discipline = (parseInt(this.totalWithRaceBonus.discipline) + bonuses.discipline).toFixed();
-      this.totalWithRaceBonus.weaponSkill = (parseInt(this.totalWithRaceBonus.weaponSkill) + bonuses.weaponSkill).toFixed();
-      this.totalWithRaceBonus.shield = (parseInt(this.totalWithRaceBonus.shield) + bonuses.shield).toFixed();
+      this.totals.forEach((total) => {
+        this.summarizeEachColumn(total);
+      });
     });
 
     this.getLevels$ = this.buildService.getAmountOfLevelsSubject().subscribe((levels) => {
@@ -371,7 +361,31 @@ export class TableComponent implements OnInit, OnDestroy {
         });
       });
 
-      this.totalWithRaceBonus.placedPoints += (stamina + strength + endurance + initiative + dodge + weaponSkill + shield + learningCapacity + luck + discipline).toFixed();
+      const bonuses = this.armoryService.getBonuses();
+
+      this.totalWithRaceBonus.stamina = (parseInt(this.totalWithRaceBonus.stamina) + bonuses.stamina).toFixed();
+      this.totalWithRaceBonus.strength = (parseInt(this.totalWithRaceBonus.strength) + bonuses.strength).toFixed();
+      this.totalWithRaceBonus.endurance = (parseInt(this.totalWithRaceBonus.endurance) + bonuses.endurance).toFixed();
+      this.totalWithRaceBonus.initiative = (parseInt(this.totalWithRaceBonus.initiative) + bonuses.initiative).toFixed();
+      this.totalWithRaceBonus.dodge = (parseInt(this.totalWithRaceBonus.dodge) + bonuses.dodge).toFixed();
+      this.totalWithRaceBonus.learningCapacity = (parseInt(this.totalWithRaceBonus.learningCapacity) + bonuses.learningCapacity).toFixed();
+      this.totalWithRaceBonus.luck = (parseInt(this.totalWithRaceBonus.luck) + bonuses.luck).toFixed();
+      this.totalWithRaceBonus.discipline = (parseInt(this.totalWithRaceBonus.discipline) + bonuses.discipline).toFixed();
+      this.totalWithRaceBonus.weaponSkill = (parseInt(this.totalWithRaceBonus.weaponSkill) + bonuses.weaponSkill).toFixed();
+      this.totalWithRaceBonus.shield = (parseInt(this.totalWithRaceBonus.shield) + bonuses.shield).toFixed();
+
+      this.totalWithRaceBonus.placedPoints = (
+        parseInt(this.totalWithRaceBonus.stamina) +
+        parseInt(this.totalWithRaceBonus.strength) +
+        parseInt(this.totalWithRaceBonus.endurance) +
+        parseInt(this.totalWithRaceBonus.initiative) +
+        parseInt(this.totalWithRaceBonus.dodge) +
+        parseInt(this.totalWithRaceBonus.weaponSkill) +
+        parseInt(this.totalWithRaceBonus.shield) +
+        parseInt(this.totalWithRaceBonus.learningCapacity) +
+        parseInt(this.totalWithRaceBonus.luck) +
+        parseInt(this.totalWithRaceBonus.discipline)
+      ).toFixed();
     }
 
     // this.setCurrentPoints();

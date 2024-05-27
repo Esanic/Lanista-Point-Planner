@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
           this.assignWeaponToArray(weapon);
         });
 
-        console.log(this.globalService.axe);
+        console.log(this.globalService.mace);
       },
       error: (err) => {},
     });

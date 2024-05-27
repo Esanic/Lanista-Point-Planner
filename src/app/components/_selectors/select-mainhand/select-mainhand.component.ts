@@ -49,92 +49,10 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
 
     this.chosenMainhand.valueChanges.subscribe((mainhand) => {
       const chosenWeapon = this.weaponArray.find((weapon) => weapon.name === mainhand);
-      let bonusToAdd: IBonus = {
-        stamina: 0,
-        strength: 0,
-        endurance: 0,
-        initiative: 0,
-        dodge: 0,
-        learningCapacity: 0,
-        luck: 0,
-        discipline: 0,
-        weaponSkill: 0,
-        shield: 0,
-      } as IBonus;
 
-      chosenWeapon!.bonuses.forEach((bonus) => {
-        if (
-          bonus.type.toLowerCase() === 'axe' ||
-          bonus.type.toLowerCase() === 'sword' ||
-          bonus.type.toLowerCase() === 'mace' ||
-          bonus.type.toLowerCase() === 'stave' ||
-          bonus.type.toLowerCase() === 'spear' ||
-          bonus.type.toLowerCase() === 'chain'
-        ) {
-          if (bonus.type.toLowerCase() === 'axe' && this.selectedWeaponSkill === weaponSkillStr.Axe) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'sword' && this.selectedWeaponSkill === weaponSkillStr.Sword) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'mace' && this.selectedWeaponSkill === weaponSkillStr.Mace) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'stave' && this.selectedWeaponSkill === weaponSkillStr.Stave) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'spear' && this.selectedWeaponSkill === weaponSkillStr.Spear) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'chain' && this.selectedWeaponSkill === weaponSkillStr.Chain) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-        }
+      const bonusToAdd: IBonus = chosenWeapon ? this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill) : ({} as IBonus);
 
-        switch (bonus.type.toLowerCase()) {
-          case 'stamina': {
-            bonusToAdd.stamina += bonus.additive;
-            break;
-          }
-          case 'strength': {
-            bonusToAdd.strength += bonus.additive;
-            break;
-          }
-          case 'endurance': {
-            bonusToAdd.endurance += bonus.additive;
-            break;
-          }
-          case 'initiative': {
-            bonusToAdd.initiative += bonus.additive;
-            break;
-          }
-          case 'dodge': {
-            bonusToAdd.dodge += bonus.additive;
-            break;
-          }
-          case 'learningcapacity': {
-            bonusToAdd.learningCapacity += bonus.additive;
-            break;
-          }
-          case 'luck': {
-            bonusToAdd.luck += bonus.additive;
-            break;
-          }
-          case 'discipline': {
-            bonusToAdd.discipline += bonus.additive;
-            break;
-          }
-          case 'shield': {
-            bonusToAdd.shield += bonus.additive;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
-      });
-      this.armoryService.addBonus(bonusToAdd);
-      console.log(1);
+      this.armoryService.addBonus('mainhand', bonusToAdd);
       this.armoryService.emitBonusesHaveBeenAdded({});
     });
   }
