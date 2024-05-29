@@ -57,23 +57,17 @@ export class TableComponent implements OnInit, OnDestroy {
       this.race = race;
       this.racePicker(race.name);
       this.weaponSkillPicker(this.weaponSkill);
-      this.totals.forEach((total) => {
-        this.summarizeEachColumn(total);
-      });
+      this.summarizeEachColumn();
     });
 
     this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((skill) => {
       this.weaponSkill = skill.split(' ')[0];
       this.weaponSkillPicker(this.weaponSkill);
-      this.totals.forEach((total) => {
-        this.summarizeEachColumn(total);
-      });
+      this.summarizeEachColumn();
     });
 
     this.addBonus$ = this.armoryService.listenBonusesHaveBeenAdded().subscribe(() => {
-      this.totals.forEach((total) => {
-        this.summarizeEachColumn(total);
-      });
+      this.summarizeEachColumn();
     });
 
     this.getLevels$ = this.buildService.getAmountOfLevelsSubject().subscribe((levels) => {
@@ -120,7 +114,6 @@ export class TableComponent implements OnInit, OnDestroy {
     });
   }
 
-  //TODO: Refactor this to make it more generic in order to support custom level intervals
   private addLevels(levels: number): void {
     for (let i = 1; i < levels; i++) {
       this.levels.push({
@@ -191,9 +184,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.tableFormArr.controls.forEach((control) => {
       control.valueChanges.pipe(debounceTime(200)).subscribe((rowThatChanged) => {
         this.summarizeEachRow(rowThatChanged, control);
-        this.totals.forEach((total) => {
-          this.summarizeEachColumn(total);
-        });
+        this.summarizeEachColumn();
       });
     });
     this.setCurrentPoints();
@@ -211,7 +202,7 @@ export class TableComponent implements OnInit, OnDestroy {
     control.patchValue({ placedPoints: total }, { emitEvent: false, onlySelf: true });
   }
 
-  private summarizeEachColumn(total: any): void {
+  private summarizeEachColumn(): void {
     this.total = { ...this.globalService.total };
     this.totalWithRaceBonus = { ...this.globalService.totalWithRaceBonus };
 
@@ -220,66 +211,56 @@ export class TableComponent implements OnInit, OnDestroy {
         switch (attribute[0]) {
           case 'stamina':
             this.total.stamina += Math.round(parseInt(attribute[1]));
-
             this.race.stats
               ? (this.totalWithRaceBonus.stamina += Math.round(parseInt(attribute[1]) * this.race.stats.stamina))
               : (this.totalWithRaceBonus.stamina += Math.round(parseInt(attribute[1])));
             break;
           case 'strength':
             this.total.strength += Math.round(parseInt(attribute[1]));
-
             this.race.stats
               ? (this.totalWithRaceBonus.strength += Math.round(parseInt(attribute[1]) * this.race.stats.strength))
               : (this.totalWithRaceBonus.strength += Math.round(parseInt(attribute[1])));
             break;
           case 'endurance':
             this.total.endurance += Math.round(parseInt(attribute[1]));
-
             this.race.stats
               ? (this.totalWithRaceBonus.endurance += Math.round(parseInt(attribute[1]) * this.race.stats.endurance))
               : (this.totalWithRaceBonus.endurance += Math.round(parseInt(attribute[1])));
             break;
           case 'initiative':
             this.total.initiative += Math.round(parseInt(attribute[1]));
-
             this.race.stats
               ? (this.totalWithRaceBonus.initiative += Math.round(parseInt(attribute[1]) * this.race.stats.initiative))
               : (this.totalWithRaceBonus.initiative += Math.round(parseInt(attribute[1])));
             break;
           case 'dodge':
             this.total.dodge += Math.round(parseInt(attribute[1]));
-
             this.race.stats ? (this.totalWithRaceBonus.dodge += Math.round(parseInt(attribute[1]) * this.race.stats.dodge)) : (this.totalWithRaceBonus.dodge += Math.round(parseInt(attribute[1])));
             break;
           case 'learningCapacity':
             this.total.learningCapacity += Math.round(parseInt(attribute[1]));
-
             this.race.stats
               ? (this.totalWithRaceBonus.learningCapacity += Math.round(parseInt(attribute[1]) * this.race.stats.learningCapacity))
               : (this.totalWithRaceBonus.learningCapacity += Math.round(parseInt(attribute[1])));
             break;
           case 'luck':
             this.total.luck += Math.round(parseInt(attribute[1]));
-
             this.race.stats ? (this.totalWithRaceBonus.luck += Math.round(parseInt(attribute[1]) * this.race.stats.luck)) : (this.totalWithRaceBonus.luck += Math.round(parseInt(attribute[1])));
             break;
           case 'discipline':
             this.total.discipline += Math.round(parseInt(attribute[1]));
-
             this.race.stats
               ? (this.totalWithRaceBonus.discipline += Math.round(parseInt(attribute[1]) * this.race.stats.discipline))
               : (this.totalWithRaceBonus.discipline += Math.round(parseInt(attribute[1])));
             break;
           case 'weaponSkill':
             this.total.weaponSkill += Math.round(parseInt(attribute[1]));
-
             this.race.stats
               ? (this.totalWithRaceBonus.weaponSkill += Math.round(parseInt(attribute[1]) * this.weaponSkillMultiplier))
               : (this.totalWithRaceBonus.weaponSkill += Math.round(parseInt(attribute[1])));
             break;
           case 'shield':
             this.total.shield += Math.round(parseInt(attribute[1]));
-
             this.race.stats
               ? (this.totalWithRaceBonus.shield += Math.round(parseInt(attribute[1]) * this.race.weaponSkills.shield))
               : (this.totalWithRaceBonus.shield += Math.round(parseInt(attribute[1])));
@@ -290,7 +271,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     this.totalPlacedPoints = Object.values(this.total).reduce((acc, curr) => acc + curr, 0);
 
-    const bonuses = this.armoryService.getBonuses();
+    const bonuses = this.armoryService.getBonusesAdditive();
     Object.keys(this.totalWithRaceBonus).forEach((key) => {
       this.totalWithRaceBonus[key] += bonuses[key];
     });
@@ -384,7 +365,6 @@ export class TableComponent implements OnInit, OnDestroy {
     } else '0';
   }
 
-  //TODO: Build this object in service instead
   private setCurrentPoints(): void {
     let arrOfLevels: ILevel[] = [];
     this.tableFormArr.controls.forEach((control) => {
@@ -418,16 +398,14 @@ export class TableComponent implements OnInit, OnDestroy {
   private getImportedPoints(levels: any): void {
     this.addData(levels);
     this.subscribeToEachLevel();
-    this.summarizeEachColumn(this.total);
-    this.summarizeEachColumn(this.totalWithRaceBonus);
+    this.summarizeEachColumn();
   }
 
   private wipeTable(): void {
     this.tableFormArr.clear();
     this.addData();
     this.subscribeToEachLevel();
-    this.summarizeEachColumn(this.total);
-    this.summarizeEachColumn(this.totalWithRaceBonus);
+    this.summarizeEachColumn();
   }
 
   private wipeLevels(): void {
