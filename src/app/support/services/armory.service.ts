@@ -13,7 +13,8 @@ export class ArmoryService {
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
-  private equipmentBonuses: IEquipmentBonus = this.globalService.equipmentBonuses;
+  private equipmentBonusesAdditive: IEquipmentBonus = this.globalService.equipmentBonusesAdditive;
+  private equipmentBonusesMultiplier: IEquipmentBonus = this.globalService.equipmentBonusesMultiplier;
 
   constructor(private globalService: GlobalService) {}
 
@@ -33,130 +34,138 @@ export class ArmoryService {
     return this.emitBonusAdded.asObservable();
   }
 
-  public addBonus(gearSlot: string, bonusesToAdd: IBonus): void {
+  //Adds bonuses to the correct equipment slot
+  public addBonus(gearSlot: string, bonusesToAdd: IBonus[]): void {
     if (gearSlot === 'mainhand') {
-      this.equipmentBonuses.mainhand = bonusesToAdd;
+      //? Should this be typed better?
+      this.equipmentBonusesAdditive.mainhand = bonusesToAdd[0];
+      this.equipmentBonusesMultiplier.mainhand = bonusesToAdd[1];
     }
     if (gearSlot === 'offhand') {
-      this.equipmentBonuses.offhand = bonusesToAdd;
+      // this.equipmentBonusesAdditive.offhand = additiveBonusesToAdd;
     }
   }
-  //Apply this when summarizing table raceBonus
-  public getBonuses(): IBonus {
-    let totalBonuses: IBonus = {
-      stamina: 0,
-      strength: 0,
-      endurance: 0,
-      initiative: 0,
-      dodge: 0,
-      learningCapacity: 0,
-      luck: 0,
-      discipline: 0,
-      weaponSkill: 0,
-      shield: 0,
-    } as IBonus;
+
+  //Returns the total additive bonuses from all equipment
+  public getBonusesAdditive(): IBonus {
+    let totalBonuses: IBonus = { ...this.globalService.additiveBonus };
 
     Object.keys(totalBonuses).forEach((stat) => {
-      Object.keys(this.equipmentBonuses).forEach((gearSlot) => {
-        totalBonuses[stat] += this.equipmentBonuses[gearSlot][stat];
+      Object.keys(this.equipmentBonusesAdditive).forEach((gearSlot) => {
+        totalBonuses[stat] += this.equipmentBonusesAdditive[gearSlot][stat];
       });
     });
-
-    //Recieves double the bonuses
 
     return totalBonuses;
   }
 
-  public calculateBonusesFromEquipment(equipment: IWeapon, selectedWeaponSkill?: string): IBonus {
-    let bonusToAdd: IBonus = {
-      stamina: 0,
-      strength: 0,
-      endurance: 0,
-      initiative: 0,
-      dodge: 0,
-      learningCapacity: 0,
-      luck: 0,
-      discipline: 0,
-      weaponSkill: 0,
-      shield: 0,
-    } as IBonus;
+  //Returns the total multiplicative bonuses from all equipment
+  public getBonusesMultiplier(): IBonus {
+    let totalBonuses: IBonus = { ...this.globalService.multiplierBonus };
+
+    Object.keys(totalBonuses).forEach((stat) => {
+      Object.keys(this.equipmentBonusesMultiplier).forEach((gearSlot) => {
+        console.log(this.equipmentBonusesMultiplier[gearSlot][stat]);
+        totalBonuses[stat] += this.equipmentBonusesMultiplier[gearSlot][stat] - 1;
+      });
+    });
+
+    console.log(totalBonuses);
+
+    return totalBonuses;
+  }
+
+  //TODO: Add more possible interfaces to equipment
+  public calculateBonusesFromEquipment(equipment: IWeapon, selectedWeaponSkill?: string): IBonus[] {
+    const weaponSkillEnums = [weaponSkillStr.Axe, weaponSkillStr.Sword, weaponSkillStr.Mace, weaponSkillStr.Stave, weaponSkillStr.Spear, weaponSkillStr.Chain];
+    const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
+    let multiplierBonus: IBonus = { ...this.globalService.multiplierBonus };
+    let additiveBonus: IBonus = { ...this.globalService.additiveBonus };
 
     equipment.bonuses.forEach((bonus) => {
-      //* Check if the bonus is a weapon skill bonus and if the selected weapon skill is the same as the bonus type
-      if (selectedWeaponSkill) {
-        if (
-          bonus.type.toLowerCase() === 'axe' ||
-          bonus.type.toLowerCase() === 'sword' ||
-          bonus.type.toLowerCase() === 'mace' ||
-          bonus.type.toLowerCase() === 'stave' ||
-          bonus.type.toLowerCase() === 'spear' ||
-          bonus.type.toLowerCase() === 'chain'
-        ) {
-          if (bonus.type.toLowerCase() === 'axe' && selectedWeaponSkill === weaponSkillStr.Axe) {
-            bonusToAdd.weaponSkill += bonus.additive;
+      if (bonus.additive !== undefined) {
+        if (selectedWeaponSkill) {
+          const index = weaponSkillTypes.findIndex((type) => type.toLowerCase() === bonus.type.toLowerCase());
+          if (index !== -1 && selectedWeaponSkill === weaponSkillEnums[index]) {
+            additiveBonus.weaponSkill += bonus.additive;
           }
-          if (bonus.type.toLowerCase() === 'sword' && selectedWeaponSkill === weaponSkillStr.Sword) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'mace' && selectedWeaponSkill === weaponSkillStr.Mace) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'stave' && selectedWeaponSkill === weaponSkillStr.Stave) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'spear' && selectedWeaponSkill === weaponSkillStr.Spear) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
-          if (bonus.type.toLowerCase() === 'chain' && selectedWeaponSkill === weaponSkillStr.Chain) {
-            bonusToAdd.weaponSkill += bonus.additive;
-          }
+        }
+
+        switch (bonus.type.toLowerCase()) {
+          case 'stamina':
+            additiveBonus.stamina += bonus.additive;
+            break;
+          case 'strength':
+            additiveBonus.strength += bonus.additive;
+            break;
+          case 'endurance':
+            additiveBonus.endurance += bonus.additive;
+            break;
+          case 'initiative':
+            additiveBonus.initiative += bonus.additive;
+            break;
+          case 'dodge':
+            additiveBonus.dodge += bonus.additive;
+            break;
+          case 'learningcapacity':
+            additiveBonus.learningCapacity += bonus.additive;
+            break;
+          case 'luck':
+            additiveBonus.luck += bonus.additive;
+            break;
+          case 'discipline':
+            additiveBonus.discipline += bonus.additive;
+            break;
+          case 'shield':
+            additiveBonus.shield += bonus.additive;
+            break;
+          default:
+            break;
         }
       }
 
-      //* Add the bonus to the bonusToAdd object
-      switch (bonus.type.toLowerCase()) {
-        case 'stamina': {
-          bonusToAdd.stamina += bonus.additive;
-          break;
+      if (bonus.multiplier !== undefined) {
+        if (selectedWeaponSkill) {
+          const index = weaponSkillTypes.findIndex((type) => type.toLowerCase() === bonus.type.toLowerCase());
+          if (index !== -1 && selectedWeaponSkill === weaponSkillEnums[index]) {
+            multiplierBonus.weaponSkill += bonus.multiplier - 1;
+          }
         }
-        case 'strength': {
-          bonusToAdd.strength += bonus.additive;
-          break;
-        }
-        case 'endurance': {
-          bonusToAdd.endurance += bonus.additive;
-          break;
-        }
-        case 'initiative': {
-          bonusToAdd.initiative += bonus.additive;
-          break;
-        }
-        case 'dodge': {
-          bonusToAdd.dodge += bonus.additive;
-          break;
-        }
-        case 'learningcapacity': {
-          bonusToAdd.learningCapacity += bonus.additive;
-          break;
-        }
-        case 'luck': {
-          bonusToAdd.luck += bonus.additive;
-          break;
-        }
-        case 'discipline': {
-          bonusToAdd.discipline += bonus.additive;
-          break;
-        }
-        case 'shield': {
-          bonusToAdd.shield += bonus.additive;
-          break;
-        }
-        default: {
-          break;
+
+        switch (bonus.type.toLowerCase()) {
+          case 'stamina':
+            multiplierBonus.stamina += bonus.multiplier - 1;
+            break;
+          case 'strength':
+            multiplierBonus.strength += bonus.multiplier - 1;
+            break;
+          case 'endurance':
+            multiplierBonus.endurance += bonus.multiplier - 1;
+            break;
+          case 'initiative':
+            multiplierBonus.initiative += bonus.multiplier - 1;
+            break;
+          case 'dodge':
+            multiplierBonus.dodge += bonus.multiplier - 1;
+            break;
+          case 'learningcapacity':
+            multiplierBonus.learningCapacity += bonus.multiplier - 1;
+            break;
+          case 'luck':
+            multiplierBonus.luck += bonus.multiplier - 1;
+            break;
+          case 'discipline':
+            multiplierBonus.discipline += bonus.multiplier - 1;
+            break;
+          case 'shield':
+            multiplierBonus.shield += bonus.multiplier - 1;
+            break;
+          default:
+            break;
         }
       }
     });
 
-    return bonusToAdd;
+    return [additiveBonus, multiplierBonus];
   }
 }

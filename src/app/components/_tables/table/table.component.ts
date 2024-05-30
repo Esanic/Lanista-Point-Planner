@@ -194,11 +194,18 @@ export class TableComponent implements OnInit, OnDestroy {
     let total = 0;
 
     Object.entries(rowThatChanged).forEach((attribute: any[]) => {
+      // If the attribute value is empty, then set it to 0 to avoid NaN
+      if (attribute[1] === '') {
+        control.patchValue({ [attribute[0]]: 0 }, { emitEvent: false, onlySelf: true });
+        attribute[1] = 0;
+      }
+      // If the attribute key is not 'level' or 'placedPoints', then add the value to the total
       if (attribute[0] !== 'level' && attribute[0] !== 'placedPoints') {
         total += parseInt(attribute[1]);
       }
     });
 
+    // Set the total to the 'placedPoints' attribute
     control.patchValue({ placedPoints: total }, { emitEvent: false, onlySelf: true });
   }
 
@@ -270,6 +277,11 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.totalPlacedPoints = Object.values(this.total).reduce((acc, curr) => acc + curr, 0);
+
+    const multiplierBonuses = this.armoryService.getBonusesMultiplier();
+    Object.keys(this.totalWithRaceBonus).forEach((key) => {
+      this.totalWithRaceBonus[key] = Math.round(this.totalWithRaceBonus[key] * multiplierBonuses[key]);
+    });
 
     const bonuses = this.armoryService.getBonusesAdditive();
     Object.keys(this.totalWithRaceBonus).forEach((key) => {

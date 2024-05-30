@@ -14,5 +14,6 @@ export interface IWeapon {
 
 export interface IWeaponBonus {
   type: string;
-  additive: number;
+  additive?: number;
+  multiplier?: number;
 }
