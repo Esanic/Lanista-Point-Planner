@@ -14,6 +14,6 @@ export enum weaponSkillStr {
   Mace = 'Hammare',
   Stave = 'Stav',
   Shield = 'Sköld',
-  Spear = 'Stickvapen',
+  Spear = 'Stick',
   Chain = 'Kätting',
 }

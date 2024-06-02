@@ -8,7 +8,7 @@ import { IRace } from './support/interfaces/race';
 import { DesktopViewComponent } from './components/_views/desktop-view/desktop-view.component';
 import { MobileViewComponent } from './components/_views/mobile-view/mobile-view.component';
 import { TabletViewComponent } from './components/_views/tablet-view/tablet-view.component';
-import { IWeapon } from './support/interfaces/weapon';
+import { IWeapon } from './support/interfaces/_armory/weapon';
 
 @Component({
   selector: 'app-root',

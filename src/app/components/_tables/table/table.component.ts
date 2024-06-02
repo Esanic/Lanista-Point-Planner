@@ -379,7 +379,7 @@ export class TableComponent implements OnInit, OnDestroy {
         case 'Stav':
           this.weaponSkillMultiplier = this.race.weaponSkills.stave;
           break;
-        case 'Stickvapen':
+        case 'Stick':
           this.weaponSkillMultiplier = this.race.weaponSkills.spear;
           break;
         case 'Kätting':

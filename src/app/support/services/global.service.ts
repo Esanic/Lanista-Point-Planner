@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { IRace } from '../interfaces/race';
 import { weaponSkillsNum } from '../enums/weapon-skills.enums';
-import { IWeapon } from '../interfaces/weapon';
-import { IBonus, IEquipmentBonus } from '../interfaces/bonus';
+import { IWeapon } from '../interfaces/_armory/weapon';
+import { IBonus } from '../interfaces/_armory/bonus';
 import { ITotal } from '../interfaces/total';
+import { IEquipmentBonus } from '../interfaces/_armory/equipmentBonus';
 
 @Injectable({
   providedIn: 'root',
@@ -84,7 +85,7 @@ export class GlobalService {
   public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.troll, this.goblin, this.undead, this.salamanth];
 
   public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'INL', 'Tur', 'DISC', 'Utplacerade Poäng'];
-  public weaponSkills: string[] = ['Yxa', 'Svärd', 'Hammare', 'Stav', 'Stickvapen', 'Kätting'];
+  public weaponSkills: string[] = ['Yxa', 'Svärd', 'Hammare', 'Stav', 'Stick', 'Kätting'];
   public WeaponSkills: number[] = [weaponSkillsNum.Axe, weaponSkillsNum.Sword, weaponSkillsNum.Mace, weaponSkillsNum.Stave, weaponSkillsNum.Shield, weaponSkillsNum.Spear, weaponSkillsNum.Chain];
 
   public axe: IWeapon[] = [];
@@ -539,7 +540,7 @@ export class GlobalService {
       case 'Sköld': {
         return Math.round((race.weaponSkills.shield - 1) * 100);
       }
-      case 'Stickvapen': {
+      case 'Stick': {
         return Math.round((race.weaponSkills.spear - 1) * 100);
       }
       case 'Kätting': {

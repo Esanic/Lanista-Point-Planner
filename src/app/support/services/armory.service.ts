@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { IBonus, IEquipmentBonus, ITotalBonus } from '../interfaces/bonus';
-import { IWeapon } from '../interfaces/weapon';
+import { IBonus, ITotalBonus } from '../interfaces/_armory/bonus';
+import { IWeapon } from '../interfaces/_armory/weapon';
 import { weaponSkillStr } from '../enums/weapon-skills.enums';
 import { GlobalService } from './global.service';
+import { IEquipmentBonus } from '../interfaces/_armory/equipmentBonus';
 
 @Injectable({
   providedIn: 'root',
