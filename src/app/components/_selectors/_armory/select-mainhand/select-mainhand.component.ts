@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BuildService } from '../../../support/services/build.service';
+import { BuildService } from '../../../../support/services/build.service';
 import { Subscription } from 'rxjs';
-import { IWeapon } from '../../../support/interfaces/_armory/weapon';
-import { GlobalService } from '../../../support/services/global.service';
-import { ArmoryService } from '../../../support/services/armory.service';
-import { weaponSkillStr } from '../../../support/enums/weapon-skills.enums';
+import { IWeapon } from '../../../../support/interfaces/_armory/weapon';
+import { GlobalService } from '../../../../support/services/global.service';
+import { ArmoryService } from '../../../../support/services/armory.service';
+import { weaponSkillStr } from '../../../../support/enums/weapon-skills.enums';
 import { main } from '@popperjs/core';
-import { IBonus, ITotalBonus } from '../../../support/interfaces/_armory/bonus';
+import { IBonus, ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 
 @Component({
   selector: 'app-select-mainhand',

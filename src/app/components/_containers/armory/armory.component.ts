@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SelectMainhandComponent } from '../../_selectors/select-mainhand/select-mainhand.component';
+import { SelectMainhandComponent } from '../../_selectors/_armory/select-mainhand/select-mainhand.component';
 import { LegendEquipmentSwitchComponent } from '../../_switch/legend-equipment-switch/legend-equipment-switch.component';
 
 @Component({
