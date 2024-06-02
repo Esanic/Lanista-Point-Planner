@@ -29,3 +29,8 @@ export interface IEquipmentBonus {
   trinket: IBonus;
   [key: string]: IBonus;
 }
+
+export interface ITotalBonus {
+  additiveBonus: IBonus;
+  multiplierBonus: IBonus;
+}

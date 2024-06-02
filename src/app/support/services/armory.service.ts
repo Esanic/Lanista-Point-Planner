@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { IBonus, IEquipmentBonus } from '../interfaces/bonus';
+import { IBonus, IEquipmentBonus, ITotalBonus } from '../interfaces/bonus';
 import { IWeapon } from '../interfaces/weapon';
 import { weaponSkillStr } from '../enums/weapon-skills.enums';
 import { GlobalService } from './global.service';
@@ -35,11 +35,11 @@ export class ArmoryService {
   }
 
   //Adds bonuses to the correct equipment slot
-  public addBonus(gearSlot: string, bonusesToAdd: IBonus[]): void {
+  public addBonus(gearSlot: string, bonusesToAdd: ITotalBonus): void {
     if (gearSlot === 'mainhand') {
       //? Should this be typed better?
-      this.equipmentBonusesAdditive.mainhand = bonusesToAdd[0];
-      this.equipmentBonusesMultiplier.mainhand = bonusesToAdd[1];
+      this.equipmentBonusesAdditive.mainhand = bonusesToAdd.additiveBonus;
+      this.equipmentBonusesMultiplier.mainhand = bonusesToAdd.multiplierBonus;
     }
     if (gearSlot === 'offhand') {
       // this.equipmentBonusesAdditive.offhand = additiveBonusesToAdd;
@@ -76,7 +76,7 @@ export class ArmoryService {
   }
 
   //TODO: Add more possible interfaces to equipment
-  public calculateBonusesFromEquipment(equipment: IWeapon, selectedWeaponSkill?: string): IBonus[] {
+  public calculateBonusesFromEquipment(equipment: IWeapon, selectedWeaponSkill?: string): ITotalBonus {
     const weaponSkillEnums = [weaponSkillStr.Axe, weaponSkillStr.Sword, weaponSkillStr.Mace, weaponSkillStr.Stave, weaponSkillStr.Spear, weaponSkillStr.Chain];
     const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
     let multiplierBonus: IBonus = { ...this.globalService.multiplierBonus };
@@ -166,6 +166,6 @@ export class ArmoryService {
       }
     });
 
-    return [additiveBonus, multiplierBonus];
+    return { additiveBonus, multiplierBonus };
   }
 }

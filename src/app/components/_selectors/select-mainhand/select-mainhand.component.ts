@@ -7,7 +7,7 @@ import { GlobalService } from '../../../support/services/global.service';
 import { ArmoryService } from '../../../support/services/armory.service';
 import { weaponSkillStr } from '../../../support/enums/weapon-skills.enums';
 import { main } from '@popperjs/core';
-import { IBonus } from '../../../support/interfaces/bonus';
+import { IBonus, ITotalBonus } from '../../../support/interfaces/bonus';
 
 @Component({
   selector: 'app-select-mainhand',
@@ -50,7 +50,7 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
     this.chosenMainhand.valueChanges.subscribe((mainhand) => {
       const chosenWeapon = this.weaponArray.find((weapon) => weapon.name === mainhand);
 
-      const bonusToAdd: IBonus[] = chosenWeapon ? this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill) : ([{}, {}] as IBonus[]);
+      const bonusToAdd: ITotalBonus = chosenWeapon ? this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill) : ({} as ITotalBonus);
 
       this.armoryService.addBonus('mainhand', bonusToAdd);
       this.armoryService.emitBonusesHaveBeenAdded({});

@@ -194,18 +194,18 @@ export class TableComponent implements OnInit, OnDestroy {
     let total = 0;
 
     Object.entries(rowThatChanged).forEach((attribute: any[]) => {
-      // If the attribute value is empty, then set it to 0 to avoid NaN
+      //* If the attribute value is empty, then set it to 0 to avoid NaN
       if (attribute[1] === '') {
         control.patchValue({ [attribute[0]]: 0 }, { emitEvent: false, onlySelf: true });
         attribute[1] = 0;
       }
-      // If the attribute key is not 'level' or 'placedPoints', then add the value to the total
+      //* If the attribute key is not 'level' or 'placedPoints', then add the value to the total
       if (attribute[0] !== 'level' && attribute[0] !== 'placedPoints') {
         total += parseInt(attribute[1]);
       }
     });
 
-    // Set the total to the 'placedPoints' attribute
+    //* Set the total to the 'placedPoints' attribute
     control.patchValue({ placedPoints: total }, { emitEvent: false, onlySelf: true });
   }
 
@@ -278,16 +278,25 @@ export class TableComponent implements OnInit, OnDestroy {
 
     this.totalPlacedPoints = Object.values(this.total).reduce((acc, curr) => acc + curr, 0);
 
+    //! Use this if +% from equipment is applied after racial bonus
+    // const multiplierBonuses = this.armoryService.getBonusesMultiplier();
+    // Object.keys(this.totalWithRaceBonus).forEach((key) => {
+    //   this.totalWithRaceBonus[key] = Math.round(this.totalWithRaceBonus[key] * multiplierBonuses[key]);
+    // });
+
+    //! Use this if racial bonus is applied after the multiplier bonus from equipment
     const multiplierBonuses = this.armoryService.getBonusesMultiplier();
-    Object.keys(this.totalWithRaceBonus).forEach((key) => {
-      this.totalWithRaceBonus[key] = Math.round(this.totalWithRaceBonus[key] * multiplierBonuses[key]);
+    Object.keys(this.total).forEach((key) => {
+      this.totalWithRaceBonus[key] = Math.round(this.total[key] * multiplierBonuses[key] + (this.totalWithRaceBonus[key] - this.total[key]));
     });
 
+    //* Add the additive bonuses from equipment
     const bonuses = this.armoryService.getBonusesAdditive();
     Object.keys(this.totalWithRaceBonus).forEach((key) => {
       this.totalWithRaceBonus[key] += bonuses[key];
     });
 
+    //* Calculate the total placed points with bonuses applied
     this.totalWithRaceBonusPlacedPoints = Object.values(this.totalWithRaceBonus).reduce((acc, curr) => acc + curr, 0);
   }
 
