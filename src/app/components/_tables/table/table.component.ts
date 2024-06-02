@@ -187,7 +187,7 @@ export class TableComponent implements OnInit, OnDestroy {
         this.summarizeEachColumn();
       });
     });
-    this.setCurrentPoints();
+    // this.setCurrentPoints();
   }
 
   private summarizeEachRow(rowThatChanged: any, control: AbstractControl): void {
@@ -298,6 +298,8 @@ export class TableComponent implements OnInit, OnDestroy {
 
     //* Calculate the total placed points with bonuses applied
     this.totalWithRaceBonusPlacedPoints = Object.values(this.totalWithRaceBonus).reduce((acc, curr) => acc + curr, 0);
+
+    this.setCurrentPoints();
   }
 
   private addLevel(level: ILevel): FormGroup {
@@ -389,19 +391,19 @@ export class TableComponent implements OnInit, OnDestroy {
   private setCurrentPoints(): void {
     let arrOfLevels: ILevel[] = [];
     this.tableFormArr.controls.forEach((control) => {
-      let level = {
-        level: control.value.level,
-        stamina: control.value.stamina,
-        strength: control.value.strength,
-        endurance: control.value.endurance,
-        initiative: control.value.initiative,
-        dodge: control.value.dodge,
-        weaponSkill: control.value.weaponSkill,
-        shield: control.value.shield,
-        learningCapacity: control.value.learningCapacity,
-        luck: control.value.luck,
-        discipline: control.value.discipline,
-        placedPoints: control.value.placedPoints,
+      const level = {
+        level: Number(control.value.level),
+        stamina: Number(control.value.stamina),
+        strength: Number(control.value.strength),
+        endurance: Number(control.value.endurance),
+        initiative: Number(control.value.initiative),
+        dodge: Number(control.value.dodge),
+        weaponSkill: Number(control.value.weaponSkill),
+        shield: Number(control.value.shield),
+        learningCapacity: Number(control.value.learningCapacity),
+        luck: Number(control.value.luck),
+        discipline: Number(control.value.discipline),
+        placedPoints: Number(control.value.placedPoints),
       };
       arrOfLevels.push(level);
     });
