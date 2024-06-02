@@ -4,7 +4,7 @@ import { IBonus, ITotalBonus } from '../interfaces/_armory/bonus';
 import { IWeapon } from '../interfaces/_armory/weapon';
 import { weaponSkillStr } from '../enums/weapon-skills.enums';
 import { GlobalService } from './global.service';
-import { IEquipmentBonus } from '../interfaces/_armory/equipmentBonus';
+import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +14,8 @@ export class ArmoryService {
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
-  private equipmentBonusesAdditive: IEquipmentBonus = this.globalService.equipmentBonusesAdditive;
-  private equipmentBonusesMultiplier: IEquipmentBonus = this.globalService.equipmentBonusesMultiplier;
+  private equipmentBonusesAdditive: IEquipmentBonusSlots = this.globalService.equipmentBonusesAdditive;
+  private equipmentBonusesMultiplier: IEquipmentBonusSlots = this.globalService.equipmentBonusesMultiplier;
 
   constructor(private globalService: GlobalService) {}
 

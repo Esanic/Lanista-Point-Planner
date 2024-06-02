@@ -1,6 +1,6 @@
 import { IBonus } from './bonus';
 
-export interface IEquipmentBonus {
+export interface IEquipmentBonusSlots {
   mainhand: IBonus;
   offhand: IBonus;
   head: IBonus;

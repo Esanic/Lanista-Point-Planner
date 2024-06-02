@@ -4,7 +4,7 @@ import { weaponSkillsNum } from '../enums/weapon-skills.enums';
 import { IWeapon } from '../interfaces/_armory/weapon';
 import { IBonus } from '../interfaces/_armory/bonus';
 import { ITotal } from '../interfaces/total';
-import { IEquipmentBonus } from '../interfaces/_armory/equipmentBonus';
+import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
 
 @Injectable({
   providedIn: 'root',
@@ -122,7 +122,7 @@ export class GlobalService {
     discipline: 0,
   };
 
-  public equipmentBonusesAdditive: IEquipmentBonus = {
+  public equipmentBonusesAdditive: IEquipmentBonusSlots = {
     mainhand: {
       stamina: 0,
       strength: 0,
@@ -293,7 +293,7 @@ export class GlobalService {
     },
   };
 
-  public equipmentBonusesMultiplier: IEquipmentBonus = {
+  public equipmentBonusesMultiplier: IEquipmentBonusSlots = {
     mainhand: {
       stamina: 1,
       strength: 1,
