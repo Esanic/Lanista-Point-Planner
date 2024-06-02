@@ -65,12 +65,9 @@ export class ArmoryService {
 
     Object.keys(totalBonuses).forEach((stat) => {
       Object.keys(this.equipmentBonusesMultiplier).forEach((gearSlot) => {
-        console.log(this.equipmentBonusesMultiplier[gearSlot][stat]);
         totalBonuses[stat] += this.equipmentBonusesMultiplier[gearSlot][stat] - 1;
       });
     });
-
-    console.log(totalBonuses);
 
     return totalBonuses;
   }
