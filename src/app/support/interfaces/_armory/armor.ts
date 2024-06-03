@@ -1,6 +1,6 @@
 import { IEquipmentBonus } from './bonus';
 
-export interface IWeapon {
+export interface IArmor {
   id: number;
   name: string;
   type: number;

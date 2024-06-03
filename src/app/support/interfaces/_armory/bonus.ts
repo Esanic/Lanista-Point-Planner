@@ -16,3 +16,9 @@ export interface ITotalBonus {
   additiveBonus: IBonus;
   multiplierBonus: IBonus;
 }
+
+export interface IEquipmentBonus {
+  type: string;
+  additive?: number;
+  multiplier?: number;
+}

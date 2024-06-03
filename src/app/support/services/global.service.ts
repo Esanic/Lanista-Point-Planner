@@ -5,6 +5,7 @@ import { IWeapon } from '../interfaces/_armory/weapon';
 import { IBonus } from '../interfaces/_armory/bonus';
 import { ITotal } from '../interfaces/total';
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
+import { IArmor } from '../interfaces/_armory/armor';
 
 @Injectable({
   providedIn: 'root',
@@ -95,6 +96,13 @@ export class GlobalService {
   public shield: IWeapon[] = [];
   public spear: IWeapon[] = [];
   public chain: IWeapon[] = [];
+
+  public head: IArmor[] = [];
+  public shoulders: IArmor[] = [];
+  public chest: IArmor[] = [];
+  public gloves: IArmor[] = [];
+  public legs: IArmor[] = [];
+  public boots: IArmor[] = [];
 
   public total: ITotal = {
     stamina: 0,

@@ -9,6 +9,8 @@ import { DesktopViewComponent } from './components/_views/desktop-view/desktop-v
 import { MobileViewComponent } from './components/_views/mobile-view/mobile-view.component';
 import { TabletViewComponent } from './components/_views/tablet-view/tablet-view.component';
 import { IWeapon } from './support/interfaces/_armory/weapon';
+import { IArmor } from './support/interfaces/_armory/armor';
+import { armorSlots } from './support/enums/armor.enums';
 
 @Component({
   selector: 'app-root',
@@ -61,6 +63,17 @@ export class AppComponent implements OnInit {
 
         weapons.forEach((weapon: IWeapon) => {
           this.assignWeaponToArray(weapon);
+        });
+      },
+      error: (err) => {},
+    });
+
+    this.apiService.getArmors().subscribe({
+      next: (res) => {
+        const armors: IArmor[] = res;
+
+        armors.forEach((armor: IArmor) => {
+          this.assignArmorToArray(armor);
         });
       },
       error: (err) => {},
@@ -118,6 +131,35 @@ export class AppComponent implements OnInit {
       }
       case weaponSkillsNum.Chain: {
         this.globalService.chain.push(weapon);
+        break;
+      }
+    }
+  }
+
+  private assignArmorToArray(armor: IArmor): void {
+    switch (armor.type) {
+      case armorSlots.Head: {
+        this.globalService.head.push(armor);
+        break;
+      }
+      case armorSlots.Shoulders: {
+        this.globalService.shoulders.push(armor);
+        break;
+      }
+      case armorSlots.Chest: {
+        this.globalService.chest.push(armor);
+        break;
+      }
+      case armorSlots.Hands: {
+        this.globalService.gloves.push(armor);
+        break;
+      }
+      case armorSlots.Legs: {
+        this.globalService.legs.push(armor);
+        break;
+      }
+      case armorSlots.Feet: {
+        this.globalService.boots.push(armor);
         break;
       }
     }
