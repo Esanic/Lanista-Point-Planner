@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { SelectMainhandComponent } from '../../_selectors/_armory/select-mainhand/select-mainhand.component';
+import { SelectMainhandComponent } from '../../_selectors/_armory/_weapons/select-mainhand/select-mainhand.component';
 import { LegendEquipmentSwitchComponent } from '../../_switch/legend-equipment-switch/legend-equipment-switch.component';
-import { SelectOffhandComponent } from '../../_selectors/_armory/select-offhand/select-offhand.component';
+import { SelectOffhandComponent } from '../../_selectors/_armory/_weapons/select-offhand/select-offhand.component';
 
 @Component({
   selector: 'app-armory',

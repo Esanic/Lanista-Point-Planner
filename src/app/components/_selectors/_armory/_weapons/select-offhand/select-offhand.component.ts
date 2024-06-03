@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { weaponSkillStr } from '../../../../support/enums/weapon-skills.enums';
-import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
-import { IWeapon } from '../../../../support/interfaces/_armory/weapon';
-import { ArmoryService } from '../../../../support/services/armory.service';
-import { BuildService } from '../../../../support/services/build.service';
-import { GlobalService } from '../../../../support/services/global.service';
-import { additiveBonus, multiplierBonus } from '../../../../support/constants/bonuses';
+import { weaponSkillStr } from '../../../../../support/enums/weapon-skills.enums';
+import { ITotalBonus } from '../../../../../support/interfaces/_armory/bonus';
+import { IWeapon } from '../../../../../support/interfaces/_armory/weapon';
+import { ArmoryService } from '../../../../../support/services/armory.service';
+import { BuildService } from '../../../../../support/services/build.service';
+import { GlobalService } from '../../../../../support/services/global.service';
+import { additiveBonus, multiplierBonus } from '../../../../../support/constants/bonuses';
 
 @Component({
   selector: 'app-select-offhand',
