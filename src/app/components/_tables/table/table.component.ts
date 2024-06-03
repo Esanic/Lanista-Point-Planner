@@ -33,9 +33,10 @@ export class TableComponent implements OnInit, OnDestroy {
 
   public total = this.globalService.total;
   public totalPlacedPoints = 0;
-  public totalWithRaceBonus = this.globalService.totalWithRaceBonus;
-  public totalWithRaceBonusPlacedPoints = 0;
-  private totals: any[] = [this.total, this.totalWithRaceBonus];
+  public totalWithBonuses = this.globalService.totalWithRaceBonus;
+  public totalWithBonusesPlacedPoints = 0;
+
+  private shieldBuild: boolean = false;
 
   Object = Object;
 
@@ -184,10 +185,11 @@ export class TableComponent implements OnInit, OnDestroy {
     this.tableFormArr.controls.forEach((control) => {
       control.valueChanges.pipe(debounceTime(200)).subscribe((rowThatChanged) => {
         this.summarizeEachRow(rowThatChanged, control);
-        this.summarizeEachColumn();
+        this.summarizeEachColumn().then(() => {
+          this.setCurrentPoints();
+        });
       });
     });
-    // this.setCurrentPoints();
   }
 
   private summarizeEachRow(rowThatChanged: any, control: AbstractControl): void {
@@ -209,97 +211,110 @@ export class TableComponent implements OnInit, OnDestroy {
     control.patchValue({ placedPoints: total }, { emitEvent: false, onlySelf: true });
   }
 
-  private summarizeEachColumn(): void {
-    this.total = { ...this.globalService.total };
-    this.totalWithRaceBonus = { ...this.globalService.totalWithRaceBonus };
+  private summarizeEachColumn(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.total = { ...this.globalService.total };
+      this.totalWithBonuses = { ...this.globalService.totalWithRaceBonus };
 
-    this.tableFormArr.controls.forEach((level) => {
-      Object.entries(level.value).forEach((attribute: any[]) => {
-        switch (attribute[0]) {
-          case 'stamina':
-            this.total.stamina += Math.round(parseInt(attribute[1]));
-            this.race.stats
-              ? (this.totalWithRaceBonus.stamina += Math.round(parseInt(attribute[1]) * this.race.stats.stamina))
-              : (this.totalWithRaceBonus.stamina += Math.round(parseInt(attribute[1])));
-            break;
-          case 'strength':
-            this.total.strength += Math.round(parseInt(attribute[1]));
-            this.race.stats
-              ? (this.totalWithRaceBonus.strength += Math.round(parseInt(attribute[1]) * this.race.stats.strength))
-              : (this.totalWithRaceBonus.strength += Math.round(parseInt(attribute[1])));
-            break;
-          case 'endurance':
-            this.total.endurance += Math.round(parseInt(attribute[1]));
-            this.race.stats
-              ? (this.totalWithRaceBonus.endurance += Math.round(parseInt(attribute[1]) * this.race.stats.endurance))
-              : (this.totalWithRaceBonus.endurance += Math.round(parseInt(attribute[1])));
-            break;
-          case 'initiative':
-            this.total.initiative += Math.round(parseInt(attribute[1]));
-            this.race.stats
-              ? (this.totalWithRaceBonus.initiative += Math.round(parseInt(attribute[1]) * this.race.stats.initiative))
-              : (this.totalWithRaceBonus.initiative += Math.round(parseInt(attribute[1])));
-            break;
-          case 'dodge':
-            this.total.dodge += Math.round(parseInt(attribute[1]));
-            this.race.stats ? (this.totalWithRaceBonus.dodge += Math.round(parseInt(attribute[1]) * this.race.stats.dodge)) : (this.totalWithRaceBonus.dodge += Math.round(parseInt(attribute[1])));
-            break;
-          case 'learningCapacity':
-            this.total.learningCapacity += Math.round(parseInt(attribute[1]));
-            this.race.stats
-              ? (this.totalWithRaceBonus.learningCapacity += Math.round(parseInt(attribute[1]) * this.race.stats.learningCapacity))
-              : (this.totalWithRaceBonus.learningCapacity += Math.round(parseInt(attribute[1])));
-            break;
-          case 'luck':
-            this.total.luck += Math.round(parseInt(attribute[1]));
-            this.race.stats ? (this.totalWithRaceBonus.luck += Math.round(parseInt(attribute[1]) * this.race.stats.luck)) : (this.totalWithRaceBonus.luck += Math.round(parseInt(attribute[1])));
-            break;
-          case 'discipline':
-            this.total.discipline += Math.round(parseInt(attribute[1]));
-            this.race.stats
-              ? (this.totalWithRaceBonus.discipline += Math.round(parseInt(attribute[1]) * this.race.stats.discipline))
-              : (this.totalWithRaceBonus.discipline += Math.round(parseInt(attribute[1])));
-            break;
-          case 'weaponSkill':
-            this.total.weaponSkill += Math.round(parseInt(attribute[1]));
-            this.race.stats
-              ? (this.totalWithRaceBonus.weaponSkill += Math.round(parseInt(attribute[1]) * this.weaponSkillMultiplier))
-              : (this.totalWithRaceBonus.weaponSkill += Math.round(parseInt(attribute[1])));
-            break;
-          case 'shield':
-            this.total.shield += Math.round(parseInt(attribute[1]));
-            this.race.stats
-              ? (this.totalWithRaceBonus.shield += Math.round(parseInt(attribute[1]) * this.race.weaponSkills.shield))
-              : (this.totalWithRaceBonus.shield += Math.round(parseInt(attribute[1])));
-            break;
-        }
+      this.tableFormArr.controls.forEach((level) => {
+        Object.entries(level.value).forEach((attribute: any[]) => {
+          switch (attribute[0]) {
+            case 'stamina':
+              this.total.stamina += Math.round(parseInt(attribute[1]));
+              this.race.stats ? (this.totalWithBonuses.stamina += Math.round(parseInt(attribute[1]) * this.race.stats.stamina)) : (this.totalWithBonuses.stamina += Math.round(parseInt(attribute[1])));
+              break;
+            case 'strength':
+              this.total.strength += Math.round(parseInt(attribute[1]));
+              this.race.stats
+                ? (this.totalWithBonuses.strength += Math.round(parseInt(attribute[1]) * this.race.stats.strength))
+                : (this.totalWithBonuses.strength += Math.round(parseInt(attribute[1])));
+              break;
+            case 'endurance':
+              this.total.endurance += Math.round(parseInt(attribute[1]));
+              this.race.stats
+                ? (this.totalWithBonuses.endurance += Math.round(parseInt(attribute[1]) * this.race.stats.endurance))
+                : (this.totalWithBonuses.endurance += Math.round(parseInt(attribute[1])));
+              break;
+            case 'initiative':
+              this.total.initiative += Math.round(parseInt(attribute[1]));
+              this.race.stats
+                ? (this.totalWithBonuses.initiative += Math.round(parseInt(attribute[1]) * this.race.stats.initiative))
+                : (this.totalWithBonuses.initiative += Math.round(parseInt(attribute[1])));
+              break;
+            case 'dodge':
+              this.total.dodge += Math.round(parseInt(attribute[1]));
+              this.race.stats ? (this.totalWithBonuses.dodge += Math.round(parseInt(attribute[1]) * this.race.stats.dodge)) : (this.totalWithBonuses.dodge += Math.round(parseInt(attribute[1])));
+              break;
+            case 'learningCapacity':
+              this.total.learningCapacity += Math.round(parseInt(attribute[1]));
+              this.race.stats
+                ? (this.totalWithBonuses.learningCapacity += Math.round(parseInt(attribute[1]) * this.race.stats.learningCapacity))
+                : (this.totalWithBonuses.learningCapacity += Math.round(parseInt(attribute[1])));
+              break;
+            case 'luck':
+              this.total.luck += Math.round(parseInt(attribute[1]));
+              this.race.stats ? (this.totalWithBonuses.luck += Math.round(parseInt(attribute[1]) * this.race.stats.luck)) : (this.totalWithBonuses.luck += Math.round(parseInt(attribute[1])));
+              break;
+            case 'discipline':
+              this.total.discipline += Math.round(parseInt(attribute[1]));
+              this.race.stats
+                ? (this.totalWithBonuses.discipline += Math.round(parseInt(attribute[1]) * this.race.stats.discipline))
+                : (this.totalWithBonuses.discipline += Math.round(parseInt(attribute[1])));
+              break;
+            case 'weaponSkill':
+              this.total.weaponSkill += Math.round(parseInt(attribute[1]));
+              this.race.stats
+                ? (this.totalWithBonuses.weaponSkill += Math.round(parseInt(attribute[1]) * this.weaponSkillMultiplier))
+                : (this.totalWithBonuses.weaponSkill += Math.round(parseInt(attribute[1])));
+              break;
+            case 'shield':
+              this.total.shield += Math.round(parseInt(attribute[1]));
+              this.race.stats
+                ? (this.totalWithBonuses.shield += Math.round(parseInt(attribute[1]) * this.race.weaponSkills.shield))
+                : (this.totalWithBonuses.shield += Math.round(parseInt(attribute[1])));
+              break;
+          }
+        });
       });
+
+      this.totalPlacedPoints = Object.values(this.total).reduce((acc, curr) => acc + curr, 0);
+
+      if (this.total.shield > 0) {
+        if (!this.shieldBuild) {
+          this.shieldBuild = true;
+          this.armoryService.emitShieldBuild(true);
+        }
+      }
+      if (this.total.shield === 0) {
+        if (this.shieldBuild) {
+          this.shieldBuild = false;
+          this.armoryService.emitShieldBuild(false);
+        }
+      }
+
+      //! Use this if +% from equipment is applied after racial bonus
+      // const multiplierBonuses = this.armoryService.getBonusesMultiplier();
+      // Object.keys(this.totalWithRaceBonus).forEach((key) => {
+      //   this.totalWithRaceBonus[key] = Math.round(this.totalWithRaceBonus[key] * multiplierBonuses[key]);
+      // });
+
+      //! Use this if racial bonus is applied after the multiplier bonus from equipment
+      const multiplierBonuses = this.armoryService.getBonusesMultiplier();
+      Object.keys(this.total).forEach((key) => {
+        this.totalWithBonuses[key] = Math.round(this.total[key] * multiplierBonuses[key] + (this.totalWithBonuses[key] - this.total[key]));
+      });
+
+      //* Add the additive bonuses from equipment
+      const bonuses = this.armoryService.getBonusesAdditive();
+      Object.keys(this.totalWithBonuses).forEach((key) => {
+        this.totalWithBonuses[key] += bonuses[key];
+      });
+
+      //* Calculate the total placed points with bonuses applied
+      this.totalWithBonusesPlacedPoints = Object.values(this.totalWithBonuses).reduce((acc, curr) => acc + curr, 0);
+
+      resolve();
     });
-
-    this.totalPlacedPoints = Object.values(this.total).reduce((acc, curr) => acc + curr, 0);
-
-    //! Use this if +% from equipment is applied after racial bonus
-    // const multiplierBonuses = this.armoryService.getBonusesMultiplier();
-    // Object.keys(this.totalWithRaceBonus).forEach((key) => {
-    //   this.totalWithRaceBonus[key] = Math.round(this.totalWithRaceBonus[key] * multiplierBonuses[key]);
-    // });
-
-    //! Use this if racial bonus is applied after the multiplier bonus from equipment
-    const multiplierBonuses = this.armoryService.getBonusesMultiplier();
-    Object.keys(this.total).forEach((key) => {
-      this.totalWithRaceBonus[key] = Math.round(this.total[key] * multiplierBonuses[key] + (this.totalWithRaceBonus[key] - this.total[key]));
-    });
-
-    //* Add the additive bonuses from equipment
-    const bonuses = this.armoryService.getBonusesAdditive();
-    Object.keys(this.totalWithRaceBonus).forEach((key) => {
-      this.totalWithRaceBonus[key] += bonuses[key];
-    });
-
-    //* Calculate the total placed points with bonuses applied
-    this.totalWithRaceBonusPlacedPoints = Object.values(this.totalWithRaceBonus).reduce((acc, curr) => acc + curr, 0);
-
-    this.setCurrentPoints();
   }
 
   private addLevel(level: ILevel): FormGroup {
@@ -414,21 +429,25 @@ export class TableComponent implements OnInit, OnDestroy {
       levels: arrOfLevels,
     };
 
-    this.buildService.setStatsFromTable(build);
     this.build = build;
+    this.buildService.setStatsFromTable(this.build);
   }
 
   private getImportedPoints(levels: any): void {
     this.addData(levels);
     this.subscribeToEachLevel();
-    this.summarizeEachColumn();
+    this.summarizeEachColumn().then(() => {
+      this.setCurrentPoints();
+    });
   }
 
   private wipeTable(): void {
     this.tableFormArr.clear();
     this.addData();
     this.subscribeToEachLevel();
-    this.summarizeEachColumn();
+    this.summarizeEachColumn().then(() => {
+      this.setCurrentPoints();
+    });
   }
 
   private wipeLevels(): void {

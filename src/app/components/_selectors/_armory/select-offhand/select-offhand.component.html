@@ -1,1 +1,6 @@
-<p>select-offhand works!</p>
+<label class="form-label" for="raceSelector">Sköldhand</label>
+<select class="form-select" name="raceSelector" [formControl]="chosenOffhand">
+  @for(weapon of weaponArray.value; track weapon){
+  <option [value]="weapon.name">{{ weapon.name }}</option>
+  }
+</select>

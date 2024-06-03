@@ -1,18 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BuildService } from '../../../../support/services/build.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { IWeapon } from '../../../../support/interfaces/_armory/weapon';
 import { GlobalService } from '../../../../support/services/global.service';
 import { ArmoryService } from '../../../../support/services/armory.service';
 import { weaponSkillStr } from '../../../../support/enums/weapon-skills.enums';
-import { main } from '@popperjs/core';
-import { IBonus, ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
+import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
+import { additiveBonus, multiplierBonus } from '../../../../support/constants/bonuses';
 
 @Component({
   selector: 'app-select-mainhand',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './select-mainhand.component.html',
   styleUrl: './select-mainhand.component.css',
 })
@@ -23,7 +23,7 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
   private selectedWeaponSkill: string = '';
   private currentMaxLevel: number = 25;
 
-  public weaponArray: IWeapon[] = [];
+  public weaponArray: BehaviorSubject<IWeapon[]> = new BehaviorSubject<IWeapon[]>([]);
 
   private chosenWeaponSkill$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
@@ -34,6 +34,7 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
       this.selectedWeaponSkill = weaponSkill.split(' ')[0];
+      this.chosenMainhand.patchValue('');
       this.selectWeaponArray(this.selectedWeaponSkill);
     });
 
@@ -43,17 +44,23 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
     });
 
     this.tableStats$ = this.buildService.getStatsFromTable().subscribe((stats) => {
-      this.currentMaxLevel = stats.levels.length;
-      this.selectWeaponArray(this.selectedWeaponSkill);
+      if (stats.levels) {
+        this.currentMaxLevel = stats.levels.length;
+        this.selectWeaponArray(this.selectedWeaponSkill);
+      }
     });
 
     this.chosenMainhand.valueChanges.subscribe((mainhand) => {
-      const chosenWeapon = this.weaponArray.find((weapon) => weapon.name === mainhand);
+      const chosenWeapon = this.weaponArray.value.find((weapon) => weapon.name === mainhand);
 
-      const bonusToAdd: ITotalBonus = chosenWeapon ? this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill) : ({} as ITotalBonus);
+      if (chosenWeapon) {
+        const bonusToAdd: ITotalBonus = chosenWeapon ? this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill) : ({} as ITotalBonus);
 
-      this.armoryService.addBonus('mainhand', bonusToAdd);
-      this.armoryService.emitBonusesHaveBeenAdded({});
+        this.armoryService.addBonus('mainhand', bonusToAdd);
+        this.armoryService.emitBonusesHaveBeenAdded({});
+      } else {
+        this.resetBonus();
+      }
     });
   }
 
@@ -63,32 +70,38 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
     this.tableStats$.unsubscribe();
   }
 
-  private selectWeaponArray(weaponSkill: string): void {
-    this.weaponArray = [];
+  private resetBonus(): void {
+    this.armoryService.addBonus('mainhand', {
+      additiveBonus: additiveBonus,
+      multiplierBonus: multiplierBonus,
+    });
+    this.armoryService.emitBonusesHaveBeenAdded({});
+  }
 
+  private selectWeaponArray(weaponSkill: string): void {
     switch (weaponSkill) {
       case weaponSkillStr.Axe: {
-        this.weaponArray = this.filterAndRenamedWeapons(this.globalService.axe);
+        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.axe));
         break;
       }
       case weaponSkillStr.Sword: {
-        this.weaponArray = this.filterAndRenamedWeapons(this.globalService.sword);
+        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.sword));
         break;
       }
       case weaponSkillStr.Mace: {
-        this.weaponArray = this.filterAndRenamedWeapons(this.globalService.mace);
+        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.mace));
         break;
       }
       case weaponSkillStr.Stave: {
-        this.weaponArray = this.filterAndRenamedWeapons(this.globalService.stave);
+        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.stave));
         break;
       }
       case weaponSkillStr.Spear: {
-        this.weaponArray = this.filterAndRenamedWeapons(this.globalService.spear);
+        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.spear));
         break;
       }
       case weaponSkillStr.Chain: {
-        this.weaponArray = this.filterAndRenamedWeapons(this.globalService.chain);
+        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.chain));
         break;
       }
     }

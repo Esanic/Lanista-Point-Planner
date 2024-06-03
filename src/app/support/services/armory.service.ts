@@ -11,6 +11,7 @@ import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
 })
 export class ArmoryService {
   private legendEquipment: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private shieldBuild: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
@@ -35,21 +36,29 @@ export class ArmoryService {
     return this.emitBonusAdded.asObservable();
   }
 
+  public emitShieldBuild(event: boolean): void {
+    this.shieldBuild.next(event);
+  }
+
+  public listenShieldBuild(): Observable<boolean> {
+    return this.shieldBuild.asObservable();
+  }
+
   //Adds bonuses to the correct equipment slot
   public addBonus(gearSlot: string, bonusesToAdd: ITotalBonus): void {
     if (gearSlot === 'mainhand') {
-      //? Should this be typed better?
       this.equipmentBonusesAdditive.mainhand = bonusesToAdd.additiveBonus;
       this.equipmentBonusesMultiplier.mainhand = bonusesToAdd.multiplierBonus;
     }
     if (gearSlot === 'offhand') {
-      // this.equipmentBonusesAdditive.offhand = additiveBonusesToAdd;
+      this.equipmentBonusesAdditive.offhand = bonusesToAdd.additiveBonus;
+      this.equipmentBonusesMultiplier.offhand = bonusesToAdd.multiplierBonus;
     }
   }
 
   //Returns the total additive bonuses from all equipment
   public getBonusesAdditive(): IBonus {
-    let totalBonuses: IBonus = { ...this.globalService.additiveBonus };
+    let totalBonuses: IBonus = { ...this.globalService.additiveBonusTemplate };
 
     Object.keys(totalBonuses).forEach((stat) => {
       Object.keys(this.equipmentBonusesAdditive).forEach((gearSlot) => {
@@ -62,7 +71,7 @@ export class ArmoryService {
 
   //Returns the total multiplicative bonuses from all equipment
   public getBonusesMultiplier(): IBonus {
-    let totalBonuses: IBonus = { ...this.globalService.multiplierBonus };
+    let totalBonuses: IBonus = { ...this.globalService.multiplierBonusTemplate };
 
     Object.keys(totalBonuses).forEach((stat) => {
       Object.keys(this.equipmentBonusesMultiplier).forEach((gearSlot) => {
@@ -77,8 +86,8 @@ export class ArmoryService {
   public calculateBonusesFromEquipment(equipment: IWeapon, selectedWeaponSkill?: string): ITotalBonus {
     const weaponSkillEnums = [weaponSkillStr.Axe, weaponSkillStr.Sword, weaponSkillStr.Mace, weaponSkillStr.Stave, weaponSkillStr.Spear, weaponSkillStr.Chain];
     const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
-    let multiplierBonus: IBonus = { ...this.globalService.multiplierBonus };
-    let additiveBonus: IBonus = { ...this.globalService.additiveBonus };
+    let multiplierBonus: IBonus = { ...this.globalService.multiplierBonusTemplate };
+    let additiveBonus: IBonus = { ...this.globalService.additiveBonusTemplate };
 
     equipment.bonuses.forEach((bonus) => {
       if (bonus.additive !== undefined) {

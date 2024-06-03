@@ -1,6 +1,6 @@
 <label class="form-label" for="raceSelector">Vapenhand</label>
 <select class="form-select" name="raceSelector" [formControl]="chosenMainhand">
-  @for(weapon of weaponArray; track weapon){
+  @for(weapon of weaponArray.value; track weapon){
   <option [value]="weapon.name">{{ weapon.name }}</option>
   }
 </select>

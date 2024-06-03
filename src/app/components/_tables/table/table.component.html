@@ -89,7 +89,7 @@
           <td class="text-center fw-bold">
             <span class="default-cursor">Total m. bonus</span>
           </td>
-          @for(attribute of Object.values(this.totalWithRaceBonus); track 0){
+          @for(attribute of Object.values(this.totalWithBonuses); track 0){
           <td class="text-center fw-bold">
             <span class="default-cursor">
               {{ attribute }}
@@ -97,7 +97,7 @@
           </td>
           }
           <td class="text-center fw-bold">
-            <span class="default-cursor">{{ totalWithRaceBonusPlacedPoints }}</span>
+            <span class="default-cursor">{{ totalWithBonusesPlacedPoints }}</span>
           </td>
         </tr>
       </tfoot>

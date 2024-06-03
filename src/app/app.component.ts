@@ -24,6 +24,11 @@ export class AppComponent implements OnInit {
 
   constructor(private apiService: ApiService, private globalService: GlobalService) {}
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.screenWidth = event.target.innerWidth;
+  }
+
   ngOnInit(): void {
     if (localStorage.getItem('builds') === null) {
       localStorage.setItem('builds', JSON.stringify([]));
@@ -57,8 +62,6 @@ export class AppComponent implements OnInit {
         weapons.forEach((weapon: IWeapon) => {
           this.assignWeaponToArray(weapon);
         });
-
-        console.log(this.globalService.mace);
       },
       error: (err) => {},
     });
@@ -118,10 +121,5 @@ export class AppComponent implements OnInit {
         break;
       }
     }
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any): void {
-    this.screenWidth = event.target.innerWidth;
   }
 }
