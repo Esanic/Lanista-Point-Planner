@@ -30,6 +30,7 @@ export class SelectOffhandComponent {
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
   private shieldBuild$: Subscription = new Subscription();
+  private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private globalService: GlobalService, private armoryService: ArmoryService) {}
 
@@ -58,6 +59,10 @@ export class SelectOffhandComponent {
       }
     });
 
+    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chosenOffhand.patchValue('');
+    });
+
     this.chosenOffhand.valueChanges.subscribe((offhand) => {
       const chosenWeapon = this.weaponArray.value.find((weapon) => weapon.name === offhand);
 
@@ -77,6 +82,7 @@ export class SelectOffhandComponent {
     this.viewLegendEquipment$.unsubscribe();
     this.tableStats$.unsubscribe();
     this.shieldBuild$.unsubscribe();
+    this.wipeBonus$.unsubscribe();
   }
 
   //* If shieldBuild is true, then shield is selected, otherwise the selectedWeaponSkill is selected

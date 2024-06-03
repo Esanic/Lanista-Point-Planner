@@ -28,6 +28,7 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
   private chosenWeaponSkill$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
+  private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private globalService: GlobalService, private armoryService: ArmoryService) {}
 
@@ -50,6 +51,10 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chosenMainhand.patchValue('');
+    });
+
     this.chosenMainhand.valueChanges.subscribe((mainhand) => {
       const chosenWeapon = this.weaponArray.value.find((weapon) => weapon.name === mainhand);
 
@@ -68,6 +73,7 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
     this.chosenWeaponSkill$.unsubscribe();
     this.viewLegendEquipment$.unsubscribe();
     this.tableStats$.unsubscribe();
+    this.wipeBonus$.unsubscribe();
   }
 
   private resetBonus(): void {
