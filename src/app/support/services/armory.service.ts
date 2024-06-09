@@ -5,6 +5,7 @@ import { IWeapon } from '../interfaces/_armory/weapon';
 import { weaponSkillStr } from '../enums/weapon-skills.enums';
 import { GlobalService } from './global.service';
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
+import { IArmor } from '../interfaces/_armory/armor';
 
 @Injectable({
   providedIn: 'root',
@@ -174,5 +175,26 @@ export class ArmoryService {
     });
 
     return { additiveBonus, multiplierBonus };
+  }
+
+  public filterAndRenameEquipment(equipmentArray: IWeapon[] | IArmor[], currentMaxLevel: number): IWeapon[] | IArmor[] {
+    const equipment = JSON.parse(JSON.stringify(equipmentArray));
+
+    let filteredWeapons: IWeapon[] | IArmor[] = [];
+    //? Should this be passed as a parameter?
+    if (this.legendEquipment.value) {
+      filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+    } else {
+      filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.requires_legend && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+    }
+
+    const renamedEquipment: IWeapon[] | IArmor[] = filteredWeapons.map((weapon) => {
+      weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : ''}) ${weapon.requires_legend ? '(L)' : ''}`;
+      return weapon;
+    });
+
+    const sortedEquipment = renamedEquipment.sort((a, b) => a.required_level - b.required_level);
+
+    return sortedEquipment;
   }
 }

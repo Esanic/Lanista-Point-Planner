@@ -105,53 +105,33 @@ export class SelectOffhandComponent {
   private selectWeaponArray(weaponSkill: string): void {
     switch (weaponSkill) {
       case weaponSkillStr.Axe: {
-        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.axe));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.axe, this.currentMaxLevel));
         break;
       }
       case weaponSkillStr.Sword: {
-        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.sword));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.sword, this.currentMaxLevel));
         break;
       }
       case weaponSkillStr.Mace: {
-        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.mace));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.mace, this.currentMaxLevel));
         break;
       }
       case weaponSkillStr.Stave: {
-        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.stave));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.stave, this.currentMaxLevel));
         break;
       }
       case weaponSkillStr.Spear: {
-        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.spear));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.spear, this.currentMaxLevel));
         break;
       }
       case weaponSkillStr.Chain: {
-        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.chain));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.chain, this.currentMaxLevel));
         break;
       }
       case weaponSkillStr.Shield: {
-        this.weaponArray.next(this.filterAndRenamedWeapons(this.globalService.shield));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.shield, this.currentMaxLevel));
         break;
       }
     }
-  }
-
-  private filterAndRenamedWeapons(weaponArray: IWeapon[]): IWeapon[] {
-    const weapons = JSON.parse(JSON.stringify(weaponArray));
-
-    let filteredWeapons: IWeapon[] = [];
-    if (this.viewLegendEquipment) {
-      filteredWeapons = weapons.filter((weapon: IWeapon) => weapon.max_level <= this.currentMaxLevel && weapon.required_level <= this.currentMaxLevel);
-    } else {
-      filteredWeapons = weapons.filter((weapon: IWeapon) => !weapon.requires_legend && weapon.max_level <= this.currentMaxLevel && weapon.required_level <= this.currentMaxLevel);
-    }
-
-    const renamedWeapons: IWeapon[] = filteredWeapons.map((weapon) => {
-      weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : ''}) ${weapon.requires_legend ? '(L)' : ''}`;
-      return weapon;
-    });
-
-    const sortedWeapons = renamedWeapons.sort((a, b) => a.required_level - b.required_level);
-
-    return sortedWeapons;
   }
 }
