@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectMainhandComponent } from './select-mainhand.component';
+import { SelectWeaponComponent } from './select-weapon.component';
 
-describe('SelectMainhandComponent', () => {
-  let component: SelectMainhandComponent;
-  let fixture: ComponentFixture<SelectMainhandComponent>;
+describe('SelectWeaponComponent', () => {
+  let component: SelectWeaponComponent;
+  let fixture: ComponentFixture<SelectWeaponComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SelectMainhandComponent]
+      imports: [SelectWeaponComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(SelectMainhandComponent);
+    fixture = TestBed.createComponent(SelectWeaponComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,8 +1,9 @@
-<label class="form-label" for="raceSelector">
-  {{ armorSlot | armor }}
-</label>
-<select class="form-select" name="raceSelector" [formControl]="chosenArmor">
-  @for(armor of filteredAndRenamedArmorArray; track armor){
-  <option [value]="armor.name">{{ armor.name }}</option>
-  }
-</select>
+<div class="d-flex">
+  <label class="form-label my-auto" for="armorSelector" style="width: 25%">{{ armorSlot | armor }}:</label>
+  <select class="form-select" name="armorSelector" [formControl]="chosenArmor">
+    <option value="none" selected></option>
+    @for(armor of filteredAndRenamedArmorArray; track armor){
+    <option [value]="armor.name">{{ armor.name }}</option>
+    }
+  </select>
+</div>

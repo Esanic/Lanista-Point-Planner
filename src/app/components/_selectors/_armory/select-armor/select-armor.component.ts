@@ -98,22 +98,22 @@ export class SelectArmorComponent implements OnInit {
   public filterAndRenameArmors(): void {
     switch (this.armorSlot) {
       case armorSlots.Head:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.head, this.currentMaxLevel);
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.head, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Shoulders:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.shoulders, this.currentMaxLevel);
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.shoulders, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Chest:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.chest, this.currentMaxLevel);
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.chest, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Hands:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.gloves, this.currentMaxLevel);
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.gloves, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Legs:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.legs, this.currentMaxLevel);
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.legs, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Feet:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.boots, this.currentMaxLevel);
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.boots, this.currentMaxLevel, this.viewLegendEquipment);
         break;
     }
   }

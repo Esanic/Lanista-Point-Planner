@@ -189,12 +189,12 @@ export class ArmoryService {
     return { additiveBonus, multiplierBonus };
   }
 
-  public filterAndRenameEquipment(equipmentArray: IWeapon[] | IArmor[], currentMaxLevel: number): IWeapon[] | IArmor[] {
+  public filterAndRenameEquipment(equipmentArray: IWeapon[] | IArmor[], currentMaxLevel: number, showLegendEquipment: boolean): IWeapon[] | IArmor[] {
     const equipment = JSON.parse(JSON.stringify(equipmentArray));
 
     let filteredWeapons: IWeapon[] | IArmor[] = [];
     //? Should this be passed as a parameter?
-    if (this.legendEquipment.value) {
+    if (showLegendEquipment) {
       filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
     } else {
       filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.requires_legend && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);

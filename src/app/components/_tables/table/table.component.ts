@@ -298,6 +298,8 @@ export class TableComponent implements OnInit, OnDestroy {
       //   this.totalWithRaceBonus[key] = Math.round(this.totalWithRaceBonus[key] * multiplierBonuses[key]);
       // });
 
+      this.totalWithBonuses = { ...this.globalService.totalWithRaceBonus };
+
       //! Use this if racial bonus is applied after the multiplier bonus from equipment
       const multiplierBonuses = this.armoryService.getBonusesMultiplier();
       Object.keys(this.total).forEach((key) => {
