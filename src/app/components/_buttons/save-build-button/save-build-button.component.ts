@@ -5,6 +5,7 @@ import { BuildService } from '../../../support/services/build.service';
 import { BuildNameModalComponent } from '../../_modals/build-name-modal/build-name-modal.component';
 import { NgbPopover, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { StorageService } from '../../../support/services/storage.service';
+import { emptyString } from '../../../support/constants/global';
 
 @Component({
   selector: 'app-save-build-button',
@@ -16,7 +17,7 @@ import { StorageService } from '../../../support/services/storage.service';
 export class SaveBuildButtonComponent implements OnInit, OnDestroy {
   private build: IBuild = {} as IBuild;
 
-  private buildName: string = '';
+  private buildName: string = emptyString;
 
   public viewBuildNameModal = false;
 
@@ -27,7 +28,7 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToDeselectBuild$ = this.buildService.listenDeselectBuild().subscribe(() => {
       this.build = {} as IBuild;
-      this.buildName = '';
+      this.buildName = emptyString;
     });
   }
 
@@ -36,7 +37,7 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
   }
 
   public async saveBuild(saved?: boolean): Promise<void> {
-    if (this.build.race === 'Default' && this.build.weaponSkill === '') {
+    if (this.build.race === 'Default' && this.build.weaponSkill === emptyString) {
       return;
     }
 

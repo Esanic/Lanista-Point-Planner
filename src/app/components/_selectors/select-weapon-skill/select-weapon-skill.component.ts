@@ -4,6 +4,7 @@ import { GlobalService } from '../../../support/services/global.service';
 import { Subscription } from 'rxjs';
 import { BuildService } from '../../../support/services/build.service';
 import { IRace } from '../../../support/interfaces/race';
+import { emptyString } from '../../../support/constants/global';
 
 @Component({
   selector: 'select-weapon-skill',
@@ -13,7 +14,7 @@ import { IRace } from '../../../support/interfaces/race';
   styleUrl: './select-weapon-skill.component.css',
 })
 export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
-  public chooseWeaponSkill = new FormControl('');
+  public chooseWeaponSkill = new FormControl(emptyString);
   public weaponSkills: string[] = this.globalService.weaponSkills;
   private selectedRace: IRace = {} as IRace;
 
@@ -26,8 +27,8 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedRace$ = this.buildService.getChosenRace().subscribe((race: IRace) => {
-      let selectedWeaponSkill: string = '';
-      if (this.chooseWeaponSkill.value !== '' && this.chooseWeaponSkill.value !== null) {
+      let selectedWeaponSkill: string = emptyString;
+      if (this.chooseWeaponSkill.value !== emptyString && this.chooseWeaponSkill.value !== null) {
         selectedWeaponSkill = this.chooseWeaponSkill.value.split(' ')[0];
       }
 

@@ -3,7 +3,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalService } from '../../../support/services/global.service';
 import { Subscription } from 'rxjs';
 import { BuildService } from '../../../support/services/build.service';
-import { IRace } from '../../../support/interfaces/race';
+import { emptyString } from '../../../support/constants/global';
 
 @Component({
   selector: 'select-race',
@@ -13,7 +13,7 @@ import { IRace } from '../../../support/interfaces/race';
   styleUrl: './select-race.component.css',
 })
 export class SelectRaceComponent implements OnInit, OnDestroy {
-  public chooseRace = new FormControl('');
+  public chooseRace = new FormControl(emptyString);
   public races: string[] = this.globalService.races.map((race) => race.name!);
 
   private incomingRace$: Subscription = new Subscription();

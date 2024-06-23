@@ -9,6 +9,7 @@ import { armorSlots } from '../../../../support/enums/armor.enums';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { ArmorPipe } from '../../../../support/pipes/armor.pipe';
 import { additiveBonus, multiplierBonus } from '../../../../support/constants/bonuses';
+import { emptyString } from '../../../../support/constants/global';
 
 @Component({
   selector: 'app-select-armor',
@@ -20,7 +21,7 @@ import { additiveBonus, multiplierBonus } from '../../../../support/constants/bo
 export class SelectArmorComponent implements OnInit {
   @Input() armorSlot: number = -1;
 
-  public chosenArmor = new FormControl('');
+  public chosenArmor = new FormControl(emptyString);
 
   public filteredAndRenamedArmorArray: IArmor[] = [];
 
@@ -54,7 +55,7 @@ export class SelectArmorComponent implements OnInit {
     });
 
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
-      this.chosenArmor.patchValue('');
+      this.chosenArmor.patchValue(emptyString);
     });
 
     this.chosenArmor.valueChanges.subscribe((armor) => {

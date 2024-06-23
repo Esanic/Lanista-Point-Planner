@@ -6,6 +6,7 @@ import { ConfirmActionModalComponent } from '../../_modals/confirm-action-modal/
 import { StorageService } from '../../../support/services/storage.service';
 import { Subscription } from 'rxjs';
 import { GlobalService } from '../../../support/services/global.service';
+import { emptyString } from '../../../support/constants/global';
 
 @Component({
   selector: 'app-saved-builds-list',
@@ -16,7 +17,7 @@ import { GlobalService } from '../../../support/services/global.service';
 })
 export class SavedBuildsListComponent implements OnInit, OnDestroy {
   public builds: IBuild[] = [];
-  public selectedBuildName: string = '';
+  public selectedBuildName: string = emptyString;
 
   private buildToDelete: IBuild = {} as IBuild;
 
@@ -35,17 +36,17 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
 
     this.listenToUpdateBuildList$ = this.buildService.listenToUpdateBuildList().subscribe((buildName) => {
       this.builds = this.storageService.getBuilds();
-      if (buildName !== '') {
+      if (buildName !== emptyString) {
         this.selectBuild({ name: buildName } as IBuild, true);
       }
     });
 
     this.listenWipeData$ = this.buildService.listenWipeData().subscribe(() => {
-      this.selectedBuildName = '';
+      this.selectedBuildName = emptyString;
     });
 
     this.deselectBuild$ = this.buildService.listenDeselectBuild().subscribe(() => {
-      this.selectedBuildName = '';
+      this.selectedBuildName = emptyString;
     });
   }
 
@@ -66,8 +67,8 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
     //* If the build is already selected, deselect it
     if (updateList === false || updateList === undefined) {
       if (build.name === this.selectedBuildName) {
-        this.selectedBuildName = '';
-        this.buildService.emitWipeData('');
+        this.selectedBuildName = emptyString;
+        this.buildService.emitWipeData(emptyString);
         this.buildService.setSelectedBuild({} as IBuild);
         return;
       }
@@ -94,10 +95,10 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
 
     this.storageService.setBuilds(this.builds);
 
-    this.buildService.emitUpdateBuildList('');
+    this.buildService.emitUpdateBuildList(emptyString);
 
     if (this.selectedBuildName === build.name) {
-      this.buildService.emitWipeData('');
+      this.buildService.emitWipeData(emptyString);
     }
 
     this.buildService.setSelectedBuild({} as IBuild);

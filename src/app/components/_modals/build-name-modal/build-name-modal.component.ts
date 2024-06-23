@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuildService } from '../../../support/services/build.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { emptyString } from '../../../support/constants/global';
 
 @Component({
   selector: 'app-build-name-modal',
@@ -11,7 +12,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './build-name-modal.component.css',
 })
 export class BuildNameModalComponent {
-  public buildName = new FormControl('');
+  public buildName = new FormControl(emptyString);
 
   @Output() closeModal = new EventEmitter();
   @Output() dismissModal = new EventEmitter();

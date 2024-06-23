@@ -3,6 +3,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalService } from '../../../support/services/global.service';
 import { BuildService } from '../../../support/services/build.service';
+import { emptyString } from '../../../support/constants/global';
 
 @Component({
   selector: 'app-import-modal',
@@ -12,7 +13,7 @@ import { BuildService } from '../../../support/services/build.service';
   styleUrl: './import-modal.component.css',
 })
 export class ImportModalComponent implements AfterViewInit {
-  public jsonString = new FormControl('');
+  public jsonString = new FormControl(emptyString);
 
   @Output() closeModal = new EventEmitter();
   @Output() dismissModal = new EventEmitter();
@@ -34,7 +35,7 @@ export class ImportModalComponent implements AfterViewInit {
           this.buildService.setImportedStats(jsonObject.levels);
           this.buildService.setAmountOfLevels(jsonObject.levels.length);
 
-          this.buildService.emitDeselectBuild('');
+          this.buildService.emitDeselectBuild(emptyString);
         }
         this.closeModal.emit(resolved);
       },

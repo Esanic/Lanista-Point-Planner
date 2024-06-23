@@ -6,6 +6,7 @@ import { weaponSkillStr } from '../enums/weapon-skills.enums';
 import { GlobalService } from './global.service';
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
 import { IArmor } from '../interfaces/_armory/armor';
+import { emptyString } from '../constants/global';
 
 @Injectable({
   providedIn: 'root',
@@ -224,7 +225,7 @@ export class ArmoryService {
     }
 
     const renamedEquipment: IWeapon[] | IArmor[] = filteredWeapons.map((weapon) => {
-      weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : ''}) ${weapon.requires_legend ? '(L)' : ''}`;
+      weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : emptyString}) ${weapon.requires_legend ? '(L)' : emptyString}`;
       return weapon;
     });
 

@@ -9,6 +9,7 @@ import { IRace } from '../../../support/interfaces/race';
 import { BuildService } from '../../../support/services/build.service';
 import { IBuild } from '../../../support/interfaces/build';
 import { ArmoryService } from '../../../support/services/armory.service';
+import { emptyString } from '../../../support/constants/global';
 
 @Component({
   selector: 'app-table',
@@ -28,7 +29,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   // public race: IRace = this.globalService.defaultRace;
   public race: IRace = {} as IRace;
-  public weaponSkill: string = '';
+  public weaponSkill: string = emptyString;
   public weaponSkillMultiplier: number = 1;
 
   public total = this.globalService.total;
@@ -197,7 +198,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     Object.entries(rowThatChanged).forEach((attribute: any[]) => {
       //* If the attribute value is empty, then set it to 0 to avoid NaN
-      if (attribute[1] === '') {
+      if (attribute[1] === emptyString) {
         control.patchValue({ [attribute[0]]: 0 }, { emitEvent: false, onlySelf: true });
         attribute[1] = 0;
       }

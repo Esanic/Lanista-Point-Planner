@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { armorSlots } from '../enums/armor.enums';
+import { emptyString } from '../constants/global';
 
 @Pipe({
   name: 'armor',
@@ -21,7 +22,7 @@ export class ArmorPipe implements PipeTransform {
       case armorSlots.Feet:
         return 'Fötter';
       default:
-        return '';
+        return emptyString;
     }
   }
 }

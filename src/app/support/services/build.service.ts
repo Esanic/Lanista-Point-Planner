@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBuild } from '../interfaces/build';
 import { IRace } from '../interfaces/race';
+import { emptyString } from '../constants/global';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class BuildService {
   private buildFromTable: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
 
   private chosenRace: BehaviorSubject<IRace> = new BehaviorSubject<IRace>({} as IRace);
-  private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>(emptyString);
   private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);
   private chosenLevelsSubject: Subject<number> = new Subject<number>();
   private importedStats: Subject<any> = new Subject<any>();

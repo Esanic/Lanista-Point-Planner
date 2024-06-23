@@ -8,6 +8,7 @@ import { IWeapon } from '../../../../support/interfaces/_armory/weapon';
 import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { GlobalService } from '../../../../support/services/global.service';
+import { emptyString } from '../../../../support/constants/global';
 
 @Component({
   selector: 'app-select-weapon',
@@ -19,9 +20,9 @@ import { GlobalService } from '../../../../support/services/global.service';
 export class SelectWeaponComponent {
   @Input() isOffhand: boolean = false;
 
-  public chosenWeapon = new FormControl('');
+  public chosenWeapon = new FormControl(emptyString);
 
-  private selectedWeaponSkill: string = '';
+  private selectedWeaponSkill: string = emptyString;
   private currentMaxLevel: number = 25;
   private viewLegendEquipment: boolean = false;
   private shieldBuild: boolean = false;
@@ -41,13 +42,13 @@ export class SelectWeaponComponent {
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
       this.selectedWeaponSkill = weaponSkill.split(' ')[0];
-      this.chosenWeapon.patchValue('');
+      this.chosenWeapon.patchValue(emptyString);
       this.selectWeaponArray(this.selectedWeaponSkill);
     });
 
     this.shieldBuild$ = this.armoryService.listenShieldBuild().subscribe((shieldBuild) => {
       if (this.isOffhand) {
-        this.chosenWeapon.patchValue('');
+        this.chosenWeapon.patchValue(emptyString);
         this.resetBonus();
         this.shieldBuild = shieldBuild;
         this.selectOffhand();
@@ -57,7 +58,7 @@ export class SelectWeaponComponent {
     this.twoHandedBuild$ = this.armoryService.listenTwoHandedBuild().subscribe((twoHandedBuild) => {
       this.twoHandedBuild = twoHandedBuild;
       if (this.isOffhand && this.twoHandedBuild) {
-        this.chosenWeapon.patchValue('');
+        this.chosenWeapon.patchValue(emptyString);
         this.resetBonus();
       }
     });
@@ -75,7 +76,7 @@ export class SelectWeaponComponent {
     });
 
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
-      this.chosenWeapon.patchValue('');
+      this.chosenWeapon.patchValue(emptyString);
     });
 
     this.chosenWeapon.valueChanges.subscribe((selectedWeapon) => {
