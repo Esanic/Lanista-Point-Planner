@@ -11,6 +11,7 @@ import { TabletViewComponent } from './components/_views/tablet-view/tablet-view
 import { IWeapon } from './support/interfaces/_armory/weapon';
 import { IArmor } from './support/interfaces/_armory/armor';
 import { armorSlots } from './support/enums/armor.enums';
+import { ArmoryService } from './support/services/armory.service';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,7 @@ export class AppComponent implements OnInit {
 
   public screenWidth: number = 0;
 
-  constructor(private apiService: ApiService, private globalService: GlobalService) {}
+  constructor(private apiService: ApiService, private globalService: GlobalService, private armoryService: ArmoryService) {}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
@@ -75,6 +76,8 @@ export class AppComponent implements OnInit {
         armors.forEach((armor: IArmor) => {
           this.assignArmorToArray(armor);
         });
+
+        this.armoryService.emitArmorsFetched(true);
       },
       error: (err) => {},
     });

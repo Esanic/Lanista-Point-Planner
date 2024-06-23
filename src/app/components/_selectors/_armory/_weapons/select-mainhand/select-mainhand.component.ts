@@ -59,7 +59,7 @@ export class SelectMainhandComponent implements OnInit, OnDestroy {
       const chosenWeapon = this.weaponArray.value.find((weapon) => weapon.name === mainhand);
 
       if (chosenWeapon) {
-        const bonusToAdd: ITotalBonus = chosenWeapon ? this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill) : ({} as ITotalBonus);
+        const bonusToAdd: ITotalBonus = this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
 
         this.armoryService.addBonus('mainhand', bonusToAdd);
         this.armoryService.emitBonusesHaveBeenAdded({});

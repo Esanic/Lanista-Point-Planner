@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectHeadArmorComponent } from './select-head-armor.component';
+import { SelectArmorComponent } from './select-armor.component';
 
-describe('SelectHeadArmorComponent', () => {
-  let component: SelectHeadArmorComponent;
-  let fixture: ComponentFixture<SelectHeadArmorComponent>;
+describe('SelectArmorComponent', () => {
+  let component: SelectArmorComponent;
+  let fixture: ComponentFixture<SelectArmorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SelectHeadArmorComponent]
+      imports: [SelectArmorComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(SelectHeadArmorComponent);
+    fixture = TestBed.createComponent(SelectArmorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

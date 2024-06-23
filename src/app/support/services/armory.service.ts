@@ -13,6 +13,8 @@ import { IArmor } from '../interfaces/_armory/armor';
 export class ArmoryService {
   private legendEquipment: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private shieldBuild: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private armorsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private weaponsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
@@ -29,14 +31,6 @@ export class ArmoryService {
     return this.legendEquipment.asObservable();
   }
 
-  public emitBonusesHaveBeenAdded(event: any): void {
-    this.emitBonusAdded.next(event);
-  }
-
-  public listenBonusesHaveBeenAdded(): Observable<boolean> {
-    return this.emitBonusAdded.asObservable();
-  }
-
   public emitShieldBuild(event: boolean): void {
     this.shieldBuild.next(event);
   }
@@ -45,16 +39,34 @@ export class ArmoryService {
     return this.shieldBuild.asObservable();
   }
 
+  public emitBonusesHaveBeenAdded(event: any): void {
+    this.emitBonusAdded.next(event);
+  }
+
+  public listenBonusesHaveBeenAdded(): Observable<boolean> {
+    return this.emitBonusAdded.asObservable();
+  }
+
+  public emitArmorsFetched(event: boolean): void {
+    this.armorsFetched.next(event);
+  }
+
+  public listenArmorsFetched(): Observable<boolean> {
+    return this.armorsFetched.asObservable();
+  }
+
+  public emitWeaponsFetched(): void {
+    this.weaponsFetched.next(true);
+  }
+
+  public listenWeaponsFetched(): Observable<boolean> {
+    return this.weaponsFetched.asObservable();
+  }
+
   //Adds bonuses to the correct equipment slot
   public addBonus(gearSlot: string, bonusesToAdd: ITotalBonus): void {
-    if (gearSlot === 'mainhand') {
-      this.equipmentBonusesAdditive.mainhand = bonusesToAdd.additiveBonus;
-      this.equipmentBonusesMultiplier.mainhand = bonusesToAdd.multiplierBonus;
-    }
-    if (gearSlot === 'offhand') {
-      this.equipmentBonusesAdditive.offhand = bonusesToAdd.additiveBonus;
-      this.equipmentBonusesMultiplier.offhand = bonusesToAdd.multiplierBonus;
-    }
+    this.equipmentBonusesAdditive[gearSlot] = bonusesToAdd.additiveBonus;
+    this.equipmentBonusesMultiplier[gearSlot] = bonusesToAdd.multiplierBonus;
   }
 
   //Returns the total additive bonuses from all equipment
