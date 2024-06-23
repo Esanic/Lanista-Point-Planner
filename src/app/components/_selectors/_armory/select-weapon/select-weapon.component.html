@@ -1,5 +1,8 @@
-<div class="d-flex">
-  <label class="form-label" for="weaponSelector" style="width: 25%">{{ isOffhand ? "Sköldhand:" : "Vapenhand:" }}</label>
+<!-- prettier-ignore -->
+@if(twoHandedBuild){ 
+  @if(!isOffhand){
+<div class="d-flex my-2">
+  <label class="form-label my-auto" for="weaponSelector" style="width: 25%">Tvåhand:</label>
   <select class="form-select" name="weaponSelector" [formControl]="chosenWeapon">
     <option value="none" selected></option>
     @for(weapon of weaponArray.value; track weapon){
@@ -7,3 +10,15 @@
     }
   </select>
 </div>
+
+} } @else {
+<div class="d-flex my-2">
+  <label class="form-label my-auto" for="weaponSelector" style="width: 25%">{{ isOffhand ? "Sköldhand:" : "Vapenhand:" }}</label>
+  <select class="form-select" name="weaponSelector" [formControl]="chosenWeapon">
+    <option value="none" selected></option>
+    @for(weapon of weaponArray.value; track weapon){
+    <option [value]="weapon.name">{{ weapon.name }}</option>
+    }
+  </select>
+</div>
+}

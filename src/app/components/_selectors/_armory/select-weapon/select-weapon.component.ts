@@ -25,6 +25,7 @@ export class SelectWeaponComponent {
   private currentMaxLevel: number = 25;
   private viewLegendEquipment: boolean = false;
   private shieldBuild: boolean = false;
+  public twoHandedBuild: boolean = false;
 
   public weaponArray: BehaviorSubject<IWeapon[]> = new BehaviorSubject<IWeapon[]>([]);
 
@@ -32,6 +33,7 @@ export class SelectWeaponComponent {
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
   private shieldBuild$: Subscription = new Subscription();
+  private twoHandedBuild$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private globalService: GlobalService, private armoryService: ArmoryService) {}
@@ -52,6 +54,14 @@ export class SelectWeaponComponent {
       }
     });
 
+    this.twoHandedBuild$ = this.armoryService.listenTwoHandedBuild().subscribe((twoHandedBuild) => {
+      this.twoHandedBuild = twoHandedBuild;
+      if (this.isOffhand && this.twoHandedBuild) {
+        this.chosenWeapon.patchValue('');
+        this.resetBonus();
+      }
+    });
+
     this.viewLegendEquipment$ = this.armoryService.getLegendEquipmentViewStatus().subscribe((legendEquipmentViewStatus) => {
       this.viewLegendEquipment = legendEquipmentViewStatus;
       this.selectOffhand();
@@ -68,14 +78,31 @@ export class SelectWeaponComponent {
       this.chosenWeapon.patchValue('');
     });
 
-    this.chosenWeapon.valueChanges.subscribe((mainhand) => {
-      const chosenWeapon = this.weaponArray.value.find((weapon) => weapon.name === mainhand);
+    this.chosenWeapon.valueChanges.subscribe((selectedWeapon) => {
+      //* If no weapon is selected, reset bonuses and emit that two handed weapon is not selected
+      if (selectedWeapon === 'none') {
+        this.armoryService.emitTwoHandedBuild(false);
+        this.resetBonus();
+        return;
+      }
+
+      const chosenWeapon = this.weaponArray.value.find((weapon) => weapon.name === selectedWeapon);
 
       if (chosenWeapon) {
         const bonusToAdd: ITotalBonus = this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
 
-        if (this.isOffhand) this.armoryService.addBonus('offhand', bonusToAdd);
-        else this.armoryService.addBonus('mainhand', bonusToAdd);
+        //* If two handed weapon is selected, emit that event
+        if (chosenWeapon.is_two_handed) {
+          this.armoryService.emitTwoHandedBuild(true);
+          this.resetBonus();
+        } else {
+          this.armoryService.emitTwoHandedBuild(false);
+          this.resetBonus();
+        }
+
+        if (this.isOffhand) {
+          this.armoryService.addBonus('offhand', bonusToAdd);
+        } else this.armoryService.addBonus('mainhand', bonusToAdd);
 
         this.armoryService.emitBonusesHaveBeenAdded({});
       } else {
@@ -90,6 +117,7 @@ export class SelectWeaponComponent {
     this.tableStats$.unsubscribe();
     this.shieldBuild$.unsubscribe();
     this.wipeBonus$.unsubscribe();
+    this.twoHandedBuild$.unsubscribe();
   }
 
   private resetBonus(): void {
@@ -119,31 +147,31 @@ export class SelectWeaponComponent {
   private selectWeaponArray(weaponSkill: string): void {
     switch (weaponSkill) {
       case weaponSkillStr.Axe: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.axe, this.currentMaxLevel, this.viewLegendEquipment));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.axe, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Sword: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.sword, this.currentMaxLevel, this.viewLegendEquipment));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.sword, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Mace: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.mace, this.currentMaxLevel, this.viewLegendEquipment));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.mace, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Stave: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.stave, this.currentMaxLevel, this.viewLegendEquipment));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.stave, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Spear: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.spear, this.currentMaxLevel, this.viewLegendEquipment));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.spear, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Chain: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.chain, this.currentMaxLevel, this.viewLegendEquipment));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.chain, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Shield: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.shield, this.currentMaxLevel, this.viewLegendEquipment));
+        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.shield, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
     }

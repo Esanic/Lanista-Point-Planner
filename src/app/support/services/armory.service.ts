@@ -13,6 +13,7 @@ import { IArmor } from '../interfaces/_armory/armor';
 export class ArmoryService {
   private legendEquipment: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private shieldBuild: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private twoHandedBuild: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private armorsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private weaponsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -23,6 +24,7 @@ export class ArmoryService {
 
   constructor(private globalService: GlobalService) {}
 
+  //* Legend equipment
   public setLegendEquipmentViewStatus(value: boolean): void {
     this.legendEquipment.next(value);
   }
@@ -31,6 +33,7 @@ export class ArmoryService {
     return this.legendEquipment.asObservable();
   }
 
+  //* Shield build
   public emitShieldBuild(event: boolean): void {
     this.shieldBuild.next(event);
   }
@@ -39,14 +42,16 @@ export class ArmoryService {
     return this.shieldBuild.asObservable();
   }
 
-  public emitBonusesHaveBeenAdded(event: any): void {
-    this.emitBonusAdded.next(event);
+  //* Two handed build
+  public emitTwoHandedBuild(event: boolean): void {
+    this.twoHandedBuild.next(event);
   }
 
-  public listenBonusesHaveBeenAdded(): Observable<boolean> {
-    return this.emitBonusAdded.asObservable();
+  public listenTwoHandedBuild(): Observable<boolean> {
+    return this.twoHandedBuild.asObservable();
   }
 
+  //* Gear arrays fetched
   public emitArmorsFetched(event: boolean): void {
     this.armorsFetched.next(event);
   }
@@ -63,6 +68,14 @@ export class ArmoryService {
     return this.weaponsFetched.asObservable();
   }
 
+  //* Bonuses
+  public emitBonusesHaveBeenAdded(event: any): void {
+    this.emitBonusAdded.next(event);
+  }
+
+  public listenBonusesHaveBeenAdded(): Observable<boolean> {
+    return this.emitBonusAdded.asObservable();
+  }
   //Adds bonuses to the correct equipment slot
   public addBonus(gearSlot: string, bonusesToAdd: ITotalBonus): void {
     this.equipmentBonusesAdditive[gearSlot] = bonusesToAdd.additiveBonus;
@@ -189,15 +202,25 @@ export class ArmoryService {
     return { additiveBonus, multiplierBonus };
   }
 
-  public filterAndRenameEquipment(equipmentArray: IWeapon[] | IArmor[], currentMaxLevel: number, showLegendEquipment: boolean): IWeapon[] | IArmor[] {
+  public filterAndRenameEquipment(equipmentArray: IWeapon[] | IArmor[], currentMaxLevel: number, showLegendEquipment: boolean, isOffhand?: boolean): IWeapon[] | IArmor[] {
     const equipment = JSON.parse(JSON.stringify(equipmentArray));
 
     let filteredWeapons: IWeapon[] | IArmor[] = [];
-    //? Should this be passed as a parameter?
+
     if (showLegendEquipment) {
-      filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+      if (isOffhand) {
+        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.is_two_handed && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+      } else {
+        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+      }
     } else {
-      filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.requires_legend && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+      if (isOffhand) {
+        filteredWeapons = equipment.filter(
+          (weapon: IWeapon | IArmor) => !weapon.is_two_handed && !weapon.requires_legend && !weapon.is_two_handed && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel
+        );
+      } else {
+        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.requires_legend && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+      }
     }
 
     const renamedEquipment: IWeapon[] | IArmor[] = filteredWeapons.map((weapon) => {
