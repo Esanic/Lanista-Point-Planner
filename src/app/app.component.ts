@@ -12,6 +12,7 @@ import { IWeapon } from './support/interfaces/_armory/weapon';
 import { IArmor } from './support/interfaces/_armory/armor';
 import { armorSlots } from './support/enums/armor.enums';
 import { ArmoryService } from './support/services/armory.service';
+import { accessoriesSlots } from './support/enums/accessories.enums';
 
 @Component({
   selector: 'app-root',
@@ -60,6 +61,7 @@ export class AppComponent implements OnInit {
 
     this.apiService.getWeapons().subscribe({
       next: (res) => {
+        console.log(res);
         const weapons: IWeapon[] = res;
 
         weapons.forEach((weapon: IWeapon) => {
@@ -163,6 +165,30 @@ export class AppComponent implements OnInit {
       }
       case armorSlots.Feet: {
         this.globalService.boots.push(armor);
+        break;
+      }
+      case accessoriesSlots.Back: {
+        this.globalService.back.push(armor);
+        break;
+      }
+      case accessoriesSlots.Neck: {
+        this.globalService.neck.push(armor);
+        break;
+      }
+      case accessoriesSlots.Finger: {
+        this.globalService.finger.push(armor);
+        break;
+      }
+      case accessoriesSlots.Amulet: {
+        this.globalService.amulet.push(armor);
+        break;
+      }
+      case accessoriesSlots.Bracelet: {
+        this.globalService.bracelet.push(armor);
+        break;
+      }
+      case accessoriesSlots.Trinket: {
+        this.globalService.trinket.push(armor);
         break;
       }
     }

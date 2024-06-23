@@ -10,6 +10,7 @@ import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { ArmorPipe } from '../../../../support/pipes/armor.pipe';
 import { additiveBonus, multiplierBonus } from '../../../../support/constants/bonuses';
 import { emptyString } from '../../../../support/constants/global';
+import { accessoriesSlots } from '../../../../support/enums/accessories.enums';
 
 @Component({
   selector: 'app-select-armor',
@@ -83,6 +84,24 @@ export class SelectArmorComponent implements OnInit {
           case armorSlots.Feet:
             this.armoryService.addBonus('boots', bonusesToAdd);
             break;
+          case accessoriesSlots.Back:
+            this.armoryService.addBonus('back', bonusesToAdd);
+            break;
+          case accessoriesSlots.Neck:
+            this.armoryService.addBonus('neck', bonusesToAdd);
+            break;
+          case accessoriesSlots.Finger:
+            this.armoryService.addBonus('finger', bonusesToAdd);
+            break;
+          case accessoriesSlots.Amulet:
+            this.armoryService.addBonus('amulet', bonusesToAdd);
+            break;
+          case accessoriesSlots.Bracelet:
+            this.armoryService.addBonus('bracelet', bonusesToAdd);
+            break;
+          case accessoriesSlots.Trinket:
+            this.armoryService.addBonus('trinket', bonusesToAdd);
+            break;
         }
       } else {
         this.resetBonus();
@@ -136,6 +155,42 @@ export class SelectArmorComponent implements OnInit {
           multiplierBonus: multiplierBonus,
         });
         break;
+      case accessoriesSlots.Back:
+        this.armoryService.addBonus('back', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case accessoriesSlots.Neck:
+        this.armoryService.addBonus('neck', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case accessoriesSlots.Finger:
+        this.armoryService.addBonus('finger', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case accessoriesSlots.Amulet:
+        this.armoryService.addBonus('amulet', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case accessoriesSlots.Bracelet:
+        this.armoryService.addBonus('bracelet', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case accessoriesSlots.Trinket:
+        this.armoryService.addBonus('trinket', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
     }
   }
 
@@ -158,6 +213,24 @@ export class SelectArmorComponent implements OnInit {
         break;
       case armorSlots.Feet:
         this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.boots, this.currentMaxLevel, this.viewLegendEquipment);
+        break;
+      case accessoriesSlots.Back:
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.back, this.currentMaxLevel, this.viewLegendEquipment);
+        break;
+      case accessoriesSlots.Neck:
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.neck, this.currentMaxLevel, this.viewLegendEquipment);
+        break;
+      case accessoriesSlots.Finger:
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.finger, this.currentMaxLevel, this.viewLegendEquipment);
+        break;
+      case accessoriesSlots.Amulet:
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.amulet, this.currentMaxLevel, this.viewLegendEquipment);
+        break;
+      case accessoriesSlots.Bracelet:
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.bracelet, this.currentMaxLevel, this.viewLegendEquipment);
+        break;
+      case accessoriesSlots.Trinket:
+        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.trinket, this.currentMaxLevel, this.viewLegendEquipment);
         break;
     }
   }

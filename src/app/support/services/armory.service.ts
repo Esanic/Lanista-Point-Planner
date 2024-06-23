@@ -210,17 +210,15 @@ export class ArmoryService {
 
     if (showLegendEquipment) {
       if (isOffhand) {
-        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.is_two_handed && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
       } else {
-        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => weapon.required_level <= currentMaxLevel);
       }
     } else {
       if (isOffhand) {
-        filteredWeapons = equipment.filter(
-          (weapon: IWeapon | IArmor) => !weapon.is_two_handed && !weapon.requires_legend && !weapon.is_two_handed && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel
-        );
+        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.is_two_handed && !weapon.requires_legend && !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
       } else {
-        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.requires_legend && weapon.max_level <= currentMaxLevel && weapon.required_level <= currentMaxLevel);
+        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.requires_legend && weapon.required_level <= currentMaxLevel);
       }
     }
 

@@ -104,6 +104,13 @@ export class GlobalService {
   public legs: IArmor[] = [];
   public boots: IArmor[] = [];
 
+  public back: IArmor[] = []; // 8
+  public neck: IArmor[] = []; // 6
+  public finger: IArmor[] = []; //7
+  public amulet: IArmor[] = []; //9
+  public bracelet: IArmor[] = []; //10
+  public trinket: IArmor[] = []; //11
+
   public total: ITotal = {
     stamina: 0,
     strength: 0,
