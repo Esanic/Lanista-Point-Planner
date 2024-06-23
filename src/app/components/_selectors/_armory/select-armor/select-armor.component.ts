@@ -8,6 +8,7 @@ import { GlobalService } from '../../../../support/services/global.service';
 import { armorSlots } from '../../../../support/enums/armor.enums';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { ArmorPipe } from '../../../../support/pipes/armor.pipe';
+import { additiveBonus, multiplierBonus } from '../../../../support/constants/bonuses';
 
 @Component({
   selector: 'app-select-armor',
@@ -82,9 +83,10 @@ export class SelectArmorComponent implements OnInit {
             this.armoryService.addBonus('boots', bonusesToAdd);
             break;
         }
-
-        this.armoryService.emitBonusesHaveBeenAdded({});
+      } else {
+        this.resetBonus();
       }
+      this.armoryService.emitBonusesHaveBeenAdded({});
     });
   }
 
@@ -95,7 +97,48 @@ export class SelectArmorComponent implements OnInit {
     this.wipeBonus$.unsubscribe();
   }
 
-  public filterAndRenameArmors(): void {
+  private resetBonus(): void {
+    switch (this.armorSlot) {
+      case armorSlots.Head:
+        this.armoryService.addBonus('head', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case armorSlots.Shoulders:
+        this.armoryService.addBonus('shoulders', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case armorSlots.Chest:
+        this.armoryService.addBonus('chest', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case armorSlots.Hands:
+        this.armoryService.addBonus('gloves', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case armorSlots.Legs:
+        this.armoryService.addBonus('legs', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+      case armorSlots.Feet:
+        this.armoryService.addBonus('boots', {
+          additiveBonus: additiveBonus,
+          multiplierBonus: multiplierBonus,
+        });
+        break;
+    }
+  }
+
+  private filterAndRenameArmors(): void {
     switch (this.armorSlot) {
       case armorSlots.Head:
         this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.head, this.currentMaxLevel, this.viewLegendEquipment);

@@ -73,8 +73,10 @@ export class SelectWeaponComponent {
 
       if (chosenWeapon) {
         const bonusToAdd: ITotalBonus = this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
+
         if (this.isOffhand) this.armoryService.addBonus('offhand', bonusToAdd);
         else this.armoryService.addBonus('mainhand', bonusToAdd);
+
         this.armoryService.emitBonusesHaveBeenAdded({});
       } else {
         this.resetBonus();

@@ -1,6 +1,7 @@
 <div class="d-flex">
   <label class="form-label" for="weaponSelector" style="width: 25%">{{ isOffhand ? "Sköldhand:" : "Vapenhand:" }}</label>
   <select class="form-select" name="weaponSelector" [formControl]="chosenWeapon">
+    <option value="none" selected></option>
     @for(weapon of weaponArray.value; track weapon){
     <option [value]="weapon.name">{{ weapon.name }}</option>
     }
