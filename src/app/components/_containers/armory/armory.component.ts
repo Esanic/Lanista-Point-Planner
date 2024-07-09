@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LegendEquipmentSwitchComponent } from '../../_switch/legend-equipment-switch/legend-equipment-switch.component';
+import { LegendEquipmentSwitchComponent } from '../../_switches/legend-equipment-switch/legend-equipment-switch.component';
 import { SelectArmorComponent } from '../../_selectors/_armory/select-armor/select-armor.component';
 import { armorSlots } from '../../../support/enums/armor.enums';
 
