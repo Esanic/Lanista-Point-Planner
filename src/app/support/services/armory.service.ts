@@ -141,15 +141,6 @@ export class ArmoryService {
           case 'dodge':
             additiveBonus.dodge += bonus.additive;
             break;
-          case 'learningcapacity':
-            additiveBonus.learningCapacity += bonus.additive;
-            break;
-          case 'luck':
-            additiveBonus.luck += bonus.additive;
-            break;
-          case 'discipline':
-            additiveBonus.discipline += bonus.additive;
-            break;
           case 'shield':
             additiveBonus.shield += bonus.additive;
             break;
@@ -181,15 +172,6 @@ export class ArmoryService {
             break;
           case 'dodge':
             multiplierBonus.dodge += bonus.multiplier - 1;
-            break;
-          case 'learningcapacity':
-            multiplierBonus.learningCapacity += bonus.multiplier - 1;
-            break;
-          case 'luck':
-            multiplierBonus.luck += bonus.multiplier - 1;
-            break;
-          case 'discipline':
-            multiplierBonus.discipline += bonus.multiplier - 1;
             break;
           case 'shield':
             multiplierBonus.shield += bonus.multiplier - 1;

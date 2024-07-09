@@ -23,7 +23,7 @@ export class TableComponent implements OnInit, OnDestroy {
   public levels: ILevel[] = [];
   public desiredLevels: number = 25 + 1;
   public tableForm!: FormGroup;
-  public formNames: string[] = ['stamina', 'strength', 'endurance', 'initiative', 'dodge', 'weaponSkill', 'shield', 'learningCapacity', 'luck', 'discipline'];
+  public formNames: string[] = ['stamina', 'strength', 'endurance', 'initiative', 'dodge', 'weaponSkill', 'shield'];
 
   public build: IBuild = {} as IBuild;
 
@@ -127,9 +127,6 @@ export class TableComponent implements OnInit, OnDestroy {
         dodge: 0,
         weaponSkill: 0,
         shield: 0,
-        learningCapacity: 0,
-        luck: 0,
-        discipline: 0,
         placedPoints: 0,
       });
     }
@@ -154,9 +151,6 @@ export class TableComponent implements OnInit, OnDestroy {
               dodge: 0,
               weaponSkill: 0,
               shield: 0,
-              learningCapacity: 0,
-              luck: 0,
-              discipline: 0,
               placedPoints: 0,
             });
           }
@@ -246,22 +240,6 @@ export class TableComponent implements OnInit, OnDestroy {
               this.total.dodge += Math.round(parseInt(attribute[1]));
               this.race.stats ? (this.totalWithBonuses.dodge += Math.round(parseInt(attribute[1]) * this.race.stats.dodge)) : (this.totalWithBonuses.dodge += Math.round(parseInt(attribute[1])));
               break;
-            case 'learningCapacity':
-              this.total.learningCapacity += Math.round(parseInt(attribute[1]));
-              this.race.stats
-                ? (this.totalWithBonuses.learningCapacity += Math.round(parseInt(attribute[1]) * this.race.stats.learningCapacity))
-                : (this.totalWithBonuses.learningCapacity += Math.round(parseInt(attribute[1])));
-              break;
-            case 'luck':
-              this.total.luck += Math.round(parseInt(attribute[1]));
-              this.race.stats ? (this.totalWithBonuses.luck += Math.round(parseInt(attribute[1]) * this.race.stats.luck)) : (this.totalWithBonuses.luck += Math.round(parseInt(attribute[1])));
-              break;
-            case 'discipline':
-              this.total.discipline += Math.round(parseInt(attribute[1]));
-              this.race.stats
-                ? (this.totalWithBonuses.discipline += Math.round(parseInt(attribute[1]) * this.race.stats.discipline))
-                : (this.totalWithBonuses.discipline += Math.round(parseInt(attribute[1])));
-              break;
             case 'weaponSkill':
               this.total.weaponSkill += Math.round(parseInt(attribute[1]));
               this.race.stats
@@ -329,9 +307,6 @@ export class TableComponent implements OnInit, OnDestroy {
         dodge: [level.dodge],
         weaponSkill: [level.weaponSkill],
         shield: [level.shield],
-        learningCapacity: [level.learningCapacity],
-        luck: [level.luck],
-        discipline: [level.discipline],
         placedPoints: [level.placedPoints, [Validators.max(150)]],
       });
     } else {
@@ -344,9 +319,6 @@ export class TableComponent implements OnInit, OnDestroy {
         dodge: [level.dodge],
         weaponSkill: [level.weaponSkill],
         shield: [level.shield],
-        learningCapacity: [level.learningCapacity],
-        luck: [level.luck],
-        discipline: [level.discipline],
         placedPoints: [level.placedPoints, [Validators.max(20)]],
       });
     }
@@ -416,9 +388,9 @@ export class TableComponent implements OnInit, OnDestroy {
         dodge: Number(control.value.dodge),
         weaponSkill: Number(control.value.weaponSkill),
         shield: Number(control.value.shield),
-        learningCapacity: Number(control.value.learningCapacity),
-        luck: Number(control.value.luck),
-        discipline: Number(control.value.discipline),
+        // learningCapacity: Number(control.value.learningCapacity),
+        // luck: Number(control.value.luck),
+        // discipline: Number(control.value.discipline),
         placedPoints: Number(control.value.placedPoints),
       };
       arrOfLevels.push(level);
@@ -476,15 +448,6 @@ export class TableComponent implements OnInit, OnDestroy {
       }
       case 'UA': {
         return Math.round((race.stats.dodge - 1) * 100);
-      }
-      case 'INL': {
-        return Math.round((race.stats.learningCapacity - 1) * 100);
-      }
-      case 'Tur': {
-        return Math.round((race.stats.luck - 1) * 100);
-      }
-      case 'Disc': {
-        return Math.round((race.stats.discipline - 1) * 100);
       }
       default: {
         return 0;

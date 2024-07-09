@@ -85,7 +85,7 @@ export class GlobalService {
   };
   public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.troll, this.goblin, this.undead, this.salamanth];
 
-  public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'INL', 'Tur', 'DISC', 'Utplacerade Poäng'];
+  public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'Utplacerade Poäng'];
   public weaponSkills: string[] = ['Yxa', 'Svärd', 'Hammare', 'Stav', 'Stick', 'Kätting'];
   public WeaponSkills: number[] = [weaponSkillsNum.Axe, weaponSkillsNum.Sword, weaponSkillsNum.Mace, weaponSkillsNum.Stave, weaponSkillsNum.Shield, weaponSkillsNum.Spear, weaponSkillsNum.Chain];
 
@@ -119,9 +119,6 @@ export class GlobalService {
     dodge: 0,
     weaponSkill: 0,
     shield: 0,
-    learningCapacity: 0,
-    luck: 0,
-    discipline: 0,
   };
 
   public totalWithRaceBonus: ITotal = {
@@ -132,9 +129,6 @@ export class GlobalService {
     dodge: 0,
     weaponSkill: 0,
     shield: 0,
-    learningCapacity: 0,
-    luck: 0,
-    discipline: 0,
   };
 
   public additiveBonusTemplate: IBonus = {
@@ -143,9 +137,7 @@ export class GlobalService {
     endurance: 0,
     initiative: 0,
     dodge: 0,
-    learningCapacity: 0,
-    luck: 0,
-    discipline: 0,
+
     weaponSkill: 0,
     shield: 0,
   };
@@ -156,9 +148,7 @@ export class GlobalService {
     endurance: 1,
     initiative: 1,
     dodge: 1,
-    learningCapacity: 1,
-    luck: 1,
-    discipline: 1,
+
     weaponSkill: 1,
     shield: 1,
   };
