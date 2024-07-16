@@ -13,6 +13,7 @@ import { IArmor } from './support/interfaces/_armory/armor';
 import { armorSlots } from './support/enums/armor.enums';
 import { ArmoryService } from './support/services/armory.service';
 import { accessoriesSlots } from './support/enums/accessories.enums';
+import { IConsumable } from './support/interfaces/_armory/consumables';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit {
 
   constructor(private apiService: ApiService, private globalService: GlobalService, private armoryService: ArmoryService) {}
 
+  /** To determine programmatically what view to use depending on the users device size. */
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
     this.screenWidth = event.target.innerWidth;
@@ -40,6 +42,7 @@ export class AppComponent implements OnInit {
 
     this.screenWidth = window.innerWidth;
 
+    //* Fetching race data from API
     this.apiService.getRaces().subscribe({
       next: (res) => {
         const human = res.races[0].bonuses;
@@ -59,9 +62,9 @@ export class AppComponent implements OnInit {
       },
     });
 
+    //* Fetching weapons from API
     this.apiService.getWeapons().subscribe({
       next: (res) => {
-        console.log(res);
         const weapons: IWeapon[] = res;
 
         weapons.forEach((weapon: IWeapon) => {
@@ -71,6 +74,16 @@ export class AppComponent implements OnInit {
       error: (err) => {},
     });
 
+    //* Fetching enchants from API
+    //! Not implemented yet
+    this.apiService.getEnchants().subscribe({
+      next: (res) => {
+        const enchants = res;
+      },
+      error: (err) => {},
+    });
+
+    //* Fetching armors from API
     this.apiService.getArmors().subscribe({
       next: (res) => {
         const armors: IArmor[] = res;
@@ -79,15 +92,16 @@ export class AppComponent implements OnInit {
           this.assignArmorToArray(armor);
         });
 
-        this.armoryService.emitArmorsAndAccessoriesFetched(true);
+        this.armoryService.emitArmorsAndAccessoriesFetched();
       },
       error: (err) => {},
     });
 
+    //* Fetching consumables from API
     this.apiService.getConsumables().subscribe({
       next: (res) => {
-        const consumables = res;
-        console.log(res);
+        this.globalService.consumables = res;
+        this.armoryService.emitConsumablesFetched();
       },
       error: (err) => {},
     });
@@ -149,6 +163,7 @@ export class AppComponent implements OnInit {
     }
   }
 
+  //TODO Seperate armor and accessories
   private assignArmorToArray(armor: IArmor): void {
     switch (armor.type) {
       case armorSlots.Head: {

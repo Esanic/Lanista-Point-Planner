@@ -1,16 +1,23 @@
-import { IEquipmentBonus } from './bonus';
+import { IEquipment } from './equipment';
 
-export interface IWeapon {
-  id: number;
-  name: string;
-  type: number;
-  bonuses: IEquipmentBonus[];
+// export interface IWeapon {
+//   id: number;
+//   name: string;
+//   type: number;
+//   bonuses: IEquipmentBonus[];
+//   is_ranged: boolean;
+//   is_shield: boolean;
+//   is_two_handed: boolean;
+//   is_weapon: boolean;
+//   max_level: number;
+//   required_level: number;
+//   requires_legend: boolean;
+//   weight: number;
+// }
+
+export interface IWeapon extends IEquipment {
   is_ranged: boolean;
   is_shield: boolean;
   is_two_handed: boolean;
   is_weapon: boolean;
-  max_level: number;
-  required_level: number;
-  requires_legend: boolean;
-  weight: number;
 }

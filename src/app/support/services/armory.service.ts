@@ -7,6 +7,8 @@ import { GlobalService } from './global.service';
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
 import { IArmor } from '../interfaces/_armory/armor';
 import { emptyString } from '../constants/global';
+import { IConsumable } from '../interfaces/_armory/consumables';
+import { IEquipment } from '../interfaces/_armory/equipment';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +19,7 @@ export class ArmoryService {
   private twoHandedBuild: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private armorsAndAccessoriesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private weaponsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private consumablesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
@@ -52,11 +55,11 @@ export class ArmoryService {
     return this.twoHandedBuild.asObservable();
   }
 
-  //* Gear arrays fetched
+  /** Gear arrays fetched */
 
-  /** Armors and Accessories are being fetched in the same API call */
-  public emitArmorsAndAccessoriesFetched(event: boolean): void {
-    this.armorsAndAccessoriesFetched.next(event);
+  //* Armors and Accessories are being fetched in the same API call
+  public emitArmorsAndAccessoriesFetched(): void {
+    this.armorsAndAccessoriesFetched.next(true);
   }
 
   public listenArmorsAndAccessoriesFetched(): Observable<boolean> {
@@ -71,14 +74,23 @@ export class ArmoryService {
     return this.weaponsFetched.asObservable();
   }
 
-  //* Bonuses
-  public emitBonusesHaveBeenAdded(event: any): void {
-    this.emitBonusAdded.next(event);
+  public emitConsumablesFetched(): void {
+    this.consumablesFetched.next(true);
+  }
+
+  public listenConsumablesFetched(): Observable<boolean> {
+    return this.consumablesFetched.asObservable();
+  }
+
+  /** Bonuses */
+  public emitBonusesHaveBeenAdded(): void {
+    this.emitBonusAdded.next(true);
   }
 
   public listenBonusesHaveBeenAdded(): Observable<boolean> {
     return this.emitBonusAdded.asObservable();
   }
+
   //Adds bonuses to the correct equipment slot
   public addBonus(gearSlot: string, bonusesToAdd: ITotalBonus): void {
     this.equipmentBonusesAdditive[gearSlot] = bonusesToAdd.additiveBonus;
@@ -112,7 +124,7 @@ export class ArmoryService {
   }
 
   //TODO: Add more possible interfaces to equipment
-  public calculateBonusesFromEquipment(equipment: IWeapon, selectedWeaponSkill?: string): ITotalBonus {
+  public calculateBonusesFromEquipment(equipment: IEquipment, selectedWeaponSkill?: string): ITotalBonus {
     const weaponSkillEnums = [weaponSkillStr.Axe, weaponSkillStr.Sword, weaponSkillStr.Mace, weaponSkillStr.Stave, weaponSkillStr.Spear, weaponSkillStr.Chain];
     const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
     let multiplierBonus: IBonus = { ...this.globalService.multiplierBonusTemplate };
@@ -187,32 +199,62 @@ export class ArmoryService {
     return { additiveBonus, multiplierBonus };
   }
 
-  public filterAndRenameEquipment(equipmentArray: IWeapon[] | IArmor[], currentMaxLevel: number, showLegendEquipment: boolean, isOffhand?: boolean): IWeapon[] | IArmor[] {
+  public filterAndRenameEquipment(equipmentArray: IEquipment[], currentMaxLevel: number, showLegendEquipment: boolean, isOffhand?: boolean, isWeapon?: boolean): IEquipment[] {
     const equipment = JSON.parse(JSON.stringify(equipmentArray));
 
-    let filteredWeapons: IWeapon[] | IArmor[] = [];
+    let filteredEquipment: IEquipment[] = [];
 
     if (showLegendEquipment) {
       if (isOffhand) {
-        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
+        filteredEquipment = equipment.filter((weapon: IWeapon) => !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
       } else {
-        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => weapon.required_level <= currentMaxLevel);
+        filteredEquipment = equipment.filter((equipment: IEquipment) => equipment.required_level <= currentMaxLevel);
       }
     } else {
       if (isOffhand) {
-        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.is_two_handed && !weapon.requires_legend && !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
+        filteredEquipment = equipment.filter((weapon: IWeapon) => !weapon.is_two_handed && !weapon.requires_legend && !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
       } else {
-        filteredWeapons = equipment.filter((weapon: IWeapon | IArmor) => !weapon.requires_legend && weapon.required_level <= currentMaxLevel);
+        filteredEquipment = equipment.filter((equipment: IEquipment) => !equipment.requires_legend && equipment.required_level <= currentMaxLevel);
       }
     }
 
-    const renamedEquipment: IWeapon[] | IArmor[] = filteredWeapons.map((weapon) => {
-      weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : emptyString}) ${weapon.requires_legend ? '(L)' : emptyString}`;
-      return weapon;
+    const renamedEquipment: IEquipment[] = filteredEquipment.map((equipment) => {
+      equipment.name = `${equipment.name} (G${equipment.required_level}${equipment.max_level ? '-' + equipment.max_level : emptyString}) ${equipment.requires_legend ? '(L)' : emptyString}`;
+      return equipment;
     });
 
     const sortedEquipment = renamedEquipment.sort((a, b) => a.required_level - b.required_level);
 
     return sortedEquipment;
+  }
+
+  //? Can this be achieved in the function above?
+  public filterAndRenameWeapons(weapons: IWeapon[], currentMaxLevel: number, showLegendEquipment: boolean, isOffhand?: boolean): IWeapon[] {
+    const weaponsArray = JSON.parse(JSON.stringify(weapons));
+
+    let filteredWeapons: IWeapon[] = [];
+
+    if (showLegendEquipment) {
+      if (isOffhand) {
+        filteredWeapons = weaponsArray.filter((weapon: IWeapon) => !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
+      } else {
+        filteredWeapons = weaponsArray.filter((equipment: IEquipment) => equipment.required_level <= currentMaxLevel);
+      }
+    } else {
+      if (isOffhand) {
+        filteredWeapons = weaponsArray.filter((weapon: IWeapon) => !weapon.is_two_handed && !weapon.requires_legend && !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
+      } else {
+        filteredWeapons = weaponsArray.filter((equipment: IEquipment) => !equipment.requires_legend && equipment.required_level <= currentMaxLevel);
+      }
+    }
+
+    const renamedWeapons: IWeapon[] = filteredWeapons.map((weapon) => {
+      weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : emptyString}) ${weapon.requires_legend ? '(L)' : emptyString}`;
+      return weapon;
+    });
+
+    const sortedWeapons = renamedWeapons.sort((a, b) => a.required_level - b.required_level);
+
+    return sortedWeapons;
   }
 }

@@ -105,7 +105,7 @@ export class SelectWeaponComponent {
           this.armoryService.addBonus('offhand', bonusToAdd);
         } else this.armoryService.addBonus('mainhand', bonusToAdd);
 
-        this.armoryService.emitBonusesHaveBeenAdded({});
+        this.armoryService.emitBonusesHaveBeenAdded();
       } else {
         this.resetBonus();
       }
@@ -133,7 +133,7 @@ export class SelectWeaponComponent {
         multiplierBonus: multiplierBonus,
       });
     }
-    this.armoryService.emitBonusesHaveBeenAdded({});
+    this.armoryService.emitBonusesHaveBeenAdded();
   }
 
   //* If shieldBuild is true, then shield is selected, otherwise the selectedWeaponSkill is selected
@@ -148,31 +148,31 @@ export class SelectWeaponComponent {
   private selectWeaponArray(weaponSkill: string): void {
     switch (weaponSkill) {
       case weaponSkillStr.Axe: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.axe, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.axe, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Sword: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.sword, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.sword, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Mace: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.mace, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.mace, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Stave: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.stave, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.stave, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Spear: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.spear, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.spear, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Chain: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.chain, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.chain, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Shield: {
-        this.weaponArray.next(this.armoryService.filterAndRenameEquipment(this.globalService.shield, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.shield, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
     }

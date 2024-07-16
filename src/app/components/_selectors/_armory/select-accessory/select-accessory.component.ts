@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { additiveBonus, multiplierBonus } from '../../../../support/constants/bonuses';
@@ -18,7 +18,7 @@ import { AccessoriesPipe } from '../../../../support/pipes/accessories.pipe';
   templateUrl: './select-accessory.component.html',
   styleUrl: './select-accessory.component.css',
 })
-export class SelectAccessoryComponent {
+export class SelectAccessoryComponent implements OnInit, OnDestroy {
   @Input() accessorySlot: number = -1;
 
   public chosenAccessory = new FormControl(emptyString);
@@ -87,7 +87,7 @@ export class SelectAccessoryComponent {
       } else {
         this.resetBonus();
       }
-      this.armoryService.emitBonusesHaveBeenAdded({});
+      this.armoryService.emitBonusesHaveBeenAdded();
     });
   }
 

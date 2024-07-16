@@ -1,10 +1,6 @@
-import { IEquipmentBonus } from './bonus';
+import { IEquipment } from './equipment';
 
-export interface IConsumable {
-  id: number;
-  name: string;
-  weight?: number;
-  bonuses: IEquipmentBonus[];
+export interface IConsumable extends IEquipment {
   instant_points: IInstantPoints[];
   is_hidden: boolean;
   for_live_battle: boolean;

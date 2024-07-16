@@ -6,6 +6,8 @@ import { IBonus } from '../interfaces/_armory/bonus';
 import { ITotal } from '../interfaces/total';
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
 import { IArmor } from '../interfaces/_armory/armor';
+import { IConsumable } from '../interfaces/_armory/consumables';
+import { IAccessory } from '../interfaces/_armory/accessory';
 
 @Injectable({
   providedIn: 'root',
@@ -104,12 +106,14 @@ export class GlobalService {
   public legs: IArmor[] = [];
   public boots: IArmor[] = [];
 
-  public back: IArmor[] = []; // 8
-  public neck: IArmor[] = []; // 6
-  public finger: IArmor[] = []; //7
-  public amulet: IArmor[] = []; //9
-  public bracelet: IArmor[] = []; //10
-  public trinket: IArmor[] = []; //11
+  public back: IAccessory[] = []; // 8
+  public neck: IAccessory[] = []; // 6
+  public finger: IAccessory[] = []; //7
+  public amulet: IAccessory[] = []; //9
+  public bracelet: IAccessory[] = []; //10
+  public trinket: IAccessory[] = []; //11
+
+  public consumables: IConsumable[] = [];
 
   public total: ITotal = {
     stamina: 0,
@@ -168,6 +172,9 @@ export class GlobalService {
     amulet: { ...this.additiveBonusTemplate },
     wrist: { ...this.additiveBonusTemplate },
     trinket: { ...this.additiveBonusTemplate },
+    consumableOne: { ...this.additiveBonusTemplate },
+    consumableTwo: { ...this.additiveBonusTemplate },
+    consumableThree: { ...this.additiveBonusTemplate },
   };
 
   public equipmentBonusesMultiplier: IEquipmentBonusSlots = {
@@ -185,6 +192,9 @@ export class GlobalService {
     amulet: { ...this.multiplierBonusTemplate },
     wrist: { ...this.multiplierBonusTemplate },
     trinket: { ...this.multiplierBonusTemplate },
+    consumableOne: { ...this.multiplierBonusTemplate },
+    consumableTwo: { ...this.multiplierBonusTemplate },
+    consumableThree: { ...this.multiplierBonusTemplate },
   };
 
   constructor() {}

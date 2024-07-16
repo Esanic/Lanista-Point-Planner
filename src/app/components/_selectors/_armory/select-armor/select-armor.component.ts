@@ -87,7 +87,7 @@ export class SelectArmorComponent implements OnInit {
       } else {
         this.resetBonus();
       }
-      this.armoryService.emitBonusesHaveBeenAdded({});
+      this.armoryService.emitBonusesHaveBeenAdded();
     });
   }
 
