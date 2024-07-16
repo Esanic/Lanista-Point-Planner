@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
         const races: any[] = [human, elf, dwarf, orc, troll, goblin, undead, salamanth];
 
         this.globalRaces.forEach((race, index) => {
-          this.assignApiData(race, races[index]);
+          this.assignRacesData(race, races[index]);
         });
       },
     });
@@ -79,13 +79,21 @@ export class AppComponent implements OnInit {
           this.assignArmorToArray(armor);
         });
 
-        this.armoryService.emitArmorsFetched(true);
+        this.armoryService.emitArmorsAndAccessoriesFetched(true);
+      },
+      error: (err) => {},
+    });
+
+    this.apiService.getConsumables().subscribe({
+      next: (res) => {
+        const consumables = res;
+        console.log(res);
       },
       error: (err) => {},
     });
   }
 
-  private assignApiData(race: IRace, changes: any): void {
+  private assignRacesData(race: IRace, changes: any): void {
     race.stats = {
       stamina: changes.stats.find((stat: any) => stat.type === Stats.Stamina).value,
       strength: changes.stats.find((stat: any) => stat.type === Stats.Strength).value,

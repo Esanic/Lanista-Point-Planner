@@ -15,7 +15,7 @@ export class ArmoryService {
   private legendEquipment: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private shieldBuild: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private twoHandedBuild: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private armorsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private armorsAndAccessoriesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private weaponsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
@@ -53,12 +53,14 @@ export class ArmoryService {
   }
 
   //* Gear arrays fetched
-  public emitArmorsFetched(event: boolean): void {
-    this.armorsFetched.next(event);
+
+  /** Armors and Accessories are being fetched in the same API call */
+  public emitArmorsAndAccessoriesFetched(event: boolean): void {
+    this.armorsAndAccessoriesFetched.next(event);
   }
 
-  public listenArmorsFetched(): Observable<boolean> {
-    return this.armorsFetched.asObservable();
+  public listenArmorsAndAccessoriesFetched(): Observable<boolean> {
+    return this.armorsAndAccessoriesFetched.asObservable();
   }
 
   public emitWeaponsFetched(): void {

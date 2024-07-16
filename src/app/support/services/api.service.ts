@@ -22,11 +22,11 @@ export class ApiService {
     return this.http.get<any>(`${this.url}/external/items/armors/all`);
   }
 
-  getAccessories() {
-    return this.http.get<any>(`${this.url}/external/items/accessories/all`);
-  }
-
   getConsumables() {
     return this.http.get<any>(`${this.url}/external/items/consumables/all`);
+  }
+
+  getEnchants() {
+    return this.http.get<any>(`${this.url}/external/items/enchants/all`);
   }
 }
