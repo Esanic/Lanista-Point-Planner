@@ -9,6 +9,7 @@ import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { GlobalService } from '../../../../support/services/global.service';
 import { emptyString } from '../../../../support/constants/global';
+import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
 
 @Component({
   selector: 'app-select-weapon',
@@ -37,7 +38,7 @@ export class SelectWeaponComponent {
   private twoHandedBuild$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private globalService: GlobalService, private armoryService: ArmoryService) {}
+  constructor(private buildService: BuildService, private globalService: GlobalService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
@@ -90,7 +91,7 @@ export class SelectWeaponComponent {
       const chosenWeapon = this.weaponArray.value.find((weapon) => weapon.name === selectedWeapon);
 
       if (chosenWeapon) {
-        const bonusToAdd: ITotalBonus = this.armoryService.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
+        const bonusToAdd: ITotalBonus = this.armoryHelper.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
 
         //* If two handed weapon is selected, emit that event
         if (chosenWeapon.is_two_handed) {
