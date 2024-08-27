@@ -87,7 +87,7 @@ export class GlobalService {
   };
   public races: IRace[] = [this.human, this.elf, this.dwarf, this.orc, this.troll, this.goblin, this.undead, this.salamanth];
 
-  public headers: string[] = ['Grad', 'Hälsa', 'Styrka', 'Uthållighet', 'Initiativ', 'Undvika anfall', 'VF', 'Sköld', 'Utplacerade Poäng'];
+  public headers: string[] = ['Grad', 'KP', 'SB', 'UTH', 'INI', 'UA', 'VF', 'Sköld', 'Utplacerade Poäng'];
   public weaponSkills: string[] = ['Yxa', 'Svärd', 'Hammare', 'Stav', 'Stick', 'Kätting'];
   public WeaponSkills: number[] = [weaponSkillsNum.Axe, weaponSkillsNum.Sword, weaponSkillsNum.Mace, weaponSkillsNum.Stave, weaponSkillsNum.Shield, weaponSkillsNum.Spear, weaponSkillsNum.Chain];
 

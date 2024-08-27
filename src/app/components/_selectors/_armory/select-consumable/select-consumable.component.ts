@@ -8,6 +8,7 @@ import { IConsumable } from '../../../../support/interfaces/_armory/consumables'
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { GlobalService } from '../../../../support/services/global.service';
 import { ConsumablePipe } from '../../../../support/pipes/consumable.pipe';
+import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
 
 @Component({
   selector: 'app-select-consumable',
@@ -29,7 +30,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
   private tableStats$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
-  constructor(private armoryService: ArmoryService, private buildService: BuildService, private globalService: GlobalService) {}
+  constructor(private armoryService: ArmoryService, private armoryHelper: ArmoryHelper, private buildService: BuildService, private globalService: GlobalService) {}
 
   ngOnInit(): void {
     this.consumablesFetched$ = this.armoryService.listenConsumablesFetched().subscribe((event) => {
@@ -53,7 +54,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
       const chosenConsumable = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === this.chosenConsumable.value);
 
       if (chosenConsumable) {
-        const bonusesToAdd: ITotalBonus = this.armoryService.calculateBonusesFromEquipment(chosenConsumable);
+        const bonusesToAdd: ITotalBonus = this.armoryHelper.calculateBonusesFromEquipment(chosenConsumable);
 
         switch (this.consumableSlot) {
           case 1:
