@@ -148,33 +148,62 @@ export class SelectWeaponComponent {
   private selectWeaponArray(weaponSkill: string): void {
     switch (weaponSkill) {
       case weaponSkillStr.Axe: {
-        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.axe, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.filterAndRenameWeapons(this.globalService.axe, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Sword: {
-        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.sword, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.filterAndRenameWeapons(this.globalService.sword, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Mace: {
-        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.mace, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.filterAndRenameWeapons(this.globalService.mace, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Stave: {
-        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.stave, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.filterAndRenameWeapons(this.globalService.stave, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Spear: {
-        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.spear, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.filterAndRenameWeapons(this.globalService.spear, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Chain: {
-        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.chain, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.filterAndRenameWeapons(this.globalService.chain, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
       case weaponSkillStr.Shield: {
-        this.weaponArray.next(this.armoryService.filterAndRenameWeapons(this.globalService.shield, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
+        this.weaponArray.next(this.filterAndRenameWeapons(this.globalService.shield, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
     }
+  }
+
+  private filterAndRenameWeapons(weapons: IWeapon[], currentMaxLevel: number, showLegendEquipment: boolean, isOffhand?: boolean): IWeapon[] {
+    const weaponsArray = JSON.parse(JSON.stringify(weapons));
+
+    let filteredWeapons: IWeapon[] = [];
+
+    if (showLegendEquipment) {
+      if (isOffhand) {
+        filteredWeapons = weaponsArray.filter((weapon: IWeapon) => !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
+      } else {
+        filteredWeapons = weaponsArray.filter((equipment: IWeapon) => equipment.required_level <= currentMaxLevel);
+      }
+    } else {
+      if (isOffhand) {
+        filteredWeapons = weaponsArray.filter((weapon: IWeapon) => !weapon.is_two_handed && !weapon.requires_legend && !weapon.is_two_handed && weapon.required_level <= currentMaxLevel);
+      } else {
+        filteredWeapons = weaponsArray.filter((equipment: IWeapon) => !equipment.requires_legend && equipment.required_level <= currentMaxLevel);
+      }
+    }
+
+    const renamedWeapons: IWeapon[] = filteredWeapons.map((weapon) => {
+      weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : emptyString}) ${weapon.requires_legend ? '(L)' : emptyString}`;
+      return weapon;
+    });
+
+    const sortedWeapons = renamedWeapons.sort((a, b) => a.required_level - b.required_level);
+
+    return sortedWeapons;
   }
 }

@@ -49,7 +49,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
       this.chosenConsumable.patchValue(emptyString);
     });
 
-    this.chosenConsumable.valueChanges.subscribe((consumable) => {
+    this.chosenConsumable.valueChanges.subscribe(() => {
       const chosenConsumable = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === this.chosenConsumable.value);
 
       if (chosenConsumable) {
@@ -95,6 +95,5 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
     const sortedEquipment = renamedEquipment.sort((a, b) => a.required_level - b.required_level);
 
     this.filteredAndRenamedConsumablesArray = sortedEquipment;
-    console.log(sortedEquipment);
   }
 }

@@ -14,6 +14,7 @@ import { armorSlots } from './support/enums/armor.enums';
 import { ArmoryService } from './support/services/armory.service';
 import { accessoriesSlots } from './support/enums/accessories.enums';
 import { IConsumable } from './support/interfaces/_armory/consumables';
+import { IAccessory } from './support/interfaces/_armory/accessory';
 
 @Component({
   selector: 'app-root',
@@ -89,7 +90,7 @@ export class AppComponent implements OnInit {
         const armors: IArmor[] = res;
 
         armors.forEach((armor: IArmor) => {
-          this.assignArmorToArray(armor);
+          this.assignArmorAndAccessoriesToArray(armor);
         });
 
         this.armoryService.emitArmorsAndAccessoriesFetched();
@@ -163,55 +164,54 @@ export class AppComponent implements OnInit {
     }
   }
 
-  //TODO Seperate armor and accessories
-  private assignArmorToArray(armor: IArmor): void {
-    switch (armor.type) {
+  private assignArmorAndAccessoriesToArray(equipment: IArmor | IAccessory): void {
+    switch (equipment.type) {
       case armorSlots.Head: {
-        this.globalService.head.push(armor);
+        this.globalService.head.push(equipment);
         break;
       }
       case armorSlots.Shoulders: {
-        this.globalService.shoulders.push(armor);
+        this.globalService.shoulders.push(equipment);
         break;
       }
       case armorSlots.Chest: {
-        this.globalService.chest.push(armor);
+        this.globalService.chest.push(equipment);
         break;
       }
       case armorSlots.Hands: {
-        this.globalService.gloves.push(armor);
+        this.globalService.gloves.push(equipment);
         break;
       }
       case armorSlots.Legs: {
-        this.globalService.legs.push(armor);
+        this.globalService.legs.push(equipment);
         break;
       }
       case armorSlots.Feet: {
-        this.globalService.boots.push(armor);
+        this.globalService.boots.push(equipment);
         break;
       }
       case accessoriesSlots.Back: {
-        this.globalService.back.push(armor);
+        this.globalService.back.push(equipment);
         break;
       }
       case accessoriesSlots.Neck: {
-        this.globalService.neck.push(armor);
+        this.globalService.neck.push(equipment);
         break;
       }
       case accessoriesSlots.Finger: {
-        this.globalService.finger.push(armor);
+        this.globalService.finger.push(equipment);
         break;
       }
       case accessoriesSlots.Amulet: {
-        this.globalService.amulet.push(armor);
+        this.globalService.amulet.push(equipment);
         break;
       }
       case accessoriesSlots.Bracelet: {
-        this.globalService.bracelet.push(armor);
+        this.globalService.bracelet.push(equipment);
         break;
       }
       case accessoriesSlots.Trinket: {
-        this.globalService.trinket.push(armor);
+        this.globalService.trinket.push(equipment);
         break;
       }
     }

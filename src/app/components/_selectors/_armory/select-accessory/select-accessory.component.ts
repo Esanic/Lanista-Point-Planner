@@ -10,6 +10,7 @@ import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { GlobalService } from '../../../../support/services/global.service';
 import { AccessoriesPipe } from '../../../../support/pipes/accessories.pipe';
+import { IAccessory } from '../../../../support/interfaces/_armory/accessory';
 
 @Component({
   selector: 'app-select-accessory',
@@ -23,7 +24,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
 
   public chosenAccessory = new FormControl(emptyString);
 
-  public filteredAndRenamedAccessoriesArray: IArmor[] = [];
+  public filteredAndRenamedAccessoriesArray: IAccessory[] = [];
 
   private currentMaxLevel: number = 25;
   private viewLegendEquipment: boolean = false;
@@ -38,19 +39,19 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.accessoriesFetched$ = this.armoryService.listenArmorsAndAccessoriesFetched().subscribe((event) => {
       if (event) {
-        this.filterAndRenameAccessories();
+        this.selectAccessorySlotToFilterAndRename();
       }
     });
 
     this.viewLegendEquipment$ = this.armoryService.getLegendEquipmentViewStatus().subscribe((legendEquipmentViewStatus) => {
       this.viewLegendEquipment = legendEquipmentViewStatus;
-      this.filterAndRenameAccessories();
+      this.selectAccessorySlotToFilterAndRename();
     });
 
     this.tableStats$ = this.buildService.getStatsFromTable().subscribe((stats) => {
       if (stats.levels) {
         this.currentMaxLevel = stats.levels.length;
-        this.filterAndRenameAccessories();
+        this.selectAccessorySlotToFilterAndRename();
       }
     });
 
@@ -139,26 +140,47 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
     }
   }
 
-  private filterAndRenameAccessories(): void {
+  private selectAccessorySlotToFilterAndRename(): void {
     switch (this.accessorySlot) {
       case accessoriesSlots.Back:
-        this.filteredAndRenamedAccessoriesArray = this.armoryService.filterAndRenameEquipment(this.globalService.back, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.back, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Neck:
-        this.filteredAndRenamedAccessoriesArray = this.armoryService.filterAndRenameEquipment(this.globalService.neck, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.neck, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Finger:
-        this.filteredAndRenamedAccessoriesArray = this.armoryService.filterAndRenameEquipment(this.globalService.finger, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.finger, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Amulet:
-        this.filteredAndRenamedAccessoriesArray = this.armoryService.filterAndRenameEquipment(this.globalService.amulet, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.amulet, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Bracelet:
-        this.filteredAndRenamedAccessoriesArray = this.armoryService.filterAndRenameEquipment(this.globalService.bracelet, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.bracelet, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Trinket:
-        this.filteredAndRenamedAccessoriesArray = this.armoryService.filterAndRenameEquipment(this.globalService.trinket, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.trinket, this.currentMaxLevel, this.viewLegendEquipment);
         break;
     }
+  }
+
+  private filterAndRenameAccessory(equipmentArray: IAccessory[], currentMaxLevel: number, showLegendEquipment: boolean): IAccessory[] {
+    const equipment = JSON.parse(JSON.stringify(equipmentArray));
+
+    let filteredEquipment: IAccessory[] = [];
+
+    if (showLegendEquipment) {
+      filteredEquipment = equipment.filter((equipment: IAccessory) => equipment.required_level <= currentMaxLevel);
+    } else {
+      filteredEquipment = equipment.filter((equipment: IAccessory) => !equipment.requires_legend && equipment.required_level <= currentMaxLevel);
+    }
+
+    const renamedEquipment: IAccessory[] = filteredEquipment.map((equipment) => {
+      equipment.name = `${equipment.name} (G${equipment.required_level}${equipment.max_level ? '-' + equipment.max_level : emptyString}) ${equipment.requires_legend ? '(L)' : emptyString}`;
+      return equipment;
+    });
+
+    const sortedEquipment = renamedEquipment.sort((a, b) => a.required_level - b.required_level);
+
+    return sortedEquipment;
   }
 }

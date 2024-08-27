@@ -38,19 +38,19 @@ export class SelectArmorComponent implements OnInit {
   ngOnInit(): void {
     this.armorsFetched$ = this.armoryService.listenArmorsAndAccessoriesFetched().subscribe((event) => {
       if (event) {
-        this.filterAndRenameArmors();
+        this.selectArmorSlotToFilterAndRename();
       }
     });
 
     this.viewLegendEquipment$ = this.armoryService.getLegendEquipmentViewStatus().subscribe((legendEquipmentViewStatus) => {
       this.viewLegendEquipment = legendEquipmentViewStatus;
-      this.filterAndRenameArmors();
+      this.selectArmorSlotToFilterAndRename();
     });
 
     this.tableStats$ = this.buildService.getStatsFromTable().subscribe((stats) => {
       if (stats.levels) {
         this.currentMaxLevel = stats.levels.length;
-        this.filterAndRenameArmors();
+        this.selectArmorSlotToFilterAndRename();
       }
     });
 
@@ -139,26 +139,47 @@ export class SelectArmorComponent implements OnInit {
     }
   }
 
-  private filterAndRenameArmors(): void {
+  private selectArmorSlotToFilterAndRename(): void {
     switch (this.armorSlot) {
       case armorSlots.Head:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.head, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.head, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Shoulders:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.shoulders, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.shoulders, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Chest:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.chest, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.chest, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Hands:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.gloves, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.gloves, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Legs:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.legs, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.legs, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Feet:
-        this.filteredAndRenamedArmorArray = this.armoryService.filterAndRenameEquipment(this.globalService.boots, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.boots, this.currentMaxLevel, this.viewLegendEquipment);
         break;
     }
+  }
+
+  private filterAndRenameArmor(equipmentArray: IArmor[], currentMaxLevel: number, showLegendEquipment: boolean): IArmor[] {
+    const equipment = JSON.parse(JSON.stringify(equipmentArray));
+
+    let filteredEquipment: IArmor[] = [];
+
+    if (showLegendEquipment) {
+      filteredEquipment = equipment.filter((equipment: IArmor) => equipment.required_level <= currentMaxLevel);
+    } else {
+      filteredEquipment = equipment.filter((equipment: IArmor) => !equipment.requires_legend && equipment.required_level <= currentMaxLevel);
+    }
+
+    const renamedEquipment: IArmor[] = filteredEquipment.map((equipment) => {
+      equipment.name = `${equipment.name} (G${equipment.required_level}${equipment.max_level ? '-' + equipment.max_level : emptyString}) ${equipment.requires_legend ? '(L)' : emptyString}`;
+      return equipment;
+    });
+
+    const sortedEquipment = renamedEquipment.sort((a, b) => a.required_level - b.required_level);
+
+    return sortedEquipment;
   }
 }
