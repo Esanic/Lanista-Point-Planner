@@ -14,7 +14,6 @@ import { CommonHelper } from '../../../support/helpers/common.helper';
 })
 export class SelectRaceComponent implements OnInit, OnDestroy {
   public chooseRace = new FormControl(emptyString);
-  // public races: string[] = this.globalService.races.map((race) => race.name!);
   public races: string[] = this.buildService.getRaces().map((race) => race.name);
 
   private incomingRace$: Subscription = new Subscription();
