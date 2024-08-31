@@ -1,12 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { emptyString } from '../../../../support/constants/global';
+import { emptyString } from '../../../../support/constants/common';
 import { Subscription } from 'rxjs';
 import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { IConsumable } from '../../../../support/interfaces/_armory/consumables';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
-import { GlobalService } from '../../../../support/services/global.service';
 import { ConsumablePipe } from '../../../../support/pipes/consumable.pipe';
 import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
 
@@ -30,7 +29,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
   private tableStats$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
-  constructor(private armoryService: ArmoryService, private armoryHelper: ArmoryHelper, private buildService: BuildService, private globalService: GlobalService) {}
+  constructor(private armoryService: ArmoryService, private armoryHelper: ArmoryHelper, private buildService: BuildService) {}
 
   ngOnInit(): void {
     this.consumablesFetched$ = this.armoryService.listenConsumablesFetched().subscribe((event) => {
@@ -82,7 +81,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
   }
 
   private filterAndRenameConsumables(): void {
-    const equipment = JSON.parse(JSON.stringify(this.globalService.consumables));
+    const equipment = JSON.parse(JSON.stringify(this.armoryService.consumables));
 
     let filteredEquipment: IConsumable[] = [];
 

@@ -1,10 +1,9 @@
 import { Component, Host, HostListener, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './support/services/api.service';
-import { GlobalService } from './support/services/global.service';
 import { Stats } from './support/enums/stats.enums';
 import { weaponSkillsNum } from './support/enums/weapon-skills.enums';
-import { IRace } from './support/interfaces/race';
+import { IApiBonuses, IApiRace, IRace } from './support/interfaces/race';
 import { DesktopViewComponent } from './components/_views/desktop-view/desktop-view.component';
 import { MobileViewComponent } from './components/_views/mobile-view/mobile-view.component';
 import { TabletViewComponent } from './components/_views/tablet-view/tablet-view.component';
@@ -13,8 +12,11 @@ import { IArmor } from './support/interfaces/_armory/armor';
 import { armorSlots } from './support/enums/armor.enums';
 import { ArmoryService } from './support/services/armory.service';
 import { accessoriesSlots } from './support/enums/accessories.enums';
-import { IConsumable } from './support/interfaces/_armory/consumables';
 import { IAccessory } from './support/interfaces/_armory/accessory';
+import { BuildService } from './support/services/build.service';
+import { Races } from './support/enums/races';
+import { dwarf, elf, goblin, human, orc, salamanth, troll, undead } from './support/constants/templates';
+import { BuildHelper } from './support/helpers/build.helper';
 
 @Component({
   selector: 'app-root',
@@ -24,11 +26,11 @@ import { IAccessory } from './support/interfaces/_armory/accessory';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  private globalRaces = this.globalService.races;
+  private globalRaces = this.buildService.getRaces();
 
   public screenWidth: number = 0;
 
-  constructor(private apiService: ApiService, private globalService: GlobalService, private armoryService: ArmoryService) {}
+  constructor(private apiService: ApiService, private buildService: BuildService, private buildHelper: BuildHelper, private armoryService: ArmoryService) {}
 
   /** To determine programmatically what view to use depending on the users device size. */
   @HostListener('window:resize', ['$event'])
@@ -43,27 +45,31 @@ export class AppComponent implements OnInit {
 
     this.screenWidth = window.innerWidth;
 
-    //* Fetching race data from API
+    /**
+     * Fetching races from API
+     */
     this.apiService.getRaces().subscribe({
       next: (res) => {
-        const human = res.races[0].bonuses;
-        const elf = res.races[1].bonuses;
-        const dwarf = res.races[2].bonuses;
-        const orc = res.races[3].bonuses;
-        const troll = res.races[4].bonuses;
-        const goblin = res.races[5].bonuses;
-        const undead = res.races[6].bonuses;
-        const salamanth = res.races[7].bonuses;
+        const human = { id: res.races[0].id, stats: res.races[0].bonuses.stats, weapon_skills: res.races[0].bonuses.weapon_skills } as IApiRace;
+        const elf = { id: res.races[1].id, stats: res.races[1].bonuses.stats, weapon_skills: res.races[1].bonuses.weapon_skills } as IApiRace;
+        const dwarf = { id: res.races[2].id, stats: res.races[2].bonuses.stats, weapon_skills: res.races[2].bonuses.weapon_skills } as IApiRace;
+        const orc = { id: res.races[3].id, stats: res.races[3].bonuses.stats, weapon_skills: res.races[3].bonuses.weapon_skills } as IApiRace;
+        const troll = { id: res.races[4].id, stats: res.races[4].bonuses.stats, weapon_skills: res.races[4].bonuses.weapon_skills } as IApiRace;
+        const goblin = { id: res.races[5].id, stats: res.races[5].bonuses.stats, weapon_skills: res.races[5].bonuses.weapon_skills } as IApiRace;
+        const undead = { id: res.races[6].id, stats: res.races[6].bonuses.stats, weapon_skills: res.races[6].bonuses.weapon_skills } as IApiRace;
+        const salamanth = { id: res.races[7].id, stats: res.races[7].bonuses.stats, weapon_skills: res.races[7].bonuses.weapon_skills } as IApiRace;
 
         const races: any[] = [human, elf, dwarf, orc, troll, goblin, undead, salamanth];
 
-        this.globalRaces.forEach((race, index) => {
-          this.assignRacesData(race, races[index]);
+        races.forEach((race) => {
+          this.assignRacesData(race);
         });
       },
     });
 
-    //* Fetching weapons from API
+    /**
+     * Fetching weapons from API
+     */
     this.apiService.getWeapons().subscribe({
       next: (res) => {
         const weapons: IWeapon[] = res;
@@ -75,7 +81,9 @@ export class AppComponent implements OnInit {
       error: (err) => {},
     });
 
-    //* Fetching enchants from API
+    /**
+     * Fetching enchants from API
+     */
     //! Not implemented yet
     this.apiService.getEnchants().subscribe({
       next: (res) => {
@@ -84,7 +92,9 @@ export class AppComponent implements OnInit {
       error: (err) => {},
     });
 
-    //* Fetching armors from API
+    /**
+     * Fetching armors and accessories from API
+     */
     this.apiService.getArmors().subscribe({
       next: (res) => {
         const armors: IArmor[] = res;
@@ -98,67 +108,83 @@ export class AppComponent implements OnInit {
       error: (err) => {},
     });
 
-    //* Fetching consumables from API
+    /**
+     * Fetching accessories from API
+     */
     this.apiService.getConsumables().subscribe({
       next: (res) => {
-        this.globalService.consumables = res;
+        this.armoryService.consumables = res;
         this.armoryService.emitConsumablesFetched();
       },
       error: (err) => {},
     });
   }
 
-  private assignRacesData(race: IRace, changes: any): void {
-    race.stats = {
-      stamina: changes.stats.find((stat: any) => stat.type === Stats.Stamina).value,
-      strength: changes.stats.find((stat: any) => stat.type === Stats.Strength).value,
-      endurance: changes.stats.find((stat: any) => stat.type === Stats.Endurance).value,
-      initiative: changes.stats.find((stat: any) => stat.type === Stats.Initiative).value,
-      dodge: changes.stats.find((stat: any) => stat.type === Stats.Dodge).value,
-      learningCapacity: changes.stats.find((stat: any) => stat.type === Stats.LearningCapacity).value,
-      luck: changes.stats.find((stat: any) => stat.type === Stats.Luck).value,
-      discipline: changes.stats.find((stat: any) => stat.type === Stats.Discipline).value,
-    };
-
-    race.weaponSkills = {
-      axe: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Axe).value,
-      sword: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Sword).value,
-      mace: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Mace).value,
-      stave: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Stave).value,
-      shield: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Shield).value,
-      spear: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Spear).value,
-      chain: changes.weapon_skills.find((skill: any) => skill.type === weaponSkillsNum.Chain).value,
-    };
+  private assignRacesData(race: IApiRace): void {
+    switch (race.id) {
+      case Races.human: {
+        this.buildService.setHuman(this.buildHelper.bonusAssigner(race, human));
+        break;
+      }
+      case Races.elf: {
+        this.buildService.setElf(this.buildHelper.bonusAssigner(race, elf));
+        break;
+      }
+      case Races.dwarf: {
+        this.buildService.setDwarf(this.buildHelper.bonusAssigner(race, dwarf));
+        break;
+      }
+      case Races.orc: {
+        this.buildService.setOrc(this.buildHelper.bonusAssigner(race, orc));
+        break;
+      }
+      case Races.troll: {
+        this.buildService.setTroll(this.buildHelper.bonusAssigner(race, troll));
+        break;
+      }
+      case Races.goblin: {
+        this.buildService.setGoblin(this.buildHelper.bonusAssigner(race, goblin));
+        break;
+      }
+      case Races.undead: {
+        this.buildService.setUndead(this.buildHelper.bonusAssigner(race, undead));
+        break;
+      }
+      case Races.salamanth: {
+        this.buildService.setSalamanth(this.buildHelper.bonusAssigner(race, salamanth));
+        break;
+      }
+    }
   }
 
   private assignWeaponToArray(weapon: IWeapon): void {
     switch (weapon.type) {
       case weaponSkillsNum.Axe: {
-        this.globalService.axe.push(weapon);
+        this.armoryService.axe.push(weapon);
         break;
       }
       case weaponSkillsNum.Sword: {
-        this.globalService.sword.push(weapon);
+        this.armoryService.sword.push(weapon);
         break;
       }
       case weaponSkillsNum.Mace: {
-        this.globalService.mace.push(weapon);
+        this.armoryService.mace.push(weapon);
         break;
       }
       case weaponSkillsNum.Stave: {
-        this.globalService.stave.push(weapon);
+        this.armoryService.stave.push(weapon);
         break;
       }
       case weaponSkillsNum.Shield: {
-        this.globalService.shield.push(weapon);
+        this.armoryService.shield.push(weapon);
         break;
       }
       case weaponSkillsNum.Spear: {
-        this.globalService.spear.push(weapon);
+        this.armoryService.spear.push(weapon);
         break;
       }
       case weaponSkillsNum.Chain: {
-        this.globalService.chain.push(weapon);
+        this.armoryService.chain.push(weapon);
         break;
       }
     }
@@ -167,51 +193,51 @@ export class AppComponent implements OnInit {
   private assignArmorAndAccessoriesToArray(equipment: IArmor | IAccessory): void {
     switch (equipment.type) {
       case armorSlots.Head: {
-        this.globalService.head.push(equipment);
+        this.armoryService.head.push(equipment);
         break;
       }
       case armorSlots.Shoulders: {
-        this.globalService.shoulders.push(equipment);
+        this.armoryService.shoulders.push(equipment);
         break;
       }
       case armorSlots.Chest: {
-        this.globalService.chest.push(equipment);
+        this.armoryService.chest.push(equipment);
         break;
       }
       case armorSlots.Hands: {
-        this.globalService.gloves.push(equipment);
+        this.armoryService.gloves.push(equipment);
         break;
       }
       case armorSlots.Legs: {
-        this.globalService.legs.push(equipment);
+        this.armoryService.legs.push(equipment);
         break;
       }
       case armorSlots.Feet: {
-        this.globalService.boots.push(equipment);
+        this.armoryService.boots.push(equipment);
         break;
       }
       case accessoriesSlots.Back: {
-        this.globalService.back.push(equipment);
+        this.armoryService.back.push(equipment);
         break;
       }
       case accessoriesSlots.Neck: {
-        this.globalService.neck.push(equipment);
+        this.armoryService.neck.push(equipment);
         break;
       }
       case accessoriesSlots.Finger: {
-        this.globalService.finger.push(equipment);
+        this.armoryService.finger.push(equipment);
         break;
       }
       case accessoriesSlots.Amulet: {
-        this.globalService.amulet.push(equipment);
+        this.armoryService.amulet.push(equipment);
         break;
       }
       case accessoriesSlots.Bracelet: {
-        this.globalService.bracelet.push(equipment);
+        this.armoryService.bracelet.push(equipment);
         break;
       }
       case accessoriesSlots.Trinket: {
-        this.globalService.trinket.push(equipment);
+        this.armoryService.trinket.push(equipment);
         break;
       }
     }

@@ -2,19 +2,22 @@ import { Injectable } from '@angular/core';
 import { weaponSkillStr } from '../enums/weapon-skills.enums';
 import { ITotalBonus, IBonus } from '../interfaces/_armory/bonus';
 import { IEquipment } from '../interfaces/_armory/equipment';
-import { GlobalService } from '../services/global.service';
+import { additiveBonus, multiplierBonus } from '../constants/templates';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArmoryHelper {
-  constructor(private globalService: GlobalService) {}
+  private additiveBonus: IBonus = { ...additiveBonus };
+  private multiplierBonus: IBonus = { ...multiplierBonus };
+
+  constructor() {}
 
   public calculateBonusesFromEquipment(equipment: IEquipment, selectedWeaponSkill?: string): ITotalBonus {
     const weaponSkillEnums = [weaponSkillStr.Axe, weaponSkillStr.Sword, weaponSkillStr.Mace, weaponSkillStr.Stave, weaponSkillStr.Spear, weaponSkillStr.Chain];
     const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
-    let multiplierBonus: IBonus = { ...this.globalService.multiplierBonusTemplate };
-    let additiveBonus: IBonus = { ...this.globalService.additiveBonusTemplate };
+    let multiplierBonus: IBonus = this.additiveBonus;
+    let additiveBonus: IBonus = this.multiplierBonus;
 
     equipment.bonuses.forEach((bonus) => {
       if (bonus.additive !== undefined) {

@@ -4,12 +4,11 @@ import { ArmoryService } from '../../../../support/services/armory.service';
 import { Subscription } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IArmor } from '../../../../support/interfaces/_armory/armor';
-import { GlobalService } from '../../../../support/services/global.service';
 import { armorSlots } from '../../../../support/enums/armor.enums';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { ArmorPipe } from '../../../../support/pipes/armor.pipe';
-import { additiveBonus, multiplierBonus } from '../../../../support/constants/bonuses';
-import { emptyString } from '../../../../support/constants/global';
+import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
+import { emptyString } from '../../../../support/constants/common';
 import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
 
 @Component({
@@ -34,7 +33,7 @@ export class SelectArmorComponent implements OnInit {
   private tableStats$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper, private globalService: GlobalService) {}
+  constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
 
   ngOnInit(): void {
     this.armorsFetched$ = this.armoryService.listenArmorsAndAccessoriesFetched().subscribe((event) => {
@@ -143,22 +142,22 @@ export class SelectArmorComponent implements OnInit {
   private selectArmorSlotToFilterAndRename(): void {
     switch (this.armorSlot) {
       case armorSlots.Head:
-        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.head, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.armoryService.head, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Shoulders:
-        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.shoulders, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.armoryService.shoulders, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Chest:
-        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.chest, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.armoryService.chest, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Hands:
-        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.gloves, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.armoryService.gloves, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Legs:
-        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.legs, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.armoryService.legs, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case armorSlots.Feet:
-        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.globalService.boots, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedArmorArray = this.filterAndRenameArmor(this.armoryService.boots, this.currentMaxLevel, this.viewLegendEquipment);
         break;
     }
   }

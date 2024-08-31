@@ -1,6 +1,6 @@
 import { Directive, ElementRef, forwardRef, HostListener, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { emptyString } from '../constants/global';
+import { emptyString } from '../constants/common';
 
 @Directive({
   standalone: true,

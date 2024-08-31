@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBuild } from '../interfaces/build';
 import { IRace } from '../interfaces/race';
-import { emptyString } from '../constants/global';
+import { emptyString } from '../constants/common';
+import { defaultRace, dwarf, elf, goblin, human, orc, salamanth, troll, undead } from '../constants/templates';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,16 @@ export class BuildService {
   private wipeDataEmit: Subject<any> = new Subject<any>();
   private wipeTableEmit: Subject<any> = new Subject<any>();
 
+  private human: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(human);
+  private elf: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(elf);
+  private dwarf: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(dwarf);
+  private orc: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(orc);
+  private goblin: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(goblin);
+  private troll: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(troll);
+  private undead: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(undead);
+  private salamanth: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(salamanth);
+  private default: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(defaultRace);
+
   constructor() {}
 
   //* Select build *//
@@ -36,6 +47,7 @@ export class BuildService {
     return this.selectedBuild.asObservable();
   }
 
+  //TODO: Should be reworked
   public getSelectedBuildVar(): IBuild {
     return this.selectedBuildVariable;
   }
@@ -121,4 +133,80 @@ export class BuildService {
   public getAmountOfLevelsSubject(): Observable<number> {
     return this.chosenLevelsSubject.asObservable();
   }
+
+  //#region Races
+  //* Human *//
+  public setHuman(race: IRace): void {
+    this.human.next(race);
+  }
+  public getHuman(): IRace {
+    return this.human.value;
+  }
+
+  //* Elf *//
+  public setElf(race: IRace): void {
+    this.elf.next(race);
+  }
+  public getElf(): IRace {
+    return this.elf.value;
+  }
+
+  //* Dwarf *//
+  public setDwarf(race: IRace): void {
+    this.dwarf.next(race);
+  }
+  public getDwarf(): IRace {
+    return this.dwarf.value;
+  }
+
+  //* Orc *//
+  public setOrc(race: IRace): void {
+    this.orc.next(race);
+  }
+  public getOrc(): IRace {
+    return this.orc.value;
+  }
+
+  //* Goblin *//
+  public setGoblin(race: IRace): void {
+    this.goblin.next(race);
+  }
+  public getGoblin(): IRace {
+    return this.goblin.value;
+  }
+
+  //* Troll *//
+  public setTroll(race: IRace): void {
+    this.troll.next(race);
+  }
+  public getTroll(): IRace {
+    return this.troll.value;
+  }
+
+  //* Undead *//
+  public setUndead(race: IRace): void {
+    this.undead.next(race);
+  }
+  public getUndead(): IRace {
+    return this.undead.value;
+  }
+
+  //* Salamanth *//
+  public setSalamanth(race: IRace): void {
+    this.salamanth.next(race);
+  }
+  public getSalamanth(): IRace {
+    return this.salamanth.value;
+  }
+
+  //* Default race *//
+  public getDefaultRace(): IRace {
+    return this.default.value;
+  }
+
+  //* All races *//
+  public getRaces(): IRace[] {
+    return [this.human.value, this.elf.value, this.dwarf.value, this.orc.value, this.troll.value, this.goblin.value, this.undead.value, this.salamanth.value];
+  }
+  //#endregion
 }

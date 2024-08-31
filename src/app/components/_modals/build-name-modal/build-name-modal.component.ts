@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuildService } from '../../../support/services/build.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { emptyString } from '../../../support/constants/global';
+import { emptyString } from '../../../support/constants/common';
 
 @Component({
   selector: 'app-build-name-modal',

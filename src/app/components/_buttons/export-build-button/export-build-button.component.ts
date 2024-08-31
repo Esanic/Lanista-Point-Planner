@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TableService } from '../../../support/services/table.service';
 import { firstValueFrom } from 'rxjs';
 
 import { Clipboard } from '@angular/cdk/clipboard';

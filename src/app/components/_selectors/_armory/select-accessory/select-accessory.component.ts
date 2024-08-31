@@ -1,14 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { additiveBonus, multiplierBonus } from '../../../../support/constants/bonuses';
-import { emptyString } from '../../../../support/constants/global';
+import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
+import { emptyString } from '../../../../support/constants/common';
 import { accessoriesSlots } from '../../../../support/enums/accessories.enums';
-import { IArmor } from '../../../../support/interfaces/_armory/armor';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
-import { GlobalService } from '../../../../support/services/global.service';
 import { AccessoriesPipe } from '../../../../support/pipes/accessories.pipe';
 import { IAccessory } from '../../../../support/interfaces/_armory/accessory';
 import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
@@ -35,7 +33,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   private tableStats$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper, private globalService: GlobalService) {}
+  constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
 
   ngOnInit(): void {
     this.accessoriesFetched$ = this.armoryService.listenArmorsAndAccessoriesFetched().subscribe((event) => {
@@ -144,22 +142,22 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   private selectAccessorySlotToFilterAndRename(): void {
     switch (this.accessorySlot) {
       case accessoriesSlots.Back:
-        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.back, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.back, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Neck:
-        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.neck, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.neck, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Finger:
-        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.finger, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.finger, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Amulet:
-        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.amulet, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.amulet, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Bracelet:
-        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.bracelet, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.bracelet, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Trinket:
-        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.globalService.trinket, this.currentMaxLevel, this.viewLegendEquipment);
+        this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.trinket, this.currentMaxLevel, this.viewLegendEquipment);
         break;
     }
   }

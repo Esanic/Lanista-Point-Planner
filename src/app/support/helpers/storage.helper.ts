@@ -4,7 +4,7 @@ import { IBuild } from '../interfaces/build';
 @Injectable({
   providedIn: 'root',
 })
-export class StorageService {
+export class StorageHelper {
   constructor() {}
 
   public getBuilds(): IBuild[] {

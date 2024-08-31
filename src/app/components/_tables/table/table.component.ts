@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ILevel } from '../../../support/interfaces/level';
-import { GlobalService } from '../../../support/services/global.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
@@ -9,7 +8,10 @@ import { IRace } from '../../../support/interfaces/race';
 import { BuildService } from '../../../support/services/build.service';
 import { IBuild } from '../../../support/interfaces/build';
 import { ArmoryService } from '../../../support/services/armory.service';
-import { emptyString } from '../../../support/constants/global';
+import { emptyString } from '../../../support/constants/common';
+import { tableHeaders } from '../../../support/constants/headers';
+import { total } from '../../../support/constants/templates';
+import { CommonHelper } from '../../../support/helpers/common.helper';
 
 @Component({
   selector: 'app-table',
@@ -19,7 +21,7 @@ import { emptyString } from '../../../support/constants/global';
   styleUrl: './table.component.scss',
 })
 export class TableComponent implements OnInit, OnDestroy {
-  public headers: string[] = this.globalService.headers;
+  public headers: string[] = tableHeaders;
   public levels: ILevel[] = [];
   public desiredLevels: number = 25 + 1;
   public tableForm!: FormGroup;
@@ -32,9 +34,9 @@ export class TableComponent implements OnInit, OnDestroy {
   public weaponSkill: string = emptyString;
   public weaponSkillMultiplier: number = 1;
 
-  public total = this.globalService.total;
+  public total = { ...total };
   public totalPlacedPoints = 0;
-  public totalWithBonuses = this.globalService.totalWithRaceBonus;
+  public totalWithBonuses = { ...total };
   public totalWithBonusesPlacedPoints = 0;
 
   private shieldBuild: boolean = false;
@@ -50,7 +52,7 @@ export class TableComponent implements OnInit, OnDestroy {
   private addBonus$: Subscription = new Subscription();
   private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeData$, this.wipeTable$, this.getLevels$, this.addBonus$];
 
-  constructor(private globalService: GlobalService, private formBuilder: FormBuilder, private buildService: BuildService, private armoryService: ArmoryService) {}
+  constructor(private formBuilder: FormBuilder, private buildService: BuildService, private armoryService: ArmoryService, private commonHelper: CommonHelper) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -208,8 +210,8 @@ export class TableComponent implements OnInit, OnDestroy {
 
   private summarizeEachColumn(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.total = { ...this.globalService.total };
-      this.totalWithBonuses = { ...this.globalService.totalWithRaceBonus };
+      this.total = { ...total };
+      this.totalWithBonuses = { ...total };
 
       this.tableFormArr.controls.forEach((level) => {
         Object.entries(level.value).forEach((attribute: any[]) => {
@@ -327,28 +329,28 @@ export class TableComponent implements OnInit, OnDestroy {
   private racePicker(race: string): void {
     switch (race) {
       case 'Människa':
-        this.race = this.globalService.human;
+        this.race = this.buildService.getHuman();
         break;
       case 'Alv':
-        this.race = this.globalService.elf;
+        this.race = this.buildService.getElf();
         break;
       case 'Dvärg':
-        this.race = this.globalService.dwarf;
+        this.race = this.buildService.getDwarf();
         break;
       case 'Ork':
-        this.race = this.globalService.orc;
+        this.race = this.buildService.getOrc();
         break;
       case 'Goblin':
-        this.race = this.globalService.goblin;
+        this.race = this.buildService.getGoblin();
         break;
       case 'Troll':
-        this.race = this.globalService.troll;
+        this.race = this.buildService.getTroll();
         break;
       case 'Odöd':
-        this.race = this.globalService.undead;
+        this.race = this.buildService.getUndead();
         break;
       case 'Salamanth':
-        this.race = this.globalService.salamanth;
+        this.race = this.buildService.getSalamanth();
     }
   }
 
@@ -429,7 +431,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   public getRaceBonusFromWeaponSkill(weaponSkill: string, race: IRace): number {
-    return this.globalService.selectRaceBonusFromWeaponSkill(weaponSkill, race);
+    return this.commonHelper.selectRaceBonusFromWeaponSkill(weaponSkill, race);
   }
 
   public getRaceBonusFromStats(stat: string, race: IRace): number {
@@ -448,6 +450,9 @@ export class TableComponent implements OnInit, OnDestroy {
       }
       case 'UA': {
         return Math.round((race.stats.dodge - 1) * 100);
+      }
+      case 'Sköld': {
+        return Math.round((race.weaponSkills.shield - 1) * 100);
       }
       default: {
         return 0;

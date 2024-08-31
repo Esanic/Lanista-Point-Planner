@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { armorSlots } from '../enums/armor.enums';
-import { emptyString } from '../constants/global';
+import { emptyString } from '../constants/common';
 
 @Pipe({
   name: 'armor',

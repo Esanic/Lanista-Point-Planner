@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBonus, ITotalBonus } from '../interfaces/_armory/bonus';
-import { GlobalService } from './global.service';
+
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
+import { additiveBonus, multiplierBonus } from '../constants/templates';
+import { IWeapon } from '../interfaces/_armory/weapon';
+import { IArmor } from '../interfaces/_armory/armor';
+import { IAccessory } from '../interfaces/_armory/accessory';
+import { IConsumable } from '../interfaces/_armory/consumables';
 
 @Injectable({
   providedIn: 'root',
@@ -17,10 +22,75 @@ export class ArmoryService {
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
-  private equipmentBonusesAdditive: IEquipmentBonusSlots = this.globalService.equipmentBonusesAdditive;
-  private equipmentBonusesMultiplier: IEquipmentBonusSlots = this.globalService.equipmentBonusesMultiplier;
+  //#region Equipment arrays
+  public axe: IWeapon[] = [];
+  public sword: IWeapon[] = [];
+  public mace: IWeapon[] = [];
+  public stave: IWeapon[] = [];
+  public shield: IWeapon[] = [];
+  public spear: IWeapon[] = [];
+  public chain: IWeapon[] = [];
 
-  constructor(private globalService: GlobalService) {}
+  public head: IArmor[] = [];
+  public shoulders: IArmor[] = [];
+  public chest: IArmor[] = [];
+  public gloves: IArmor[] = [];
+  public legs: IArmor[] = [];
+  public boots: IArmor[] = [];
+
+  public back: IAccessory[] = []; // 8
+  public neck: IAccessory[] = []; // 6
+  public finger: IAccessory[] = []; //7
+  public amulet: IAccessory[] = []; //9
+  public bracelet: IAccessory[] = []; //10
+  public trinket: IAccessory[] = []; //11
+
+  public consumables: IConsumable[] = [];
+  //#endregion
+
+  //#region Equipment bonuses
+  public equipmentBonusesAdditive: IEquipmentBonusSlots = {
+    mainhand: { ...additiveBonus },
+    offhand: { ...additiveBonus },
+    head: { ...additiveBonus },
+    shoulders: { ...additiveBonus },
+    chest: { ...additiveBonus },
+    gloves: { ...additiveBonus },
+    legs: { ...additiveBonus },
+    boots: { ...additiveBonus },
+    cloak: { ...additiveBonus },
+    necklace: { ...additiveBonus },
+    ring: { ...additiveBonus },
+    amulet: { ...additiveBonus },
+    wrist: { ...additiveBonus },
+    trinket: { ...additiveBonus },
+    consumableOne: { ...additiveBonus },
+    consumableTwo: { ...additiveBonus },
+    consumableThree: { ...additiveBonus },
+  };
+
+  public equipmentBonusesMultiplier: IEquipmentBonusSlots = {
+    mainhand: { ...multiplierBonus },
+    offhand: { ...multiplierBonus },
+    head: { ...multiplierBonus },
+    shoulders: { ...multiplierBonus },
+    chest: { ...multiplierBonus },
+    gloves: { ...multiplierBonus },
+    legs: { ...multiplierBonus },
+    boots: { ...multiplierBonus },
+    cloak: { ...multiplierBonus },
+    necklace: { ...multiplierBonus },
+    ring: { ...multiplierBonus },
+    amulet: { ...multiplierBonus },
+    wrist: { ...multiplierBonus },
+    trinket: { ...multiplierBonus },
+    consumableOne: { ...multiplierBonus },
+    consumableTwo: { ...multiplierBonus },
+    consumableThree: { ...multiplierBonus },
+  };
+  //#endregion
+
+  constructor() {}
 
   //* Legend equipment
   public setLegendEquipmentViewStatus(value: boolean): void {
@@ -51,7 +121,7 @@ export class ArmoryService {
 
   /** Gear arrays fetched */
 
-  //* Armors and Accessories are being fetched in the same API call
+  // Armors and Accessories are being fetched in the same API call
   public emitArmorsAndAccessoriesFetched(): void {
     this.armorsAndAccessoriesFetched.next(true);
   }
@@ -77,6 +147,7 @@ export class ArmoryService {
   }
 
   /** Bonuses */
+
   public emitBonusesHaveBeenAdded(): void {
     this.emitBonusAdded.next(true);
   }
@@ -85,15 +156,15 @@ export class ArmoryService {
     return this.emitBonusAdded.asObservable();
   }
 
-  //Adds bonuses to the correct equipment slot
+  //*Adds bonuses to the correct equipment slot
   public addBonus(gearSlot: string, bonusesToAdd: ITotalBonus): void {
     this.equipmentBonusesAdditive[gearSlot] = bonusesToAdd.additiveBonus;
     this.equipmentBonusesMultiplier[gearSlot] = bonusesToAdd.multiplierBonus;
   }
 
-  //Returns the total additive bonuses from all equipment
+  //*Returns the total additive bonuses from all equipment
   public getBonusesAdditive(): IBonus {
-    let totalBonuses: IBonus = { ...this.globalService.additiveBonusTemplate };
+    let totalBonuses: IBonus = { ...additiveBonus };
 
     Object.keys(totalBonuses).forEach((stat) => {
       Object.keys(this.equipmentBonusesAdditive).forEach((gearSlot) => {
@@ -104,9 +175,9 @@ export class ArmoryService {
     return totalBonuses;
   }
 
-  //Returns the total multiplicative bonuses from all equipment
+  //*Returns the total multiplicative bonuses from all equipment
   public getBonusesMultiplier(): IBonus {
-    let totalBonuses: IBonus = { ...this.globalService.multiplierBonusTemplate };
+    let totalBonuses: IBonus = { ...multiplierBonus };
 
     Object.keys(totalBonuses).forEach((stat) => {
       Object.keys(this.equipmentBonusesMultiplier).forEach((gearSlot) => {
