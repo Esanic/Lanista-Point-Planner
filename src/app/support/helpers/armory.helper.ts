@@ -8,44 +8,41 @@ import { additiveBonus, multiplierBonus } from '../constants/templates';
   providedIn: 'root',
 })
 export class ArmoryHelper {
-  private additiveBonus: IBonus = { ...additiveBonus };
-  private multiplierBonus: IBonus = { ...multiplierBonus };
-
   constructor() {}
 
   public calculateBonusesFromEquipment(equipment: IEquipment, selectedWeaponSkill?: string): ITotalBonus {
     const weaponSkillEnums = [weaponSkillStr.Axe, weaponSkillStr.Sword, weaponSkillStr.Mace, weaponSkillStr.Stave, weaponSkillStr.Spear, weaponSkillStr.Chain];
     const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
-    let multiplierBonus: IBonus = this.additiveBonus;
-    let additiveBonus: IBonus = this.multiplierBonus;
+    let multiplierBonuses: IBonus = { ...multiplierBonus };
+    let additiveBonuses: IBonus = { ...additiveBonus };
 
     equipment.bonuses.forEach((bonus) => {
       if (bonus.additive !== undefined) {
         if (selectedWeaponSkill) {
           const index = weaponSkillTypes.findIndex((type) => type.toLowerCase() === bonus.type.toLowerCase());
           if (index !== -1 && selectedWeaponSkill === weaponSkillEnums[index]) {
-            additiveBonus.weaponSkill += bonus.additive;
+            additiveBonuses.weaponSkill += bonus.additive;
           }
         }
 
         switch (bonus.type.toLowerCase()) {
           case 'stamina':
-            additiveBonus.stamina += bonus.additive;
+            additiveBonuses.stamina += bonus.additive;
             break;
           case 'strength':
-            additiveBonus.strength += bonus.additive;
+            additiveBonuses.strength += bonus.additive;
             break;
           case 'endurance':
-            additiveBonus.endurance += bonus.additive;
+            additiveBonuses.endurance += bonus.additive;
             break;
           case 'initiative':
-            additiveBonus.initiative += bonus.additive;
+            additiveBonuses.initiative += bonus.additive;
             break;
           case 'dodge':
-            additiveBonus.dodge += bonus.additive;
+            additiveBonuses.dodge += bonus.additive;
             break;
           case 'shield':
-            additiveBonus.shield += bonus.additive;
+            additiveBonuses.shield += bonus.additive;
             break;
           default:
             break;
@@ -56,28 +53,28 @@ export class ArmoryHelper {
         if (selectedWeaponSkill) {
           const index = weaponSkillTypes.findIndex((type) => type.toLowerCase() === bonus.type.toLowerCase());
           if (index !== -1 && selectedWeaponSkill === weaponSkillEnums[index]) {
-            multiplierBonus.weaponSkill += bonus.multiplier - 1;
+            multiplierBonuses.weaponSkill += bonus.multiplier - 1;
           }
         }
 
         switch (bonus.type.toLowerCase()) {
           case 'stamina':
-            multiplierBonus.stamina += bonus.multiplier - 1;
+            multiplierBonuses.stamina += bonus.multiplier - 1;
             break;
           case 'strength':
-            multiplierBonus.strength += bonus.multiplier - 1;
+            multiplierBonuses.strength += bonus.multiplier - 1;
             break;
           case 'endurance':
-            multiplierBonus.endurance += bonus.multiplier - 1;
+            multiplierBonuses.endurance += bonus.multiplier - 1;
             break;
           case 'initiative':
-            multiplierBonus.initiative += bonus.multiplier - 1;
+            multiplierBonuses.initiative += bonus.multiplier - 1;
             break;
           case 'dodge':
-            multiplierBonus.dodge += bonus.multiplier - 1;
+            multiplierBonuses.dodge += bonus.multiplier - 1;
             break;
           case 'shield':
-            multiplierBonus.shield += bonus.multiplier - 1;
+            multiplierBonuses.shield += bonus.multiplier - 1;
             break;
           default:
             break;
@@ -85,6 +82,6 @@ export class ArmoryHelper {
       }
     });
 
-    return { additiveBonus, multiplierBonus };
+    return { additiveBonus: additiveBonuses, multiplierBonus: multiplierBonuses };
   }
 }
