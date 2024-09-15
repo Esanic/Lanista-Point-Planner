@@ -1,5 +1,5 @@
 <div class="d-flex my-2">
-  <label class="form-label my-auto" for="armorSelector" style="width: 25%">{{ armorSlot | armor }}:</label>
+  <label class="form-label my-auto" for="armorSelector" style="width: 30%">{{ armorSlot | armor }}:</label>
   <select class="form-select" name="armorSelector" [formControl]="chosenArmor">
     <option value="none" selected></option>
     @for(armor of filteredAndRenamedArmorArray; track armor){

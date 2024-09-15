@@ -1,5 +1,5 @@
 <div class="d-flex my-2">
-  <label class="form-label my-auto" for="consumableSelect" style="width: 25%">{{ consumableSlot | consumable }}:</label>
+  <label class="form-label my-auto" for="consumableSelect" style="width: 30%">{{ consumableSlot | consumable }}:</label>
   <select class="form-select" name="consumableSelect" [formControl]="chosenConsumable">
     <option value="none" selected></option>
     @for(armor of filteredAndRenamedConsumablesArray; track armor){
