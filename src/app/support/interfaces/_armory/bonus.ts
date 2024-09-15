@@ -9,6 +9,7 @@ export interface IBonus {
   [key: string]: number;
 }
 
+//TODO: Change the name of this interface to something more descriptive
 export interface ITotalBonus {
   additiveBonus: IBonus;
   multiplierBonus: IBonus;

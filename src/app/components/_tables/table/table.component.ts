@@ -65,7 +65,7 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((skill) => {
-      this.weaponSkill = skill.split(' ')[0];
+      this.weaponSkill = skill;
       this.weaponSkillPicker(this.weaponSkill);
       this.summarizeEachColumn();
     });

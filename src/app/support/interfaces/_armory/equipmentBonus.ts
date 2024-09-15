@@ -18,5 +18,7 @@ export interface IEquipmentBonusSlots {
   consumableOne: IBonus;
   consumableTwo: IBonus;
   consumableThree: IBonus;
+  enchantOne: IBonus;
+  enchantTwo: IBonus;
   [key: string]: IBonus;
 }

@@ -6,11 +6,12 @@ import { SelectWeaponComponent } from '../../_selectors/_armory/select-weapon/se
 import { accessoriesSlots } from '../../../support/enums/accessories.enums';
 import { SelectAccessoryComponent } from '../../_selectors/_armory/select-accessory/select-accessory.component';
 import { SelectConsumableComponent } from '../../_selectors/_armory/select-consumable/select-consumable.component';
+import { SelectEnchantComponent } from '../../_selectors/_armory/select-enchant/select-enchant.component';
 
 @Component({
   selector: 'app-armory',
   standalone: true,
-  imports: [LegendEquipmentSwitchComponent, SelectWeaponComponent, SelectArmorComponent, SelectAccessoryComponent, SelectConsumableComponent],
+  imports: [LegendEquipmentSwitchComponent, SelectWeaponComponent, SelectArmorComponent, SelectAccessoryComponent, SelectConsumableComponent, SelectEnchantComponent],
   templateUrl: './armory.component.html',
   styleUrl: './armory.component.css',
 })

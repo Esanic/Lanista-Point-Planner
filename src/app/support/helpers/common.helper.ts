@@ -9,6 +9,10 @@ import { BuildService } from '../services/build.service';
 export class CommonHelper {
   constructor(private buildService: BuildService) {}
 
+  public deepCopy<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
   public selectRaceFromRaceName(raceName: string): IRace {
     switch (raceName) {
       case 'Människa': {

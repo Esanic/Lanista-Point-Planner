@@ -8,6 +8,7 @@ import { IWeapon } from '../interfaces/_armory/weapon';
 import { IArmor } from '../interfaces/_armory/armor';
 import { IAccessory } from '../interfaces/_armory/accessory';
 import { IConsumable } from '../interfaces/_armory/consumables';
+import { IEnchant } from '../interfaces/_armory/enchants';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,7 @@ export class ArmoryService {
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
   //#region Equipment arrays
+  //TODO: Rework these to observables
   public axe: IWeapon[] = [];
   public sword: IWeapon[] = [];
   public mace: IWeapon[] = [];
@@ -30,6 +32,7 @@ export class ArmoryService {
   public shield: IWeapon[] = [];
   public spear: IWeapon[] = [];
   public chain: IWeapon[] = [];
+  public distanceWeapon: IEnchant[] = [];
 
   public head: IArmor[] = [];
   public shoulders: IArmor[] = [];
@@ -46,6 +49,8 @@ export class ArmoryService {
   public trinket: IAccessory[] = []; //11
 
   public consumables: IConsumable[] = [];
+
+  public enchants: IEnchant[] = [];
   //#endregion
 
   //#region Equipment bonuses
@@ -67,6 +72,8 @@ export class ArmoryService {
     consumableOne: { ...additiveBonus },
     consumableTwo: { ...additiveBonus },
     consumableThree: { ...additiveBonus },
+    enchantOne: { ...additiveBonus },
+    enchantTwo: { ...additiveBonus },
   };
 
   public equipmentBonusesMultiplier: IEquipmentBonusSlots = {
@@ -87,6 +94,8 @@ export class ArmoryService {
     consumableOne: { ...multiplierBonus },
     consumableTwo: { ...multiplierBonus },
     consumableThree: { ...multiplierBonus },
+    enchantOne: { ...multiplierBonus },
+    enchantTwo: { ...multiplierBonus },
   };
   //#endregion
 

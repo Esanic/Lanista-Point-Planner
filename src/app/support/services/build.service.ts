@@ -106,7 +106,8 @@ export class BuildService {
   }
 
   public setChosenWeaponSkill(skill: string) {
-    this.chosenWeaponSkill.next(skill);
+    const trimmedSkill = skill.split(' ')[0];
+    this.chosenWeaponSkill.next(trimmedSkill);
   }
 
   public getChosenWeaponSkill(): Observable<string> {

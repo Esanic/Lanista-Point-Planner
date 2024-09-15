@@ -26,8 +26,6 @@ import { BuildHelper } from './support/helpers/build.helper';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  private globalRaces = this.buildService.getRaces();
-
   public screenWidth: number = 0;
 
   constructor(private apiService: ApiService, private buildService: BuildService, private buildHelper: BuildHelper, private armoryService: ArmoryService) {}
@@ -45,9 +43,7 @@ export class AppComponent implements OnInit {
 
     this.screenWidth = window.innerWidth;
 
-    /**
-     * Fetching races from API
-     */
+    /** Fetching races from API */
     this.apiService.getRaces().subscribe({
       next: (res) => {
         const human = { id: res.races[0].id, stats: res.races[0].bonuses.stats, weapon_skills: res.races[0].bonuses.weapon_skills } as IApiRace;
@@ -67,9 +63,7 @@ export class AppComponent implements OnInit {
       },
     });
 
-    /**
-     * Fetching weapons from API
-     */
+    /** Fetching weapons from API */
     this.apiService.getWeapons().subscribe({
       next: (res) => {
         const weapons: IWeapon[] = res;
@@ -81,20 +75,16 @@ export class AppComponent implements OnInit {
       error: (err) => {},
     });
 
-    /**
-     * Fetching enchants from API
-     */
-    //! Not implemented yet
+    /** Fetching enchants from API */
     this.apiService.getEnchants().subscribe({
       next: (res) => {
-        const enchants = res;
+        console.log(res);
+        this.armoryService.enchants = res;
       },
       error: (err) => {},
     });
 
-    /**
-     * Fetching armors and accessories from API
-     */
+    /** Fetching armors and accessories from API */
     this.apiService.getArmors().subscribe({
       next: (res) => {
         const armors: IArmor[] = res;
@@ -108,9 +98,7 @@ export class AppComponent implements OnInit {
       error: (err) => {},
     });
 
-    /**
-     * Fetching accessories from API
-     */
+    /** Fetching consumables from API */
     this.apiService.getConsumables().subscribe({
       next: (res) => {
         this.armoryService.consumables = res;

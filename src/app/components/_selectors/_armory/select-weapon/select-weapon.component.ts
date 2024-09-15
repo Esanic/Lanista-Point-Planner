@@ -41,7 +41,7 @@ export class SelectWeaponComponent {
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
-      this.selectedWeaponSkill = weaponSkill.split(' ')[0];
+      this.selectedWeaponSkill = weaponSkill;
       this.chosenWeapon.patchValue(emptyString);
       this.selectWeaponArray(this.selectedWeaponSkill);
     });
@@ -91,6 +91,7 @@ export class SelectWeaponComponent {
 
       if (chosenWeapon) {
         const bonusToAdd: ITotalBonus = this.armoryHelper.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
+        console.log(bonusToAdd);
 
         //* If two handed weapon is selected, emit that event
         if (chosenWeapon.is_two_handed) {

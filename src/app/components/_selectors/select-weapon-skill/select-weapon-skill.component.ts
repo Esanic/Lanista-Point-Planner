@@ -47,11 +47,7 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
 
     this.incomingWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
       if (this.selectedRace.weaponSkills) {
-        if (weaponSkill.split(' ').length >= 2) {
-          this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
-        } else {
-          this.chooseWeaponSkill.patchValue(`${weaponSkill} (${this.commonHelper.selectRaceBonusFromWeaponSkill(weaponSkill, this.selectedRace)}%)`, { emitEvent: false });
-        }
+        this.chooseWeaponSkill.patchValue(`${weaponSkill} (${this.commonHelper.selectRaceBonusFromWeaponSkill(weaponSkill, this.selectedRace)}%)`, { emitEvent: false });
       } else {
         this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
       }
