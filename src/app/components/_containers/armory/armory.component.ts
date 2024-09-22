@@ -7,15 +7,17 @@ import { accessoriesSlots } from '../../../support/enums/accessories.enums';
 import { SelectAccessoryComponent } from '../../_selectors/_armory/select-accessory/select-accessory.component';
 import { SelectConsumableComponent } from '../../_selectors/_armory/select-consumable/select-consumable.component';
 import { SelectEnchantComponent } from '../../_selectors/_armory/select-enchant/select-enchant.component';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-armory',
   standalone: true,
-  imports: [LegendEquipmentSwitchComponent, SelectWeaponComponent, SelectArmorComponent, SelectAccessoryComponent, SelectConsumableComponent, SelectEnchantComponent],
+  imports: [LegendEquipmentSwitchComponent, SelectWeaponComponent, SelectArmorComponent, SelectAccessoryComponent, SelectConsumableComponent, SelectEnchantComponent, NgbNavModule],
   templateUrl: './armory.component.html',
   styleUrl: './armory.component.css',
 })
 export class ArmoryComponent {
   public armorSlots = armorSlots;
   public accessoriesSlots = accessoriesSlots;
+  public activeTab = 1;
 }
