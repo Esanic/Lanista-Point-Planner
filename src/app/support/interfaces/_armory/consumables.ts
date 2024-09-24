@@ -7,7 +7,6 @@ export interface IConsumable extends IEquipment {
   crit_rate: number;
   min_crit_rate: number;
   max_crit_rate: number;
-  max_level: number;
 }
 
 export interface IInstantPoints {

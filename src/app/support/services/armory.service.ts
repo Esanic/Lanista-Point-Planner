@@ -3,12 +3,13 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBonus, ITotalBonus } from '../interfaces/_armory/bonus';
 
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
-import { additiveBonus, multiplierBonus } from '../constants/templates';
+import { additiveBonus, gear, multiplierBonus } from '../constants/templates';
 import { IWeapon } from '../interfaces/_armory/weapon';
 import { IArmor } from '../interfaces/_armory/armor';
 import { IAccessory } from '../interfaces/_armory/accessory';
 import { IConsumable } from '../interfaces/_armory/consumables';
 import { IEnchant } from '../interfaces/_armory/enchants';
+import { IGear } from '../interfaces/_armory/gear';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,7 @@ export class ArmoryService {
   private armorsAndAccessoriesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private weaponsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private consumablesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private gear: BehaviorSubject<IGear> = new BehaviorSubject<IGear>({ ...gear });
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
@@ -67,7 +69,7 @@ export class ArmoryService {
     necklace: { ...additiveBonus },
     ring: { ...additiveBonus },
     amulet: { ...additiveBonus },
-    wrist: { ...additiveBonus },
+    bracelet: { ...additiveBonus },
     trinket: { ...additiveBonus },
     consumableOne: { ...additiveBonus },
     consumableTwo: { ...additiveBonus },
@@ -89,7 +91,7 @@ export class ArmoryService {
     necklace: { ...multiplierBonus },
     ring: { ...multiplierBonus },
     amulet: { ...multiplierBonus },
-    wrist: { ...multiplierBonus },
+    bracelet: { ...multiplierBonus },
     trinket: { ...multiplierBonus },
     consumableOne: { ...multiplierBonus },
     consumableTwo: { ...multiplierBonus },
@@ -128,7 +130,20 @@ export class ArmoryService {
     return this.twoHandedBuild.asObservable();
   }
 
-  /** Gear arrays fetched */
+  public setGear(key: string, value: IWeapon | IArmor | IAccessory | IConsumable | IEnchant): void {
+    this.gear.value[key] = value;
+    this.gear.next(this.gear.value);
+  }
+
+  public emitGear(): void {
+    this.gear.next(this.gear.value);
+  }
+
+  public getGear(): Observable<IGear> {
+    return this.gear.asObservable();
+  }
+
+  //* Gear arrays fetched */
 
   // Armors and Accessories are being fetched in the same API call
   public emitArmorsAndAccessoriesFetched(): void {
@@ -155,7 +170,7 @@ export class ArmoryService {
     return this.consumablesFetched.asObservable();
   }
 
-  /** Bonuses */
+  //* Bonuses */
 
   public emitBonusesHaveBeenAdded(): void {
     this.emitBonusAdded.next(true);
@@ -165,13 +180,13 @@ export class ArmoryService {
     return this.emitBonusAdded.asObservable();
   }
 
-  //*Adds bonuses to the correct equipment slot
+  /** Adds bonuses to the correct equipment slot */
   public addBonus(gearSlot: string, bonusesToAdd: ITotalBonus): void {
     this.equipmentBonusesAdditive[gearSlot] = bonusesToAdd.additiveBonus;
     this.equipmentBonusesMultiplier[gearSlot] = bonusesToAdd.multiplierBonus;
   }
 
-  //*Returns the total additive bonuses from all equipment
+  /** Returns the total additive bonuses from all equipment */
   public getBonusesAdditive(): IBonus {
     let totalBonuses: IBonus = { ...additiveBonus };
 
@@ -184,7 +199,7 @@ export class ArmoryService {
     return totalBonuses;
   }
 
-  //*Returns the total multiplicative bonuses from all equipment
+  /** Returns the total multiplicative bonuses from all equipment */
   public getBonusesMultiplier(): IBonus {
     let totalBonuses: IBonus = { ...multiplierBonus };
 

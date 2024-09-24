@@ -32,6 +32,7 @@ export class SelectArmorComponent implements OnInit {
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
+  private incomingArmor$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
 
@@ -67,27 +68,62 @@ export class SelectArmorComponent implements OnInit {
         switch (this.armorSlot) {
           case armorSlots.Head:
             this.armoryService.addBonus('head', bonusesToAdd);
+            this.armoryService.setGear('head', chosenArmor);
             break;
           case armorSlots.Shoulders:
             this.armoryService.addBonus('shoulders', bonusesToAdd);
+            this.armoryService.setGear('shoulders', chosenArmor);
             break;
           case armorSlots.Chest:
             this.armoryService.addBonus('chest', bonusesToAdd);
+            this.armoryService.setGear('chest', chosenArmor);
             break;
           case armorSlots.Hands:
             this.armoryService.addBonus('gloves', bonusesToAdd);
+            this.armoryService.setGear('gloves', chosenArmor);
             break;
           case armorSlots.Legs:
             this.armoryService.addBonus('legs', bonusesToAdd);
+            this.armoryService.setGear('legs', chosenArmor);
             break;
           case armorSlots.Feet:
             this.armoryService.addBonus('boots', bonusesToAdd);
+            this.armoryService.setGear('boots', chosenArmor);
             break;
         }
       } else {
         this.resetBonus();
       }
       this.armoryService.emitBonusesHaveBeenAdded();
+    });
+
+    this.incomingArmor$ = this.armoryService.getGear().subscribe((gear) => {
+      switch (this.armorSlot) {
+        case armorSlots.Head:
+          const head = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.head.name);
+          if (head) this.chosenArmor.patchValue(head.name, { emitEvent: false });
+          break;
+        case armorSlots.Shoulders:
+          const shoulders = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.shoulders.name);
+          if (shoulders) this.chosenArmor.patchValue(shoulders.name, { emitEvent: false });
+          break;
+        case armorSlots.Chest:
+          const chest = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.chest.name);
+          if (chest) this.chosenArmor.patchValue(chest.name, { emitEvent: false });
+          break;
+        case armorSlots.Hands:
+          const gloves = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.gloves.name);
+          if (gloves) this.chosenArmor.patchValue(gloves.name, { emitEvent: false });
+          break;
+        case armorSlots.Legs:
+          const legs = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.legs.name);
+          if (legs) this.chosenArmor.patchValue(legs.name, { emitEvent: false });
+          break;
+        case armorSlots.Feet:
+          const boots = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.boots.name);
+          if (boots) this.chosenArmor.patchValue(boots.name, { emitEvent: false });
+          break;
+      }
     });
   }
 
@@ -96,6 +132,7 @@ export class SelectArmorComponent implements OnInit {
     this.viewLegendEquipment$.unsubscribe();
     this.tableStats$.unsubscribe();
     this.wipeBonus$.unsubscribe();
+    this.incomingArmor$.unsubscribe();
   }
 
   private resetBonus(): void {

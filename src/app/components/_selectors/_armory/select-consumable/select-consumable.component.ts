@@ -28,6 +28,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
   private consumablesFetched$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
+  private incomingConsumable$: Subscription = new Subscription();
 
   constructor(private armoryService: ArmoryService, private armoryHelper: ArmoryHelper, private buildService: BuildService) {}
 
@@ -58,18 +59,36 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
         switch (this.consumableSlot) {
           case 1:
             this.armoryService.addBonus('consumableOne', bonusesToAdd);
+            this.armoryService.setGear('consumableOne', chosenConsumable);
             break;
           case 2:
             this.armoryService.addBonus('consumableTwo', bonusesToAdd);
+            this.armoryService.setGear('consumableTwo', chosenConsumable);
             break;
           case 3:
             this.armoryService.addBonus('consumableThree', bonusesToAdd);
+            this.armoryService.setGear('consumableThree', chosenConsumable);
             break;
-          default:
-            this.armoryService.addBonus('consumable', bonusesToAdd);
         }
 
         this.armoryService.emitBonusesHaveBeenAdded();
+      }
+    });
+
+    this.incomingConsumable$ = this.armoryService.getGear().subscribe((gear) => {
+      switch (this.consumableSlot) {
+        case 1:
+          const consumableOne = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === gear.consumableOne.name);
+          if (consumableOne) this.chosenConsumable.patchValue(consumableOne.name, { emitEvent: false });
+          break;
+        case 2:
+          const consumableTwo = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === gear.consumableTwo.name);
+          if (consumableTwo) this.chosenConsumable.patchValue(consumableTwo.name, { emitEvent: false });
+          break;
+        case 3:
+          const consumableThree = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === gear.consumableThree.name);
+          if (consumableThree) this.chosenConsumable.patchValue(consumableThree.name, { emitEvent: false });
+          break;
       }
     });
   }
@@ -78,6 +97,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
     this.consumablesFetched$.unsubscribe();
     this.tableStats$.unsubscribe();
     this.wipeBonus$.unsubscribe();
+    this.incomingConsumable$.unsubscribe();
   }
 
   private filterAndRenameConsumables(): void {
@@ -88,7 +108,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
     filteredEquipment = equipment.filter((equipment: IConsumable) => equipment.required_level <= this.currentMaxLevel && equipment.for_live_battle === false && equipment.bonuses.length > 0);
 
     const renamedEquipment: IConsumable[] = filteredEquipment.map((equipment) => {
-      equipment.name = `${equipment.name} (G${equipment.required_level}${equipment.max_level ? '-' + equipment.max_level : emptyString}) ${equipment.requires_legend ? '(L)' : emptyString}`;
+      equipment.name = `${equipment.name} (G${equipment.required_level}${equipment.max_level ? '-' + equipment.max_level : emptyString})`;
       return equipment;
     });
 

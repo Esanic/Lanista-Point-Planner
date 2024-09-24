@@ -78,7 +78,6 @@ export class AppComponent implements OnInit {
     /** Fetching enchants from API */
     this.apiService.getEnchants().subscribe({
       next: (res) => {
-        console.log(res);
         this.armoryService.enchants = res;
       },
       error: (err) => {},
@@ -87,10 +86,12 @@ export class AppComponent implements OnInit {
     /** Fetching armors and accessories from API */
     this.apiService.getArmors().subscribe({
       next: (res) => {
-        const armors: IArmor[] = res;
+        const armorsAndAccessories: IArmor[] | IAccessory[] = res;
 
-        armors.forEach((armor: IArmor) => {
-          this.assignArmorAndAccessoriesToArray(armor);
+        console.log(res);
+
+        armorsAndAccessories.forEach((armorOrAccessory: IArmor | IAccessory) => {
+          this.assignArmorAndAccessoriesToArray(armorOrAccessory);
         });
 
         this.armoryService.emitArmorsAndAccessoriesFetched();
@@ -204,15 +205,15 @@ export class AppComponent implements OnInit {
         this.armoryService.boots.push(equipment);
         break;
       }
-      case accessoriesSlots.Back: {
+      case accessoriesSlots.Cloak: {
         this.armoryService.back.push(equipment);
         break;
       }
-      case accessoriesSlots.Neck: {
+      case accessoriesSlots.Necklace: {
         this.armoryService.neck.push(equipment);
         break;
       }
-      case accessoriesSlots.Finger: {
+      case accessoriesSlots.Ring: {
         this.armoryService.finger.push(equipment);
         break;
       }

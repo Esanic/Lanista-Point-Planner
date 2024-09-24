@@ -20,7 +20,7 @@ import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
 export class SelectWeaponComponent {
   @Input() isOffhand: boolean = false;
 
-  public chosenWeapon = new FormControl(emptyString);
+  public chosenWeapon = new FormControl({ value: emptyString, disabled: true });
 
   private selectedWeaponSkill: string = emptyString;
   private currentMaxLevel: number = 25;
@@ -31,6 +31,7 @@ export class SelectWeaponComponent {
   public weaponArray: BehaviorSubject<IWeapon[]> = new BehaviorSubject<IWeapon[]>([]);
 
   private chosenWeaponSkill$: Subscription = new Subscription();
+  private incomingWeapon$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
   private shieldBuild$: Subscription = new Subscription();
@@ -41,13 +42,16 @@ export class SelectWeaponComponent {
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
-      this.selectedWeaponSkill = weaponSkill;
-      this.chosenWeapon.patchValue(emptyString);
-      this.selectWeaponArray(this.selectedWeaponSkill);
+      if (weaponSkill) {
+        this.selectedWeaponSkill = weaponSkill;
+        this.chosenWeapon.enable();
+        this.chosenWeapon.patchValue(emptyString);
+        this.selectWeaponArray(this.selectedWeaponSkill);
+      }
     });
 
     this.shieldBuild$ = this.armoryService.listenShieldBuild().subscribe((shieldBuild) => {
-      if (this.isOffhand) {
+      if (this.isOffhand && shieldBuild) {
         this.chosenWeapon.patchValue(emptyString);
         this.resetBonus();
         this.shieldBuild = shieldBuild;
@@ -91,7 +95,6 @@ export class SelectWeaponComponent {
 
       if (chosenWeapon) {
         const bonusToAdd: ITotalBonus = this.armoryHelper.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
-        console.log(bonusToAdd);
 
         //* If two handed weapon is selected, emit that event
         if (chosenWeapon.is_two_handed) {
@@ -104,11 +107,25 @@ export class SelectWeaponComponent {
 
         if (this.isOffhand) {
           this.armoryService.addBonus('offhand', bonusToAdd);
-        } else this.armoryService.addBonus('mainhand', bonusToAdd);
+          this.armoryService.setGear('offhand', chosenWeapon);
+        } else {
+          this.armoryService.addBonus('mainhand', bonusToAdd);
+          this.armoryService.setGear('mainhand', chosenWeapon);
+        }
 
         this.armoryService.emitBonusesHaveBeenAdded();
       } else {
         this.resetBonus();
+      }
+    });
+
+    this.incomingWeapon$ = this.armoryService.getGear().subscribe((gear) => {
+      if (this.isOffhand) {
+        const offHand = this.weaponArray.value.find((weapon) => weapon.name === gear.offhand.name);
+        if (offHand) this.chosenWeapon.patchValue(offHand.name, { emitEvent: false });
+      } else {
+        const mainHand = this.weaponArray.value.find((weapon) => weapon.name === gear.mainhand.name);
+        if (mainHand) this.chosenWeapon.patchValue(mainHand.name, { emitEvent: false });
       }
     });
   }
@@ -120,6 +137,7 @@ export class SelectWeaponComponent {
     this.shieldBuild$.unsubscribe();
     this.wipeBonus$.unsubscribe();
     this.twoHandedBuild$.unsubscribe();
+    this.incomingWeapon$.unsubscribe();
   }
 
   private resetBonus(): void {

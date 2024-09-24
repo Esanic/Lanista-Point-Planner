@@ -19,27 +19,30 @@ import { additiveBonus, multiplierBonus } from '../../../../support/constants/te
 export class SelectEnchantComponent implements OnInit, OnDestroy {
   @Input() enchantSlot: number = 0;
 
-  public chosenEnchant = new FormControl(emptyString);
+  public chosenEnchant = new FormControl({ value: emptyString, disabled: true });
 
   private selectedWeaponSkill: string = emptyString;
-  private importedEnchant: IEnchant = {} as IEnchant;
 
   public filteredAndRenamedEnchants: IEnchant[] = [];
 
   private chosenEnchant$: Subscription = new Subscription();
-  private selectedWeapon$: Subscription = new Subscription();
+  private chosenWeaponSkill$: Subscription = new Subscription();
   private importedEnchant$: Subscription = new Subscription();
   private shieldBuild$: Subscription = new Subscription();
   private twoHandedBuild$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
+  private incomingEnchant$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService, private commonHelper: CommonHelper) {}
 
   ngOnInit(): void {
-    this.selectedWeapon$ = this.buildService.getChosenWeaponSkill().subscribe((weapon) => {
-      this.selectedWeaponSkill = weapon;
-      this.chosenEnchant.patchValue(emptyString);
-      this.selectEnchantsFromWeaponSkill(this.selectedWeaponSkill);
+    this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
+      if (weaponSkill) {
+        this.selectedWeaponSkill = weaponSkill;
+        this.chosenEnchant.enable();
+        this.chosenEnchant.patchValue(emptyString);
+        this.selectEnchantsFromWeaponSkill(this.selectedWeaponSkill);
+      }
     });
 
     this.shieldBuild$ = this.armoryService.listenShieldBuild().subscribe((shieldBuild) => {
@@ -168,18 +171,39 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
       }
 
       this.addEnchantBonusesToArmory(bonus);
+      if (chosenEnchant) {
+        if (this.enchantSlot === 1) {
+          this.armoryService.setGear('enchantOne', chosenEnchant);
+        } else {
+          this.armoryService.setGear('enchantTwo', chosenEnchant);
+        }
+      }
 
       this.armoryService.emitBonusesHaveBeenAdded();
+    });
+
+    this.incomingEnchant$ = this.armoryService.getGear().subscribe((gear) => {
+      switch (this.enchantSlot) {
+        case 1:
+          const enchantOne = this.filteredAndRenamedEnchants.find((enchant) => enchant.name === gear.enchantOne.name);
+          if (enchantOne) this.chosenEnchant.patchValue(enchantOne.name, { emitEvent: false });
+          break;
+        case 2:
+          const enchantTwo = this.filteredAndRenamedEnchants.find((enchant) => enchant.name === gear.enchantTwo.name);
+          if (enchantTwo) this.chosenEnchant.patchValue(enchantTwo.name, { emitEvent: false });
+          break;
+      }
     });
   }
 
   ngOnDestroy(): void {
-    this.selectedWeapon$.unsubscribe();
+    this.chosenWeaponSkill$.unsubscribe();
     this.importedEnchant$.unsubscribe();
     this.shieldBuild$.unsubscribe();
     this.twoHandedBuild$.unsubscribe();
     this.wipeBonus$.unsubscribe();
     this.chosenEnchant$.unsubscribe();
+    this.incomingEnchant$.unsubscribe();
   }
 
   private selectEnchantsFromWeaponSkill(weaponSkill: string): void {

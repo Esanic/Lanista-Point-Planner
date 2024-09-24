@@ -1,5 +1,5 @@
 <div class="d-flex my-1">
-  <label class="form-label my-auto fs-7" for="armorSelector" style="width: 30%">{{ this.enchantSlot === 1 ? "Besvärjelse 1:" : "Besvärjelse 2:" }}</label>
+  <label class="form-label my-auto fs-7 text-nowrap" for="armorSelector" style="width: 30%">{{ this.enchantSlot === 1 ? "Besvärjelse 1:" : "Besvärjelse 2:" }}</label>
   <select class="form-select form-select-sm" name="armorSelector" [formControl]="chosenEnchant">
     <option value="none" selected></option>
     @for(armor of filteredAndRenamedEnchants; track armor){

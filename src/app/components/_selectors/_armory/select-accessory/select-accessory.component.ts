@@ -32,6 +32,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
+  private incomingAccessory$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
 
@@ -65,29 +66,64 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
         const bonusesToAdd: ITotalBonus = this.armoryHelper.calculateBonusesFromEquipment(chosenAccessory);
 
         switch (this.accessorySlot) {
-          case accessoriesSlots.Back:
+          case accessoriesSlots.Cloak:
             this.armoryService.addBonus('back', bonusesToAdd);
+            this.armoryService.setGear('cloak', chosenAccessory);
             break;
-          case accessoriesSlots.Neck:
+          case accessoriesSlots.Necklace:
             this.armoryService.addBonus('neck', bonusesToAdd);
+            this.armoryService.setGear('necklace', chosenAccessory);
             break;
-          case accessoriesSlots.Finger:
+          case accessoriesSlots.Ring:
             this.armoryService.addBonus('finger', bonusesToAdd);
+            this.armoryService.setGear('ring', chosenAccessory);
             break;
           case accessoriesSlots.Amulet:
             this.armoryService.addBonus('amulet', bonusesToAdd);
+            this.armoryService.setGear('amulet', chosenAccessory);
             break;
           case accessoriesSlots.Bracelet:
             this.armoryService.addBonus('bracelet', bonusesToAdd);
+            this.armoryService.setGear('bracelet', chosenAccessory);
             break;
           case accessoriesSlots.Trinket:
             this.armoryService.addBonus('trinket', bonusesToAdd);
+            this.armoryService.setGear('trinket', chosenAccessory);
             break;
         }
       } else {
         this.resetBonus();
       }
       this.armoryService.emitBonusesHaveBeenAdded();
+    });
+
+    this.incomingAccessory$ = this.armoryService.getGear().subscribe((gear) => {
+      switch (this.accessorySlot) {
+        case accessoriesSlots.Cloak:
+          const back = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.cloak.name);
+          if (back) this.chosenAccessory.patchValue(back.name, { emitEvent: false });
+          break;
+        case accessoriesSlots.Necklace:
+          const neck = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.necklace.name);
+          if (neck) this.chosenAccessory.patchValue(neck.name, { emitEvent: false });
+          break;
+        case accessoriesSlots.Ring:
+          const finger = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.ring.name);
+          if (finger) this.chosenAccessory.patchValue(finger.name, { emitEvent: false });
+          break;
+        case accessoriesSlots.Amulet:
+          const amulet = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.amulet.name);
+          if (amulet) this.chosenAccessory.patchValue(amulet.name, { emitEvent: false });
+          break;
+        case accessoriesSlots.Bracelet:
+          const bracelet = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.bracelet.name);
+          if (bracelet) this.chosenAccessory.patchValue(bracelet.name, { emitEvent: false });
+          break;
+        case accessoriesSlots.Trinket:
+          const trinket = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.trinket.name);
+          if (trinket) this.chosenAccessory.patchValue(trinket.name, { emitEvent: false });
+          break;
+      }
     });
   }
 
@@ -96,23 +132,24 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
     this.viewLegendEquipment$.unsubscribe();
     this.tableStats$.unsubscribe();
     this.wipeBonus$.unsubscribe();
+    this.incomingAccessory$.unsubscribe();
   }
 
   private resetBonus(): void {
     switch (this.accessorySlot) {
-      case accessoriesSlots.Back:
+      case accessoriesSlots.Cloak:
         this.armoryService.addBonus('back', {
           additiveBonus: additiveBonus,
           multiplierBonus: multiplierBonus,
         });
         break;
-      case accessoriesSlots.Neck:
+      case accessoriesSlots.Necklace:
         this.armoryService.addBonus('neck', {
           additiveBonus: additiveBonus,
           multiplierBonus: multiplierBonus,
         });
         break;
-      case accessoriesSlots.Finger:
+      case accessoriesSlots.Ring:
         this.armoryService.addBonus('finger', {
           additiveBonus: additiveBonus,
           multiplierBonus: multiplierBonus,
@@ -141,13 +178,13 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
 
   private selectAccessorySlotToFilterAndRename(): void {
     switch (this.accessorySlot) {
-      case accessoriesSlots.Back:
+      case accessoriesSlots.Cloak:
         this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.back, this.currentMaxLevel, this.viewLegendEquipment);
         break;
-      case accessoriesSlots.Neck:
+      case accessoriesSlots.Necklace:
         this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.neck, this.currentMaxLevel, this.viewLegendEquipment);
         break;
-      case accessoriesSlots.Finger:
+      case accessoriesSlots.Ring:
         this.filteredAndRenamedAccessoriesArray = this.filterAndRenameAccessory(this.armoryService.finger, this.currentMaxLevel, this.viewLegendEquipment);
         break;
       case accessoriesSlots.Amulet:

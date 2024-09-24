@@ -9,11 +9,11 @@ import { emptyString } from '../constants/common';
 export class AccessoriesPipe implements PipeTransform {
   transform(value: number): string {
     switch (value) {
-      case accessoriesSlots.Back:
+      case accessoriesSlots.Cloak:
         return 'Mantel';
-      case accessoriesSlots.Neck:
+      case accessoriesSlots.Necklace:
         return 'Halsband';
-      case accessoriesSlots.Finger:
+      case accessoriesSlots.Ring:
         return 'Ring';
       case accessoriesSlots.Amulet:
         return 'Amulett';

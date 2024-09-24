@@ -13,7 +13,7 @@ export interface IEquipmentBonusSlots {
   necklace: IBonus;
   ring: IBonus;
   amulet: IBonus;
-  wrist: IBonus;
+  bracelet: IBonus;
   trinket: IBonus;
   consumableOne: IBonus;
   consumableTwo: IBonus;

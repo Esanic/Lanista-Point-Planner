@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { weaponSkillStr } from '../enums/weapon-skills.enums';
+import { weaponSkillStr, weaponSkillsNum } from '../enums/weapon-skills.enums';
 import { ITotalBonus, IBonus } from '../interfaces/_armory/bonus';
 import { IEquipment } from '../interfaces/_armory/equipment';
 import { additiveBonus, multiplierBonus } from '../constants/templates';
@@ -83,5 +83,30 @@ export class ArmoryHelper {
     });
 
     return { additiveBonus: additiveBonuses, multiplierBonus: multiplierBonuses };
+  }
+
+  public convertWeaponSkillToEnum(weaponSkill: string): number {
+    switch (weaponSkill.toLowerCase()) {
+      case 'axe':
+      case 'yxa':
+        return weaponSkillsNum.Axe;
+      case 'sword':
+      case 'svärd':
+        return weaponSkillsNum.Sword;
+      case 'mace':
+      case 'hammare':
+        return weaponSkillsNum.Mace;
+      case 'stave':
+      case 'stav':
+        return weaponSkillsNum.Stave;
+      case 'spear':
+      case 'stick':
+        return weaponSkillsNum.Spear;
+      case 'chain':
+      case 'kätting':
+        return weaponSkillsNum.Chain;
+      default:
+        return 0;
+    }
   }
 }
