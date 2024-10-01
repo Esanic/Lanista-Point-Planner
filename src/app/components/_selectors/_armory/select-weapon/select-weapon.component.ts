@@ -9,6 +9,7 @@ import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { emptyString } from '../../../../support/constants/common';
 import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
+import { Races } from '../../../../support/enums/races';
 
 @Component({
   selector: 'app-select-weapon',
@@ -23,6 +24,7 @@ export class SelectWeaponComponent {
   public chosenWeapon = new FormControl({ value: emptyString, disabled: true });
 
   private selectedWeaponSkill: string = emptyString;
+  private selectedRace: string = emptyString;
   private currentMaxLevel: number = 25;
   private viewLegendEquipment: boolean = false;
   private shieldBuild: boolean = false;
@@ -31,6 +33,7 @@ export class SelectWeaponComponent {
   public weaponArray: BehaviorSubject<IWeapon[]> = new BehaviorSubject<IWeapon[]>([]);
 
   private chosenWeaponSkill$: Subscription = new Subscription();
+  private chosenRace$: Subscription = new Subscription();
   private incomingWeapon$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
@@ -46,6 +49,13 @@ export class SelectWeaponComponent {
         this.selectedWeaponSkill = weaponSkill;
         this.chosenWeapon.enable();
         this.chosenWeapon.patchValue(emptyString);
+        this.selectWeaponArray(this.selectedWeaponSkill);
+      }
+    });
+
+    this.chosenRace$ = this.buildService.getChosenRace().subscribe((race) => {
+      if (race) {
+        this.selectedRace = race.name;
         this.selectWeaponArray(this.selectedWeaponSkill);
       }
     });
@@ -216,6 +226,40 @@ export class SelectWeaponComponent {
       }
     }
 
+    switch (this.selectedRace) {
+      case 'Människa': {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.human);
+        break;
+      }
+      case 'Dvärg': {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.dwarf);
+        break;
+      }
+      case 'Alv': {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.elf);
+        break;
+      }
+      case 'Ork': {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.orc);
+        break;
+      }
+      case 'Goblin': {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.goblin);
+        break;
+      }
+      case 'Troll': {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.troll);
+        break;
+      }
+      case 'Odöd': {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.undead);
+        break;
+      }
+      case 'Salamanth': {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.salamanth);
+      }
+    }
+
     const renamedWeapons: IWeapon[] = filteredWeapons.map((weapon) => {
       weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : emptyString}) ${weapon.requires_legend ? '(L)' : emptyString}`;
       return weapon;
@@ -224,5 +268,32 @@ export class SelectWeaponComponent {
     const sortedWeapons = renamedWeapons.sort((a, b) => a.required_level - b.required_level);
 
     return sortedWeapons;
+  }
+
+  /**
+   * Helper function to filter weapons by race.
+   *
+   * If the weapon has no requirements, it will be included in the filtered array.
+   *
+   * If the weapon has requirements and any of them have `requirementable` set to 'App\\Models\\Race',  it will look if any of the requirements have the same `requirementable_id` as the `raceId`.
+   *
+   * If the weapon has requirements and none of them have `requirementable` set to 'App\\Models\\Race', it will be included in the filtered array.
+   *
+   * @param weapons
+   * @param raceId
+   * @returns array of filtered weapons
+   */
+  private filterWeaponsByRace(weapons: IWeapon[], raceId: number): IWeapon[] {
+    return (weapons = weapons.filter((weapon) => {
+      if (weapon.requirements.length === 0) return true;
+
+      if (weapon.requirements.some((requirement) => requirement.requirementable === 'App\\Models\\Race')) {
+        return weapon.requirements.some((requirement) => {
+          return requirement.requirementable_id === raceId && requirement.requirementable === 'App\\Models\\Race';
+        });
+      } else {
+        return true;
+      }
+    }));
   }
 }

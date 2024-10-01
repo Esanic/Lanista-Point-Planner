@@ -88,8 +88,6 @@ export class AppComponent implements OnInit {
       next: (res) => {
         const armorsAndAccessories: IArmor[] | IAccessory[] = res;
 
-        console.log(res);
-
         armorsAndAccessories.forEach((armorOrAccessory: IArmor | IAccessory) => {
           this.assignArmorAndAccessoriesToArray(armorOrAccessory);
         });
