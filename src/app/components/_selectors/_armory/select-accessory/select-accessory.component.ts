@@ -10,6 +10,7 @@ import { BuildService } from '../../../../support/services/build.service';
 import { AccessoriesPipe } from '../../../../support/pipes/accessories.pipe';
 import { IAccessory } from '../../../../support/interfaces/_armory/accessory';
 import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
+import { deepCopy } from '../../../../support/helpers/common.helper';
 
 @Component({
   selector: 'app-select-accessory',
@@ -202,7 +203,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   }
 
   private filterAndRenameAccessory(equipmentArray: IAccessory[], currentMaxLevel: number, showLegendEquipment: boolean): IAccessory[] {
-    const equipment = JSON.parse(JSON.stringify(equipmentArray)); //TODO: Use helper function to deep copy
+    const equipment = deepCopy(equipmentArray);
 
     let filteredEquipment: IAccessory[] = [];
 

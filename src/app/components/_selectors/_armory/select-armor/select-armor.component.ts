@@ -10,6 +10,7 @@ import { ArmorPipe } from '../../../../support/pipes/armor.pipe';
 import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
 import { emptyString } from '../../../../support/constants/common';
 import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
+import { deepCopy } from '../../../../support/helpers/common.helper';
 
 @Component({
   selector: 'app-select-armor',
@@ -202,7 +203,7 @@ export class SelectArmorComponent implements OnInit {
   }
 
   private filterAndRenameArmor(equipmentArray: IArmor[], currentMaxLevel: number, showLegendEquipment: boolean): IArmor[] {
-    const equipment = JSON.parse(JSON.stringify(equipmentArray)); //TODO: Use helper function to deep copy
+    const equipment = deepCopy(equipmentArray);
 
     let filteredEquipment: IArmor[] = [];
 

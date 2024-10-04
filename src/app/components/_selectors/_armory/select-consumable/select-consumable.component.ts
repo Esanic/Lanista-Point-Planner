@@ -8,6 +8,7 @@ import { IConsumable } from '../../../../support/interfaces/_armory/consumables'
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { ConsumablePipe } from '../../../../support/pipes/consumable.pipe';
 import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
+import { deepCopy } from '../../../../support/helpers/common.helper';
 
 @Component({
   selector: 'app-select-consumable',
@@ -103,7 +104,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
   }
 
   private filterAndRenameConsumables(): void {
-    const equipment = JSON.parse(JSON.stringify(this.armoryService.consumables)); //TODO: Use helper function to deep copy
+    const equipment = deepCopy(this.armoryService.consumables);
 
     let filteredEquipment: IConsumable[] = [];
 

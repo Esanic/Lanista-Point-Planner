@@ -106,7 +106,7 @@ export class BuildService {
   }
 
   public setChosenWeaponSkill(skill: string) {
-    const weaponSkillId = convertWeaponSkillNameToId(skill.split(' ')[0]);
+    const weaponSkillId = convertWeaponSkillNameToId(skill.split(' ')[0]); //TODO: Add the split to a helper function
     this.chosenWeaponSkill.next(weaponSkillId);
   }
 

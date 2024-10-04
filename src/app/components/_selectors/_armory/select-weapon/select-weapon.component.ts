@@ -10,6 +10,7 @@ import { BuildService } from '../../../../support/services/build.service';
 import { emptyString } from '../../../../support/constants/common';
 import { Races } from '../../../../support/enums/races';
 import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
+import { deepCopy } from '../../../../support/helpers/common.helper';
 
 @Component({
   selector: 'app-select-weapon',
@@ -211,7 +212,7 @@ export class SelectWeaponComponent {
   }
 
   private filterAndRenameWeapons(weapons: IWeapon[], currentMaxLevel: number, showLegendEquipment: boolean, isOffhand?: boolean): IWeapon[] {
-    const weaponsArray = JSON.parse(JSON.stringify(weapons)); //TODO: Use helper function to deep copy
+    const weaponsArray = deepCopy(weapons);
 
     let filteredWeapons: IWeapon[] = [];
 
