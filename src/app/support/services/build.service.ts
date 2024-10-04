@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBuild } from '../interfaces/build';
 import { IRace } from '../interfaces/race';
-import { emptyString } from '../constants/common';
 import { defaultRace, dwarf, elf, goblin, human, orc, salamanth, troll, undead } from '../constants/templates';
-import { CommonHelper } from '../helpers/common.helper';
-import { ArmoryHelper } from '../helpers/armory.helper';
+import { convertWeaponSkillNameToId } from '../helpers/armory.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +35,7 @@ export class BuildService {
   private salamanth: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(salamanth);
   private default: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(defaultRace);
 
-  constructor(private armoryHelper: ArmoryHelper) {}
+  constructor() {}
 
   //* Select build *//
   public setSelectedBuild(build: IBuild): void {
@@ -108,7 +106,7 @@ export class BuildService {
   }
 
   public setChosenWeaponSkill(skill: string) {
-    const weaponSkillId = this.armoryHelper.convertWeaponSkillToId(skill.split(' ')[0]);
+    const weaponSkillId = convertWeaponSkillNameToId(skill.split(' ')[0]);
     this.chosenWeaponSkill.next(weaponSkillId);
   }
 
@@ -212,4 +210,36 @@ export class BuildService {
     return [this.human.value, this.elf.value, this.dwarf.value, this.orc.value, this.troll.value, this.goblin.value, this.undead.value, this.salamanth.value];
   }
   //#endregion
+
+  public selectRaceFromRaceName(raceName: string): IRace {
+    switch (raceName) {
+      case 'Människa': {
+        return this.getHuman();
+      }
+      case 'Alv': {
+        return this.getElf();
+      }
+      case 'Dvärg': {
+        return this.getDwarf();
+      }
+      case 'Ork': {
+        return this.getOrc();
+      }
+      case 'Goblin': {
+        return this.getGoblin();
+      }
+      case 'Troll': {
+        return this.getTroll();
+      }
+      case 'Odöd': {
+        return this.getUndead();
+      }
+      case 'Salamanth': {
+        return this.getSalamanth();
+      }
+      default: {
+        return this.getDefaultRace();
+      }
+    }
+  }
 }

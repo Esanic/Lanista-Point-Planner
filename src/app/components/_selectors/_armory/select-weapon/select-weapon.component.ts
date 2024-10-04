@@ -8,8 +8,8 @@ import { IWeapon } from '../../../../support/interfaces/_armory/weapon';
 import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { emptyString } from '../../../../support/constants/common';
-import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
 import { Races } from '../../../../support/enums/races';
+import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
 
 @Component({
   selector: 'app-select-weapon',
@@ -42,7 +42,7 @@ export class SelectWeaponComponent {
   private incomingWeapon$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
+  constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
@@ -101,7 +101,7 @@ export class SelectWeaponComponent {
       const chosenWeapon = this.weaponArray.value.find((weapon) => weapon.name === selectedWeapon);
 
       if (chosenWeapon) {
-        const bonusToAdd: ITotalBonus = this.armoryHelper.calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
+        const bonusToAdd: ITotalBonus = calculateBonusesFromEquipment(chosenWeapon, this.selectedWeaponSkill);
 
         //* If two handed weapon is selected, emit that event
         if (chosenWeapon.is_two_handed) {

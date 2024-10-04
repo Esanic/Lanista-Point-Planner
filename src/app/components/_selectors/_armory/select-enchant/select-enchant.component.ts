@@ -5,10 +5,10 @@ import { emptyString } from '../../../../support/constants/common';
 import { IEnchant } from '../../../../support/interfaces/_armory/enchants';
 import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
-import { CommonHelper } from '../../../../support/helpers/common.helper';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
 import { weaponSkills } from '../../../../support/enums/weapon-skills.enums';
+import { deepCopy } from '../../../../support/helpers/common.helper';
 
 @Component({
   selector: 'app-select-enchant',
@@ -34,7 +34,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
   private incomingEnchant$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private armoryService: ArmoryService, private commonHelper: CommonHelper) {}
+  constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
@@ -231,7 +231,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
   }
 
   private filterAndRenameEnchants(weaponTag: string): IEnchant[] {
-    const enchants = this.commonHelper.deepCopy(this.armoryService.enchants);
+    const enchants = deepCopy(this.armoryService.enchants);
 
     let filteredEnchants: IEnchant[] = [];
 

@@ -9,7 +9,7 @@ import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { AccessoriesPipe } from '../../../../support/pipes/accessories.pipe';
 import { IAccessory } from '../../../../support/interfaces/_armory/accessory';
-import { ArmoryHelper } from '../../../../support/helpers/armory.helper';
+import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
 
 @Component({
   selector: 'app-select-accessory',
@@ -35,7 +35,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   private incomingAccessory$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
+  constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
     this.accessoriesFetched$ = this.armoryService.listenArmorsAndAccessoriesFetched().subscribe((event) => {
@@ -60,7 +60,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
       const chosenAccessory = this.filteredAndRenamedAccessoriesArray.find((accesoryToLookAt) => accesoryToLookAt.name === armor);
 
       if (chosenAccessory) {
-        const bonusesToAdd: ITotalBonus = this.armoryHelper.calculateBonusesFromEquipment(chosenAccessory);
+        const bonusesToAdd: ITotalBonus = calculateBonusesFromEquipment(chosenAccessory);
 
         switch (this.accessorySlot) {
           case accessoriesSlots.Cloak:

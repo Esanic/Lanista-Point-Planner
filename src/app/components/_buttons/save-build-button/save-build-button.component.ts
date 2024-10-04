@@ -5,7 +5,7 @@ import { BuildService } from '../../../support/services/build.service';
 import { BuildNameModalComponent } from '../../_modals/build-name-modal/build-name-modal.component';
 import { NgbPopover, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { emptyString } from '../../../support/constants/common';
-import { StorageHelper } from '../../../support/helpers/storage.helper';
+import { getBuilds, setBuilds } from '../../../support/helpers/common.helper';
 
 @Component({
   selector: 'app-save-build-button',
@@ -23,7 +23,7 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
 
   private listenToDeselectBuild$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private storageHelper: StorageHelper) {}
+  constructor(private buildService: BuildService) {}
 
   ngOnInit(): void {
     this.listenToDeselectBuild$ = this.buildService.listenDeselectBuild().subscribe(() => {
@@ -43,17 +43,17 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
 
     this.build = await firstValueFrom(this.buildService.getStatsFromTable());
     this.build.name = this.buildName;
-    let builds = this.storageHelper.getBuilds();
+    let builds = getBuilds();
 
     if (saved) {
       builds[builds.findIndex((b) => b.name === this.build.name)] = this.build;
-      this.storageHelper.setBuilds(builds);
+      setBuilds(builds);
       this.buildService.emitUpdateBuildList(this.build.name);
       return;
     }
 
     builds.push(this.build);
-    this.storageHelper.setBuilds(builds);
+    setBuilds(builds);
 
     this.buildService.emitUpdateBuildList(this.build.name);
   }

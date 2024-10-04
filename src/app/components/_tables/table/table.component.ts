@@ -11,11 +11,11 @@ import { ArmoryService } from '../../../support/services/armory.service';
 import { emptyString } from '../../../support/constants/common';
 import { tableHeaders } from '../../../support/constants/headers';
 import { total } from '../../../support/constants/templates';
-import { CommonHelper } from '../../../support/helpers/common.helper';
 import { weaponSkills } from '../../../support/enums/weapon-skills.enums';
-import { ArmoryHelper } from '../../../support/helpers/armory.helper';
-import { WeaponSkillsPipe } from '../../../support/pipes/weapon-skills.pipe';
 
+import { WeaponSkillsPipe } from '../../../support/pipes/weapon-skills.pipe';
+import { selectRaceBonusFromWeaponSkill } from '../../../support/helpers/build.helper';
+import { convertWeaponSkillIdToName } from '../../../support/helpers/armory.helper';
 @Component({
   selector: 'app-table',
   standalone: true,
@@ -55,7 +55,7 @@ export class TableComponent implements OnInit, OnDestroy {
   private addBonus$: Subscription = new Subscription();
   private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeData$, this.wipeTable$, this.getLevels$, this.addBonus$];
 
-  constructor(private formBuilder: FormBuilder, private buildService: BuildService, private armoryService: ArmoryService, private commonHelper: CommonHelper, private armoryHelper: ArmoryHelper) {}
+  constructor(private formBuilder: FormBuilder, private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -379,7 +379,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     const build: IBuild = {
       race: this.race.name,
-      weaponSkill: this.armoryHelper.convertWeaponSkillIdToName(this.weaponSkill),
+      weaponSkill: convertWeaponSkillIdToName(this.weaponSkill),
       levels: arrOfLevels,
     };
 
@@ -410,8 +410,8 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   public getRaceBonusFromWeaponSkill(weaponSkill: number, race: IRace): number {
-    const weaponSkillName = this.armoryHelper.convertWeaponSkillIdToName(weaponSkill);
-    return this.commonHelper.selectRaceBonusFromWeaponSkill(weaponSkillName, race);
+    const weaponSkillName = convertWeaponSkillIdToName(weaponSkill);
+    return selectRaceBonusFromWeaponSkill(weaponSkillName, race);
   }
 
   public getRaceBonusFromStats(stat: string, race: IRace): number {

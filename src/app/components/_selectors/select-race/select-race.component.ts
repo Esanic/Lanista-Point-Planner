@@ -3,7 +3,6 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { BuildService } from '../../../support/services/build.service';
 import { emptyString } from '../../../support/constants/common';
-import { CommonHelper } from '../../../support/helpers/common.helper';
 
 @Component({
   selector: 'select-race',
@@ -20,7 +19,7 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
   private chosenRace$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private commonHelper: CommonHelper) {}
+  constructor(private buildService: BuildService) {}
 
   ngOnInit(): void {
     this.incomingRace$ = this.buildService.getChosenRace().subscribe((race) => {
@@ -29,7 +28,7 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
 
     this.chosenRace$ = this.chooseRace.valueChanges.subscribe((raceName) => {
       if (raceName) {
-        const race = this.commonHelper.selectRaceFromRaceName(raceName);
+        const race = this.buildService.selectRaceFromRaceName(raceName);
 
         this.buildService.setChosenRace(race);
         this.buildService.emitDeselectBuild({});

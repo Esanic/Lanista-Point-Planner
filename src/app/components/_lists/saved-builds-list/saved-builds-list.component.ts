@@ -3,10 +3,9 @@ import { IBuild } from '../../../support/interfaces/build';
 import { BuildService } from '../../../support/services/build.service';
 import { CommonModule } from '@angular/common';
 import { ConfirmActionModalComponent } from '../../_modals/confirm-action-modal/confirm-action-modal.component';
-import { StorageHelper } from '../../../support/helpers/storage.helper';
 import { Subscription } from 'rxjs';
 import { emptyString } from '../../../support/constants/common';
-import { CommonHelper } from '../../../support/helpers/common.helper';
+import { getBuilds, setBuilds } from '../../../support/helpers/common.helper';
 
 @Component({
   selector: 'app-saved-builds-list',
@@ -27,15 +26,15 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
   private listenWipeData$: Subscription = new Subscription();
   private deselectBuild$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private storageHelper: StorageHelper, private commonHelper: CommonHelper) {}
+  constructor(private buildService: BuildService) {}
 
   ngOnInit(): void {
-    this.builds = this.storageHelper.getBuilds();
+    this.builds = getBuilds();
 
     this.selectBuildUponInit();
 
     this.listenToUpdateBuildList$ = this.buildService.listenToUpdateBuildList().subscribe((buildName) => {
-      this.builds = this.storageHelper.getBuilds();
+      this.builds = getBuilds();
       if (buildName !== emptyString) {
         this.selectBuild({ name: buildName } as IBuild, true);
       }
@@ -82,7 +81,7 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
 
       this.buildService.setSelectedBuild(selectedBuild);
       this.buildService.setAmountOfLevels(selectedBuild.levels.length);
-      this.buildService.setChosenRace(this.commonHelper.selectRaceFromRaceName(selectedBuild.race));
+      this.buildService.setChosenRace(this.buildService.selectRaceFromRaceName(selectedBuild.race));
       this.buildService.setChosenWeaponSkill(selectedBuild.weaponSkill);
       this.buildService.setImportedStats(selectedBuild.levels);
     }
@@ -93,7 +92,7 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
 
     this.builds.splice(buildToDelete, 1);
 
-    this.storageHelper.setBuilds(this.builds);
+    setBuilds(this.builds);
 
     this.buildService.emitUpdateBuildList(emptyString);
 

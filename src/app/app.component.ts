@@ -16,7 +16,7 @@ import { IAccessory } from './support/interfaces/_armory/accessory';
 import { BuildService } from './support/services/build.service';
 import { Races } from './support/enums/races';
 import { dwarf, elf, goblin, human, orc, salamanth, troll, undead } from './support/constants/templates';
-import { BuildHelper } from './support/helpers/build.helper';
+import { bonusAssigner } from './support/helpers/build.helper';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +28,7 @@ import { BuildHelper } from './support/helpers/build.helper';
 export class AppComponent implements OnInit {
   public screenWidth: number = 0;
 
-  constructor(private apiService: ApiService, private buildService: BuildService, private buildHelper: BuildHelper, private armoryService: ArmoryService) {}
+  constructor(private apiService: ApiService, private buildService: BuildService, private armoryService: ArmoryService) {}
 
   /** To determine programmatically what view to use depending on the users device size. */
   @HostListener('window:resize', ['$event'])
@@ -110,35 +110,35 @@ export class AppComponent implements OnInit {
   private assignRacesData(race: IApiRace): void {
     switch (race.id) {
       case Races.human: {
-        this.buildService.setHuman(this.buildHelper.bonusAssigner(race, human));
+        this.buildService.setHuman(bonusAssigner(race, human));
         break;
       }
       case Races.elf: {
-        this.buildService.setElf(this.buildHelper.bonusAssigner(race, elf));
+        this.buildService.setElf(bonusAssigner(race, elf));
         break;
       }
       case Races.dwarf: {
-        this.buildService.setDwarf(this.buildHelper.bonusAssigner(race, dwarf));
+        this.buildService.setDwarf(bonusAssigner(race, dwarf));
         break;
       }
       case Races.orc: {
-        this.buildService.setOrc(this.buildHelper.bonusAssigner(race, orc));
+        this.buildService.setOrc(bonusAssigner(race, orc));
         break;
       }
       case Races.troll: {
-        this.buildService.setTroll(this.buildHelper.bonusAssigner(race, troll));
+        this.buildService.setTroll(bonusAssigner(race, troll));
         break;
       }
       case Races.goblin: {
-        this.buildService.setGoblin(this.buildHelper.bonusAssigner(race, goblin));
+        this.buildService.setGoblin(bonusAssigner(race, goblin));
         break;
       }
       case Races.undead: {
-        this.buildService.setUndead(this.buildHelper.bonusAssigner(race, undead));
+        this.buildService.setUndead(bonusAssigner(race, undead));
         break;
       }
       case Races.salamanth: {
-        this.buildService.setSalamanth(this.buildHelper.bonusAssigner(race, salamanth));
+        this.buildService.setSalamanth(bonusAssigner(race, salamanth));
         break;
       }
     }
