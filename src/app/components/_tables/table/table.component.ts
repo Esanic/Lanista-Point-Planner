@@ -62,7 +62,6 @@ export class TableComponent implements OnInit, OnDestroy {
 
     this.getRace$ = this.buildService.getChosenRace().subscribe((race) => {
       this.race = race;
-      console.log(this.race);
       // this.commonHelper.selectRaceFromRaceName(race.name);
       this.weaponSkillPicker(this.weaponSkill);
       this.summarizeEachColumn();
@@ -70,7 +69,6 @@ export class TableComponent implements OnInit, OnDestroy {
 
     this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
       this.weaponSkill = weaponSkill;
-      console.log(this.weaponSkill);
       this.weaponSkillPicker(this.weaponSkill);
       this.summarizeEachColumn();
     });
