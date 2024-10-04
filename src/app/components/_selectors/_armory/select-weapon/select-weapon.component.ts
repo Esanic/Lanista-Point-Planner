@@ -34,11 +34,12 @@ export class SelectWeaponComponent {
 
   private chosenWeaponSkill$: Subscription = new Subscription();
   private chosenRace$: Subscription = new Subscription();
-  private incomingWeapon$: Subscription = new Subscription();
-  private viewLegendEquipment$: Subscription = new Subscription();
-  private tableStats$: Subscription = new Subscription();
   private shieldBuild$: Subscription = new Subscription();
   private twoHandedBuild$: Subscription = new Subscription();
+  private viewLegendEquipment$: Subscription = new Subscription();
+  private tableStats$: Subscription = new Subscription();
+  private chosenWeapon$: Subscription = new Subscription();
+  private incomingWeapon$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
@@ -89,11 +90,7 @@ export class SelectWeaponComponent {
       }
     });
 
-    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
-      this.chosenWeapon.patchValue(emptyString);
-    });
-
-    this.chosenWeapon.valueChanges.subscribe((selectedWeapon) => {
+    this.chosenWeapon$ = this.chosenWeapon.valueChanges.subscribe((selectedWeapon) => {
       //* If no weapon is selected, reset bonuses and emit that two handed weapon is not selected
       if (selectedWeapon === 'none') {
         this.armoryService.emitTwoHandedBuild(false);
@@ -138,17 +135,22 @@ export class SelectWeaponComponent {
         if (mainHand) this.chosenWeapon.patchValue(mainHand.name, { emitEvent: false });
       }
     });
+
+    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chosenWeapon.patchValue(emptyString);
+    });
   }
 
   ngOnDestroy(): void {
     this.chosenWeaponSkill$.unsubscribe();
+    this.chosenRace$.unsubscribe();
+    this.shieldBuild$.unsubscribe();
+    this.twoHandedBuild$.unsubscribe();
     this.viewLegendEquipment$.unsubscribe();
     this.tableStats$.unsubscribe();
-    this.shieldBuild$.unsubscribe();
-    this.wipeBonus$.unsubscribe();
-    this.twoHandedBuild$.unsubscribe();
+    this.chosenWeapon$.unsubscribe();
     this.incomingWeapon$.unsubscribe();
-    this.chosenRace$.unsubscribe();
+    this.wipeBonus$.unsubscribe();
   }
 
   private resetBonus(): void {
@@ -209,7 +211,7 @@ export class SelectWeaponComponent {
   }
 
   private filterAndRenameWeapons(weapons: IWeapon[], currentMaxLevel: number, showLegendEquipment: boolean, isOffhand?: boolean): IWeapon[] {
-    const weaponsArray = JSON.parse(JSON.stringify(weapons));
+    const weaponsArray = JSON.parse(JSON.stringify(weapons)); //TODO: Use helper function to deep copy
 
     let filteredWeapons: IWeapon[] = [];
 

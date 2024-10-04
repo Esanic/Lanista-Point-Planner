@@ -27,8 +27,9 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
 
   private consumablesFetched$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
-  private wipeBonus$: Subscription = new Subscription();
+  private chosenConsumable$: Subscription = new Subscription();
   private incomingConsumable$: Subscription = new Subscription();
+  private wipeBonus$: Subscription = new Subscription();
 
   constructor(private armoryService: ArmoryService, private armoryHelper: ArmoryHelper, private buildService: BuildService) {}
 
@@ -46,11 +47,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
-      this.chosenConsumable.patchValue(emptyString);
-    });
-
-    this.chosenConsumable.valueChanges.subscribe(() => {
+    this.chosenConsumable$ = this.chosenConsumable.valueChanges.subscribe(() => {
       const chosenConsumable = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === this.chosenConsumable.value);
 
       if (chosenConsumable) {
@@ -91,17 +88,22 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
           break;
       }
     });
+
+    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chosenConsumable.patchValue(emptyString);
+    });
   }
 
   ngOnDestroy(): void {
     this.consumablesFetched$.unsubscribe();
     this.tableStats$.unsubscribe();
-    this.wipeBonus$.unsubscribe();
+    this.chosenConsumable$.unsubscribe();
     this.incomingConsumable$.unsubscribe();
+    this.wipeBonus$.unsubscribe();
   }
 
   private filterAndRenameConsumables(): void {
-    const equipment = JSON.parse(JSON.stringify(this.armoryService.consumables));
+    const equipment = JSON.parse(JSON.stringify(this.armoryService.consumables)); //TODO: Use helper function to deep copy
 
     let filteredEquipment: IConsumable[] = [];
 

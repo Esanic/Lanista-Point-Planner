@@ -31,8 +31,9 @@ export class SelectArmorComponent implements OnInit {
   private armorsFetched$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
-  private wipeBonus$: Subscription = new Subscription();
+  private chosenArmor$: Subscription = new Subscription();
   private incomingArmor$: Subscription = new Subscription();
+  private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
 
@@ -55,11 +56,7 @@ export class SelectArmorComponent implements OnInit {
       }
     });
 
-    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
-      this.chosenArmor.patchValue(emptyString);
-    });
-
-    this.chosenArmor.valueChanges.subscribe((armor) => {
+    this.chosenArmor$ = this.chosenArmor.valueChanges.subscribe((armor) => {
       const chosenArmor = this.filteredAndRenamedArmorArray.find((armorToLookAt) => armorToLookAt.name === armor);
 
       if (chosenArmor) {
@@ -125,14 +122,19 @@ export class SelectArmorComponent implements OnInit {
           break;
       }
     });
+
+    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chosenArmor.patchValue(emptyString);
+    });
   }
 
   ngOnDestroy(): void {
     this.armorsFetched$.unsubscribe();
     this.viewLegendEquipment$.unsubscribe();
     this.tableStats$.unsubscribe();
-    this.wipeBonus$.unsubscribe();
+    this.chosenArmor$.unsubscribe();
     this.incomingArmor$.unsubscribe();
+    this.wipeBonus$.unsubscribe();
   }
 
   private resetBonus(): void {
@@ -200,7 +202,7 @@ export class SelectArmorComponent implements OnInit {
   }
 
   private filterAndRenameArmor(equipmentArray: IArmor[], currentMaxLevel: number, showLegendEquipment: boolean): IArmor[] {
-    const equipment = JSON.parse(JSON.stringify(equipmentArray));
+    const equipment = JSON.parse(JSON.stringify(equipmentArray)); //TODO: Use helper function to deep copy
 
     let filteredEquipment: IArmor[] = [];
 

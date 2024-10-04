@@ -31,8 +31,9 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   private accessoriesFetched$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
   private tableStats$: Subscription = new Subscription();
-  private wipeBonus$: Subscription = new Subscription();
+  private chosenAccessory$: Subscription = new Subscription();
   private incomingAccessory$: Subscription = new Subscription();
+  private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService, private armoryHelper: ArmoryHelper) {}
 
@@ -55,11 +56,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
-      this.chosenAccessory.patchValue(emptyString);
-    });
-
-    this.chosenAccessory.valueChanges.subscribe((armor) => {
+    this.chosenAccessory$ = this.chosenAccessory.valueChanges.subscribe((armor) => {
       const chosenAccessory = this.filteredAndRenamedAccessoriesArray.find((accesoryToLookAt) => accesoryToLookAt.name === armor);
 
       if (chosenAccessory) {
@@ -125,14 +122,19 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
           break;
       }
     });
+
+    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chosenAccessory.patchValue(emptyString);
+    });
   }
 
   ngOnDestroy(): void {
     this.accessoriesFetched$.unsubscribe();
     this.viewLegendEquipment$.unsubscribe();
     this.tableStats$.unsubscribe();
-    this.wipeBonus$.unsubscribe();
+    this.chosenAccessory$.unsubscribe();
     this.incomingAccessory$.unsubscribe();
+    this.wipeBonus$.unsubscribe();
   }
 
   private resetBonus(): void {
@@ -200,7 +202,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   }
 
   private filterAndRenameAccessory(equipmentArray: IAccessory[], currentMaxLevel: number, showLegendEquipment: boolean): IAccessory[] {
-    const equipment = JSON.parse(JSON.stringify(equipmentArray));
+    const equipment = JSON.parse(JSON.stringify(equipmentArray)); //TODO: Use helper function to deep copy
 
     let filteredEquipment: IAccessory[] = [];
 

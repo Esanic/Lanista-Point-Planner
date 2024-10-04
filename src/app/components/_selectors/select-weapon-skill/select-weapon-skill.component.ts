@@ -20,9 +20,9 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
   public weaponSkills: string[] = [...weaponSkillsNames];
   private selectedRace: IRace = {} as IRace;
 
-  private incomingWeaponSkill$: Subscription = new Subscription();
-  private internalWeaponSkill$: Subscription = new Subscription();
   private selectedRace$: Subscription = new Subscription();
+  private incomingWeaponSkill$: Subscription = new Subscription();
+  private chosenWeaponSkill$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
   constructor(private commonHelper: CommonHelper, private buildService: BuildService, private armoryHelper: ArmoryHelper) {}
@@ -55,7 +55,7 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.internalWeaponSkill$ = this.chooseWeaponSkill.valueChanges.subscribe((weaponSkill) => {
+    this.chosenWeaponSkill$ = this.chooseWeaponSkill.valueChanges.subscribe((weaponSkill) => {
       if (weaponSkill) {
         this.buildService.setChosenWeaponSkill(weaponSkill);
         this.buildService.emitDeselectBuild({});
@@ -68,9 +68,9 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.incomingWeaponSkill$.unsubscribe();
-    this.internalWeaponSkill$.unsubscribe();
-    this.wipeData$.unsubscribe();
     this.selectedRace$.unsubscribe();
+    this.incomingWeaponSkill$.unsubscribe();
+    this.chosenWeaponSkill$.unsubscribe();
+    this.wipeData$.unsubscribe();
   }
 }

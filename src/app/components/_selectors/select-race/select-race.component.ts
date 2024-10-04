@@ -17,7 +17,7 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
   public races: string[] = this.buildService.getRaces().map((race) => race.name);
 
   private incomingRace$: Subscription = new Subscription();
-  private localRace$: Subscription = new Subscription();
+  private chosenRace$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private commonHelper: CommonHelper) {}
@@ -27,7 +27,7 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
       this.chooseRace.patchValue(race.name, { emitEvent: false });
     });
 
-    this.localRace$ = this.chooseRace.valueChanges.subscribe((raceName) => {
+    this.chosenRace$ = this.chooseRace.valueChanges.subscribe((raceName) => {
       if (raceName) {
         const race = this.commonHelper.selectRaceFromRaceName(raceName);
 
@@ -43,7 +43,7 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.incomingRace$.unsubscribe();
-    this.localRace$.unsubscribe();
+    this.chosenRace$.unsubscribe();
     this.wipeData$.unsubscribe();
   }
 }

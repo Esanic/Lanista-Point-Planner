@@ -26,13 +26,13 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
 
   public filteredAndRenamedEnchants: IEnchant[] = [];
 
-  private chosenEnchant$: Subscription = new Subscription();
   private chosenWeaponSkill$: Subscription = new Subscription();
   private importedEnchant$: Subscription = new Subscription();
   private shieldBuild$: Subscription = new Subscription();
   private twoHandedBuild$: Subscription = new Subscription();
-  private wipeBonus$: Subscription = new Subscription();
+  private chosenEnchant$: Subscription = new Subscription();
   private incomingEnchant$: Subscription = new Subscription();
+  private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService, private commonHelper: CommonHelper) {}
 
@@ -60,11 +60,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
-      this.chosenEnchant.patchValue(emptyString);
-    });
-
-    this.chosenEnchant.valueChanges.subscribe((selectedEnchant) => {
+    this.chosenEnchant$ = this.chosenEnchant.valueChanges.subscribe((selectedEnchant) => {
       const chosenEnchant = this.filteredAndRenamedEnchants.find((enchant) => enchant.name === selectedEnchant);
 
       let bonus: ITotalBonus = { additiveBonus: { ...additiveBonus }, multiplierBonus: { ...multiplierBonus } };
@@ -195,6 +191,10 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
           break;
       }
     });
+
+    this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chosenEnchant.patchValue(emptyString);
+    });
   }
 
   ngOnDestroy(): void {
@@ -202,9 +202,9 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
     this.importedEnchant$.unsubscribe();
     this.shieldBuild$.unsubscribe();
     this.twoHandedBuild$.unsubscribe();
-    this.wipeBonus$.unsubscribe();
     this.chosenEnchant$.unsubscribe();
     this.incomingEnchant$.unsubscribe();
+    this.wipeBonus$.unsubscribe();
   }
 
   private selectEnchantsFromWeaponSkill(weaponSkill: number): void {
