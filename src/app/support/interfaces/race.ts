@@ -3,6 +3,7 @@ import { IStats } from './stats';
 import { IWeaponSkills } from './weapon-skills';
 
 export interface IRace {
+  id: number;
   name: string;
   baseWeight: number;
   damageWithShield: number;

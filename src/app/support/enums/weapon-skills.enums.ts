@@ -1,4 +1,4 @@
-export enum weaponSkillsNum {
+export enum weaponSkills {
   Axe = 0,
   Sword = 1,
   Mace = 2,

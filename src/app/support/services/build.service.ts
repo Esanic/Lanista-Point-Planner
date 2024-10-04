@@ -4,6 +4,8 @@ import { IBuild } from '../interfaces/build';
 import { IRace } from '../interfaces/race';
 import { emptyString } from '../constants/common';
 import { defaultRace, dwarf, elf, goblin, human, orc, salamanth, troll, undead } from '../constants/templates';
+import { CommonHelper } from '../helpers/common.helper';
+import { ArmoryHelper } from '../helpers/armory.helper';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +18,7 @@ export class BuildService {
   private buildFromTable: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
 
   private chosenRace: BehaviorSubject<IRace> = new BehaviorSubject<IRace>({} as IRace);
-  private chosenWeaponSkill: BehaviorSubject<string> = new BehaviorSubject<string>(emptyString);
+  private chosenWeaponSkill: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);
   private chosenLevelsSubject: Subject<number> = new Subject<number>();
   private importedStats: Subject<any> = new Subject<any>();
@@ -35,7 +37,7 @@ export class BuildService {
   private salamanth: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(salamanth);
   private default: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(defaultRace);
 
-  constructor() {}
+  constructor(private armoryHelper: ArmoryHelper) {}
 
   //* Select build *//
   public setSelectedBuild(build: IBuild): void {
@@ -106,11 +108,11 @@ export class BuildService {
   }
 
   public setChosenWeaponSkill(skill: string) {
-    const trimmedSkill = skill.split(' ')[0];
-    this.chosenWeaponSkill.next(trimmedSkill);
+    const weaponSkillId = this.armoryHelper.convertWeaponSkillToId(skill.split(' ')[0]);
+    this.chosenWeaponSkill.next(weaponSkillId);
   }
 
-  public getChosenWeaponSkill(): Observable<string> {
+  public getChosenWeaponSkill(): Observable<number> {
     return this.chosenWeaponSkill.asObservable();
   }
 

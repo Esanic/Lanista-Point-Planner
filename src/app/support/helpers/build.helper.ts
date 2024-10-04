@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Stats } from '../enums/stats.enums';
-import { weaponSkillsNum } from '../enums/weapon-skills.enums';
+import { weaponSkills } from '../enums/weapon-skills.enums';
 import { IApiRace, IRace, IApiBonuses } from '../interfaces/race';
 
 @Injectable({ providedIn: 'root' })
 export class BuildHelper {
   constructor() {}
 
-  public bonusAssigner(apiRace: IApiRace, templateRace: IRace): IRace {
-    let race = { ...templateRace };
+  public bonusAssigner(apiRace: IApiRace, raceTemplate: IRace): IRace {
+    let race = { ...raceTemplate };
 
     race.stats = {
       stamina: apiRace.stats.find((stat: IApiBonuses) => stat.type === Stats.Stamina)?.value || race.stats.stamina,
@@ -22,13 +22,13 @@ export class BuildHelper {
     };
 
     race.weaponSkills = {
-      axe: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkillsNum.Axe)?.value || race.weaponSkills.axe,
-      sword: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkillsNum.Sword)?.value || race.weaponSkills.sword,
-      mace: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkillsNum.Mace)?.value || race.weaponSkills.mace,
-      stave: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkillsNum.Stave)?.value || race.weaponSkills.stave,
-      shield: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkillsNum.Shield)?.value || race.weaponSkills.shield,
-      spear: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkillsNum.Spear)?.value || race.weaponSkills.spear,
-      chain: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkillsNum.Chain)?.value || race.weaponSkills.chain,
+      axe: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkills.Axe)?.value || race.weaponSkills.axe,
+      sword: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkills.Sword)?.value || race.weaponSkills.sword,
+      mace: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkills.Mace)?.value || race.weaponSkills.mace,
+      stave: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkills.Stave)?.value || race.weaponSkills.stave,
+      shield: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkills.Shield)?.value || race.weaponSkills.shield,
+      spear: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkills.Spear)?.value || race.weaponSkills.spear,
+      chain: apiRace.weapon_skills.find((skill: IApiBonuses) => skill.type === weaponSkills.Chain)?.value || race.weaponSkills.chain,
     };
 
     return race;

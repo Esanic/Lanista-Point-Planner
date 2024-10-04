@@ -12,11 +12,14 @@ import { emptyString } from '../../../support/constants/common';
 import { tableHeaders } from '../../../support/constants/headers';
 import { total } from '../../../support/constants/templates';
 import { CommonHelper } from '../../../support/helpers/common.helper';
+import { weaponSkills } from '../../../support/enums/weapon-skills.enums';
+import { ArmoryHelper } from '../../../support/helpers/armory.helper';
+import { WeaponSkillsPipe } from '../../../support/pipes/weapon-skills.pipe';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, OnlyNumbersDirective],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, OnlyNumbersDirective, WeaponSkillsPipe],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
@@ -31,7 +34,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   // public race: IRace = this.globalService.defaultRace;
   public race: IRace = {} as IRace;
-  public weaponSkill: string = emptyString;
+  public weaponSkill: number = -1;
   public weaponSkillMultiplier: number = 1;
 
   public total = { ...total };
@@ -52,20 +55,22 @@ export class TableComponent implements OnInit, OnDestroy {
   private addBonus$: Subscription = new Subscription();
   private subscriptions: Subscription[] = [this.getRace$, this.getWeaponSkill$, this.importPoints$, this.wipeData$, this.wipeTable$, this.getLevels$, this.addBonus$];
 
-  constructor(private formBuilder: FormBuilder, private buildService: BuildService, private armoryService: ArmoryService, private commonHelper: CommonHelper) {}
+  constructor(private formBuilder: FormBuilder, private buildService: BuildService, private armoryService: ArmoryService, private commonHelper: CommonHelper, private armoryHelper: ArmoryHelper) {}
 
   ngOnInit(): void {
     this.createForm();
 
     this.getRace$ = this.buildService.getChosenRace().subscribe((race) => {
       this.race = race;
-      this.racePicker(race.name);
+      console.log(this.race);
+      // this.commonHelper.selectRaceFromRaceName(race.name);
       this.weaponSkillPicker(this.weaponSkill);
       this.summarizeEachColumn();
     });
 
-    this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((skill) => {
-      this.weaponSkill = skill;
+    this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
+      this.weaponSkill = weaponSkill;
+      console.log(this.weaponSkill);
       this.weaponSkillPicker(this.weaponSkill);
       this.summarizeEachColumn();
     });
@@ -326,56 +331,30 @@ export class TableComponent implements OnInit, OnDestroy {
     }
   }
 
-  private racePicker(race: string): void {
-    switch (race) {
-      case 'Människa':
-        this.race = this.buildService.getHuman();
-        break;
-      case 'Alv':
-        this.race = this.buildService.getElf();
-        break;
-      case 'Dvärg':
-        this.race = this.buildService.getDwarf();
-        break;
-      case 'Ork':
-        this.race = this.buildService.getOrc();
-        break;
-      case 'Goblin':
-        this.race = this.buildService.getGoblin();
-        break;
-      case 'Troll':
-        this.race = this.buildService.getTroll();
-        break;
-      case 'Odöd':
-        this.race = this.buildService.getUndead();
-        break;
-      case 'Salamanth':
-        this.race = this.buildService.getSalamanth();
-    }
-  }
-
-  private weaponSkillPicker(weaponSkill: string): void {
+  private weaponSkillPicker(weaponSkill: number): void {
     if (this.race.weaponSkills) {
       switch (weaponSkill) {
-        case 'Yxa':
+        case weaponSkills.Axe:
+          console.log('Axe');
           this.weaponSkillMultiplier = this.race.weaponSkills.axe;
+          console.log(this.weaponSkillMultiplier);
           break;
-        case 'Svärd':
+        case weaponSkills.Sword:
           this.weaponSkillMultiplier = this.race.weaponSkills.sword;
           break;
-        case 'Hammare':
+        case weaponSkills.Mace:
           this.weaponSkillMultiplier = this.race.weaponSkills.mace;
           break;
-        case 'Stav':
+        case weaponSkills.Stave:
           this.weaponSkillMultiplier = this.race.weaponSkills.stave;
           break;
-        case 'Stick':
+        case weaponSkills.Spear:
           this.weaponSkillMultiplier = this.race.weaponSkills.spear;
           break;
-        case 'Kätting':
+        case weaponSkills.Chain:
           this.weaponSkillMultiplier = this.race.weaponSkills.chain;
       }
-    } else '0';
+    } else -1;
   }
 
   private setCurrentPoints(): void {
@@ -400,7 +379,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     const build: IBuild = {
       race: this.race.name,
-      weaponSkill: this.weaponSkill,
+      weaponSkill: this.armoryHelper.convertWeaponSkillIdToName(this.weaponSkill),
       levels: arrOfLevels,
     };
 
@@ -430,8 +409,9 @@ export class TableComponent implements OnInit, OnDestroy {
     this.levels = [];
   }
 
-  public getRaceBonusFromWeaponSkill(weaponSkill: string, race: IRace): number {
-    return this.commonHelper.selectRaceBonusFromWeaponSkill(weaponSkill, race);
+  public getRaceBonusFromWeaponSkill(weaponSkill: number, race: IRace): number {
+    const weaponSkillName = this.armoryHelper.convertWeaponSkillIdToName(weaponSkill);
+    return this.commonHelper.selectRaceBonusFromWeaponSkill(weaponSkillName, race);
   }
 
   public getRaceBonusFromStats(stat: string, race: IRace): number {

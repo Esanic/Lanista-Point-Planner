@@ -8,6 +8,7 @@ import { BuildService } from '../../../../support/services/build.service';
 import { CommonHelper } from '../../../../support/helpers/common.helper';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
+import { weaponSkills } from '../../../../support/enums/weapon-skills.enums';
 
 @Component({
   selector: 'app-select-enchant',
@@ -21,7 +22,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
 
   public chosenEnchant = new FormControl({ value: emptyString, disabled: true });
 
-  private selectedWeaponSkill: string = emptyString;
+  private selectedWeaponSkill: number = -1;
 
   public filteredAndRenamedEnchants: IEnchant[] = [];
 
@@ -117,7 +118,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
               }
               break;
             case 'vapenfärdigheten yxor':
-              if (this.selectedWeaponSkill === 'Yxa') {
+              if (this.selectedWeaponSkill === weaponSkills.Axe) {
                 if (typeof modifier.enchant_value === 'number') {
                   bonus.additiveBonus.weaponSkill += modifier.enchant_value;
                 }
@@ -127,7 +128,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
               }
               break;
             case 'vapenfärdigheten hammare':
-              if (this.selectedWeaponSkill === 'Hammare') {
+              if (this.selectedWeaponSkill === weaponSkills.Mace) {
                 if (typeof modifier.enchant_value === 'number') {
                   bonus.additiveBonus.weaponSkill += modifier.enchant_value;
                 }
@@ -137,7 +138,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
               }
               break;
             case 'vapenfärdigheten stavar':
-              if (this.selectedWeaponSkill === 'Stav') {
+              if (this.selectedWeaponSkill === weaponSkills.Stave) {
                 if (typeof modifier.enchant_value === 'number') {
                   bonus.additiveBonus.weaponSkill += modifier.enchant_value;
                 }
@@ -147,7 +148,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
               }
               break;
             case 'vapenfärdigheten stickvapen':
-              if (this.selectedWeaponSkill === 'Stick') {
+              if (this.selectedWeaponSkill === weaponSkills.Spear) {
                 if (typeof modifier.enchant_value === 'number') {
                   bonus.additiveBonus.weaponSkill += modifier.enchant_value;
                 }
@@ -157,7 +158,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
               }
               break;
             case 'vapenfärdigheten kättingvapen':
-              if (this.selectedWeaponSkill === 'Kätting') {
+              if (this.selectedWeaponSkill === weaponSkills.Chain) {
                 if (typeof modifier.enchant_value === 'number') {
                   bonus.additiveBonus.weaponSkill += modifier.enchant_value;
                 }
@@ -206,24 +207,24 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
     this.incomingEnchant$.unsubscribe();
   }
 
-  private selectEnchantsFromWeaponSkill(weaponSkill: string): void {
+  private selectEnchantsFromWeaponSkill(weaponSkill: number): void {
     switch (weaponSkill) {
-      case 'Svärd':
+      case weaponSkills.Axe:
         this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('sword');
         break;
-      case 'Yxa':
+      case weaponSkills.Sword:
         this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('axe');
         break;
-      case 'Hammare':
+      case weaponSkills.Mace:
         this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('mace');
         break;
-      case 'Stav':
+      case weaponSkills.Stave:
         this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('stave');
         break;
-      case 'Stick':
+      case weaponSkills.Spear:
         this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('spear');
         break;
-      case 'Kätting':
+      case weaponSkills.Chain:
         this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('chain');
         break;
     }

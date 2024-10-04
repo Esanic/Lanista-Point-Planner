@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { weaponSkillStr } from '../../../../support/enums/weapon-skills.enums';
+import { weaponSkillStr, weaponSkills } from '../../../../support/enums/weapon-skills.enums';
 import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -23,8 +23,8 @@ export class SelectWeaponComponent {
 
   public chosenWeapon = new FormControl({ value: emptyString, disabled: true });
 
-  private selectedWeaponSkill: string = emptyString;
-  private selectedRace: string = emptyString;
+  private selectedWeaponSkill: number = -1;
+  private selectedRace: number = 0;
   private currentMaxLevel: number = 25;
   private viewLegendEquipment: boolean = false;
   private shieldBuild: boolean = false;
@@ -55,7 +55,7 @@ export class SelectWeaponComponent {
 
     this.chosenRace$ = this.buildService.getChosenRace().subscribe((race) => {
       if (race) {
-        this.selectedRace = race.name;
+        this.selectedRace = race.id;
         this.selectWeaponArray(this.selectedWeaponSkill);
       }
     });
@@ -148,6 +148,7 @@ export class SelectWeaponComponent {
     this.wipeBonus$.unsubscribe();
     this.twoHandedBuild$.unsubscribe();
     this.incomingWeapon$.unsubscribe();
+    this.chosenRace$.unsubscribe();
   }
 
   private resetBonus(): void {
@@ -168,39 +169,39 @@ export class SelectWeaponComponent {
   //* If shieldBuild is true, then shield is selected, otherwise the selectedWeaponSkill is selected
   private selectOffhand(): void {
     if (this.shieldBuild) {
-      this.selectWeaponArray(weaponSkillStr.Shield);
+      this.selectWeaponArray(weaponSkills.Shield);
     } else {
       this.selectWeaponArray(this.selectedWeaponSkill);
     }
   }
 
-  private selectWeaponArray(weaponSkill: string): void {
+  private selectWeaponArray(weaponSkill: number): void {
     switch (weaponSkill) {
-      case weaponSkillStr.Axe: {
+      case weaponSkills.Axe: {
         this.weaponArray.next(this.filterAndRenameWeapons(this.armoryService.axe, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
-      case weaponSkillStr.Sword: {
+      case weaponSkills.Sword: {
         this.weaponArray.next(this.filterAndRenameWeapons(this.armoryService.sword, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
-      case weaponSkillStr.Mace: {
+      case weaponSkills.Mace: {
         this.weaponArray.next(this.filterAndRenameWeapons(this.armoryService.mace, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
-      case weaponSkillStr.Stave: {
+      case weaponSkills.Stave: {
         this.weaponArray.next(this.filterAndRenameWeapons(this.armoryService.stave, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
-      case weaponSkillStr.Spear: {
+      case weaponSkills.Spear: {
         this.weaponArray.next(this.filterAndRenameWeapons(this.armoryService.spear, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
-      case weaponSkillStr.Chain: {
+      case weaponSkills.Chain: {
         this.weaponArray.next(this.filterAndRenameWeapons(this.armoryService.chain, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
-      case weaponSkillStr.Shield: {
+      case weaponSkills.Shield: {
         this.weaponArray.next(this.filterAndRenameWeapons(this.armoryService.shield, this.currentMaxLevel, this.viewLegendEquipment, this.isOffhand));
         break;
       }
@@ -227,35 +228,35 @@ export class SelectWeaponComponent {
     }
 
     switch (this.selectedRace) {
-      case 'Människa': {
+      case Races.human: {
         filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.human);
         break;
       }
-      case 'Dvärg': {
+      case Races.dwarf: {
         filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.dwarf);
         break;
       }
-      case 'Alv': {
+      case Races.elf: {
         filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.elf);
         break;
       }
-      case 'Ork': {
+      case Races.orc: {
         filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.orc);
         break;
       }
-      case 'Goblin': {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.goblin);
-        break;
-      }
-      case 'Troll': {
+      case Races.troll: {
         filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.troll);
         break;
       }
-      case 'Odöd': {
+      case Races.goblin: {
+        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.goblin);
+        break;
+      }
+      case Races.undead: {
         filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.undead);
         break;
       }
-      case 'Salamanth': {
+      case Races.salamanth: {
         filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.salamanth);
       }
     }

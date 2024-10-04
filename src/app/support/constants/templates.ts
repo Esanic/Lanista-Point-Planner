@@ -143,6 +143,7 @@ export const gear: IGear = {
 //#region Races
 export const defaultRace: IRace = {
   name: 'Default',
+  id: 0,
   baseWeight: 0,
   damageWithShield: 1,
   critChances: { baseCrit: 1, baseMaxCrit: 1, maxDamage: 1 },
@@ -151,6 +152,7 @@ export const defaultRace: IRace = {
 };
 export const human: IRace = {
   name: 'Människa',
+  id: 1,
   baseWeight: 5,
   damageWithShield: 0.85,
   critChances: { baseCrit: 1.05, baseMaxCrit: 1.11, maxDamage: 1.2 },
@@ -159,6 +161,7 @@ export const human: IRace = {
 };
 export const elf: IRace = {
   name: 'Alv',
+  id: 2,
   baseWeight: 0,
   damageWithShield: 0.8,
   critChances: { baseCrit: 1, baseMaxCrit: 1.1, maxDamage: 1.2 },
@@ -167,6 +170,7 @@ export const elf: IRace = {
 };
 export const dwarf: IRace = {
   name: 'Dvärg',
+  id: 3,
   baseWeight: 4,
   damageWithShield: 0.95,
   critChances: { baseCrit: 1.05, baseMaxCrit: 1.11, maxDamage: 1.2 },
@@ -175,30 +179,34 @@ export const dwarf: IRace = {
 };
 export const orc: IRace = {
   name: 'Ork',
+  id: 4,
   baseWeight: 7,
   damageWithShield: 1,
   critChances: { baseCrit: 1, baseMaxCrit: 1.09, maxDamage: 1.27 },
   stats: { stamina: 1.2, strength: 1.3, endurance: 1, initiative: 0.95, dodge: 0.7, learningCapacity: 0.9, luck: 1.05, discipline: 1.15 },
   weaponSkills: { axe: 1.1, sword: 1, mace: 1.1, stave: 0.85, shield: 0.95, spear: 1, chain: 1.1 },
 };
-export const goblin: IRace = {
-  name: 'Goblin',
-  baseWeight: 2,
-  damageWithShield: 0.85,
-  critChances: { baseCrit: 1, baseMaxCrit: 1.08, maxDamage: 1.2 },
-  stats: { stamina: 0.85, strength: 1.2, endurance: 1, initiative: 1.1, dodge: 1.3, learningCapacity: 1, luck: 1.2, discipline: 1 },
-  weaponSkills: { axe: 1, sword: 0.9, mace: 1.2, stave: 1.15, shield: 1, spear: 1.2, chain: 1.1 },
-};
 export const troll: IRace = {
   name: 'Troll',
+  id: 5,
   baseWeight: 12,
   damageWithShield: 0.9,
   critChances: { baseCrit: 1, baseMaxCrit: 1.07, maxDamage: 1.24 },
   stats: { stamina: 1.5, strength: 1.5, endurance: 0.8, initiative: 0.6, dodge: 0.4, learningCapacity: 0.8, luck: 1.15, discipline: 1.05 },
   weaponSkills: { axe: 0.8, sword: 0.7, mace: 0.85, stave: 0.65, shield: 0.8, spear: 0.75, chain: 0.85 },
 };
+export const goblin: IRace = {
+  name: 'Goblin',
+  id: 6,
+  baseWeight: 2,
+  damageWithShield: 0.85,
+  critChances: { baseCrit: 1, baseMaxCrit: 1.08, maxDamage: 1.2 },
+  stats: { stamina: 0.85, strength: 1.2, endurance: 1, initiative: 1.1, dodge: 1.3, learningCapacity: 1, luck: 1.2, discipline: 1 },
+  weaponSkills: { axe: 1, sword: 0.9, mace: 1.2, stave: 1.15, shield: 1, spear: 1.2, chain: 1.1 },
+};
 export const undead: IRace = {
   name: 'Odöd',
+  id: 7,
   baseWeight: 2,
   damageWithShield: 0.85,
   critChances: { baseCrit: 1.02, baseMaxCrit: 1.09, maxDamage: 1.2 },
@@ -207,6 +215,7 @@ export const undead: IRace = {
 };
 export const salamanth: IRace = {
   name: 'Salamanth',
+  id: 11,
   baseWeight: 2,
   damageWithShield: 0.85,
   critChances: { baseCrit: 1.02, baseMaxCrit: 1.09, maxDamage: 1.2 },

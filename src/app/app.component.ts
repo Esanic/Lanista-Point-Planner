@@ -2,7 +2,7 @@ import { Component, Host, HostListener, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './support/services/api.service';
 import { Stats } from './support/enums/stats.enums';
-import { weaponSkillsNum } from './support/enums/weapon-skills.enums';
+import { weaponSkills } from './support/enums/weapon-skills.enums';
 import { IApiBonuses, IApiRace, IRace } from './support/interfaces/race';
 import { DesktopViewComponent } from './components/_views/desktop-view/desktop-view.component';
 import { MobileViewComponent } from './components/_views/mobile-view/mobile-view.component';
@@ -146,31 +146,31 @@ export class AppComponent implements OnInit {
 
   private assignWeaponToArray(weapon: IWeapon): void {
     switch (weapon.type) {
-      case weaponSkillsNum.Axe: {
+      case weaponSkills.Axe: {
         this.armoryService.axe.push(weapon);
         break;
       }
-      case weaponSkillsNum.Sword: {
+      case weaponSkills.Sword: {
         this.armoryService.sword.push(weapon);
         break;
       }
-      case weaponSkillsNum.Mace: {
+      case weaponSkills.Mace: {
         this.armoryService.mace.push(weapon);
         break;
       }
-      case weaponSkillsNum.Stave: {
+      case weaponSkills.Stave: {
         this.armoryService.stave.push(weapon);
         break;
       }
-      case weaponSkillsNum.Shield: {
+      case weaponSkills.Shield: {
         this.armoryService.shield.push(weapon);
         break;
       }
-      case weaponSkillsNum.Spear: {
+      case weaponSkills.Spear: {
         this.armoryService.spear.push(weapon);
         break;
       }
-      case weaponSkillsNum.Chain: {
+      case weaponSkills.Chain: {
         this.armoryService.chain.push(weapon);
         break;
       }

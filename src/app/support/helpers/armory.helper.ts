@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { weaponSkillStr, weaponSkillsNum } from '../enums/weapon-skills.enums';
+import { weaponSkillStr, weaponSkills } from '../enums/weapon-skills.enums';
 import { ITotalBonus, IBonus } from '../interfaces/_armory/bonus';
 import { IEquipment } from '../interfaces/_armory/equipment';
 import { additiveBonus, multiplierBonus } from '../constants/templates';
@@ -10,19 +10,20 @@ import { additiveBonus, multiplierBonus } from '../constants/templates';
 export class ArmoryHelper {
   constructor() {}
 
-  public calculateBonusesFromEquipment(equipment: IEquipment, selectedWeaponSkill?: string): ITotalBonus {
-    const weaponSkillEnums = [weaponSkillStr.Axe, weaponSkillStr.Sword, weaponSkillStr.Mace, weaponSkillStr.Stave, weaponSkillStr.Spear, weaponSkillStr.Chain];
-    const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
+  public calculateBonusesFromEquipment(equipment: IEquipment, selectedWeaponSkill?: number): ITotalBonus {
+    // const weaponSkillEnums = [weaponSkillStr.Axe, weaponSkillStr.Sword, weaponSkillStr.Mace, weaponSkillStr.Stave, weaponSkillStr.Spear, weaponSkillStr.Chain];
+    // const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
     let multiplierBonuses: IBonus = { ...multiplierBonus };
     let additiveBonuses: IBonus = { ...additiveBonus };
 
     equipment.bonuses.forEach((bonus) => {
       if (bonus.additive !== undefined) {
         if (selectedWeaponSkill) {
-          const index = weaponSkillTypes.findIndex((type) => type.toLowerCase() === bonus.type.toLowerCase());
-          if (index !== -1 && selectedWeaponSkill === weaponSkillEnums[index]) {
-            additiveBonuses.weaponSkill += bonus.additive;
-          }
+          additiveBonuses.weaponSkill += bonus.additive;
+          // const index = weaponSkillTypes.findIndex((type) => type.toLowerCase() === bonus.type.toLowerCase());
+          // if (index !== -1 && selectedWeaponSkill === weaponSkillEnums[index]) {
+          //   additiveBonuses.weaponSkill += bonus.additive;
+          // }
         }
 
         switch (bonus.type.toLowerCase()) {
@@ -51,10 +52,11 @@ export class ArmoryHelper {
 
       if (bonus.multiplier !== undefined) {
         if (selectedWeaponSkill) {
-          const index = weaponSkillTypes.findIndex((type) => type.toLowerCase() === bonus.type.toLowerCase());
-          if (index !== -1 && selectedWeaponSkill === weaponSkillEnums[index]) {
-            multiplierBonuses.weaponSkill += bonus.multiplier - 1;
-          }
+          multiplierBonuses.weaponSkill += bonus.multiplier - 1;
+          // const index = weaponSkillTypes.findIndex((type) => type.toLowerCase() === bonus.type.toLowerCase());
+          // if (index !== -1 && selectedWeaponSkill === weaponSkillEnums[index]) {
+          //   multiplierBonuses.weaponSkill += bonus.multiplier - 1;
+          // }
         }
 
         switch (bonus.type.toLowerCase()) {
@@ -85,28 +87,47 @@ export class ArmoryHelper {
     return { additiveBonus: additiveBonuses, multiplierBonus: multiplierBonuses };
   }
 
-  public convertWeaponSkillToEnum(weaponSkill: string): number {
+  public convertWeaponSkillToId(weaponSkill: string): number {
     switch (weaponSkill.toLowerCase()) {
       case 'axe':
       case 'yxa':
-        return weaponSkillsNum.Axe;
+        return weaponSkills.Axe;
       case 'sword':
       case 'svärd':
-        return weaponSkillsNum.Sword;
+        return weaponSkills.Sword;
       case 'mace':
       case 'hammare':
-        return weaponSkillsNum.Mace;
+        return weaponSkills.Mace;
       case 'stave':
       case 'stav':
-        return weaponSkillsNum.Stave;
+        return weaponSkills.Stave;
       case 'spear':
       case 'stick':
-        return weaponSkillsNum.Spear;
+        return weaponSkills.Spear;
       case 'chain':
       case 'kätting':
-        return weaponSkillsNum.Chain;
+        return weaponSkills.Chain;
       default:
         return 0;
+    }
+  }
+
+  public convertWeaponSkillIdToName(weaponSkill: number): string {
+    switch (weaponSkill) {
+      case weaponSkills.Axe:
+        return weaponSkillStr.Axe;
+      case weaponSkills.Sword:
+        return weaponSkillStr.Sword;
+      case weaponSkills.Mace:
+        return weaponSkillStr.Mace;
+      case weaponSkills.Stave:
+        return weaponSkillStr.Stave;
+      case weaponSkills.Spear:
+        return weaponSkillStr.Spear;
+      case weaponSkills.Chain:
+        return weaponSkillStr.Chain;
+      default:
+        return '';
     }
   }
 }

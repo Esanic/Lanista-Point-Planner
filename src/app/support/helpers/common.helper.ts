@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { IRace } from '../interfaces/race';
 import { BuildService } from '../services/build.service';
+import { weaponSkills } from '../enums/weapon-skills.enums';
 
 @Injectable({
   providedIn: 'root',

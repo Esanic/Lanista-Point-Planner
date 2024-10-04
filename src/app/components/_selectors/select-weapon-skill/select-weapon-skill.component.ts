@@ -6,6 +6,7 @@ import { IRace } from '../../../support/interfaces/race';
 import { emptyString } from '../../../support/constants/common';
 import { weaponSkillsNames } from '../../../support/constants/weaponSkills';
 import { CommonHelper } from '../../../support/helpers/common.helper';
+import { ArmoryHelper } from '../../../support/helpers/armory.helper';
 
 @Component({
   selector: 'select-weapon-skill',
@@ -24,7 +25,7 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
   private selectedRace$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
-  constructor(private commonHelper: CommonHelper, private buildService: BuildService) {}
+  constructor(private commonHelper: CommonHelper, private buildService: BuildService, private armoryHelper: ArmoryHelper) {}
 
   ngOnInit(): void {
     this.selectedRace$ = this.buildService.getChosenRace().subscribe((race: IRace) => {
@@ -46,10 +47,11 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
     });
 
     this.incomingWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
+      const weaponSkillString = this.armoryHelper.convertWeaponSkillIdToName(weaponSkill);
       if (this.selectedRace.weaponSkills) {
-        this.chooseWeaponSkill.patchValue(`${weaponSkill} (${this.commonHelper.selectRaceBonusFromWeaponSkill(weaponSkill, this.selectedRace)}%)`, { emitEvent: false });
+        this.chooseWeaponSkill.patchValue(`${weaponSkillString} (${this.commonHelper.selectRaceBonusFromWeaponSkill(weaponSkillString, this.selectedRace)}%)`, { emitEvent: false });
       } else {
-        this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
+        this.chooseWeaponSkill.patchValue(weaponSkillString, { emitEvent: false });
       }
     });
 

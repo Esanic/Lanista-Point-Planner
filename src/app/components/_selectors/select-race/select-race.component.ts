@@ -28,9 +28,9 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
     });
 
     this.localRace$ = this.chooseRace.valueChanges.subscribe((raceName) => {
-      const race = this.commonHelper.selectRaceFromRaceName(raceName!);
-
       if (raceName) {
+        const race = this.commonHelper.selectRaceFromRaceName(raceName);
+
         this.buildService.setChosenRace(race);
         this.buildService.emitDeselectBuild({});
       }
