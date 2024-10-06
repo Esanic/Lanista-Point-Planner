@@ -47,7 +47,8 @@ export class SelectWeaponComponent {
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
-      if (weaponSkill) {
+      console.log(weaponSkill);
+      if (weaponSkill !== -1) {
         this.selectedWeaponSkill = weaponSkill;
         this.chosenWeapon.enable();
         this.chosenWeapon.patchValue(emptyString);

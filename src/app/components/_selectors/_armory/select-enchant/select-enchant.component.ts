@@ -38,7 +38,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
-      if (weaponSkill) {
+      if (weaponSkill !== -1) {
         this.selectedWeaponSkill = weaponSkill;
         this.chosenEnchant.enable();
         this.chosenEnchant.patchValue(emptyString);
