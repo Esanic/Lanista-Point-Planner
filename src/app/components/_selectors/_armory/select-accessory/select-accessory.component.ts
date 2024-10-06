@@ -31,7 +31,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
 
   private accessoriesFetched$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
-  private tableStats$: Subscription = new Subscription();
+  private maxLevel$: Subscription = new Subscription();
   private chosenAccessory$: Subscription = new Subscription();
   private incomingAccessory$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
@@ -50,9 +50,9 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
       this.selectAccessorySlotToFilterAndRename();
     });
 
-    this.tableStats$ = this.buildService.getStatsFromTable().subscribe((stats) => {
-      if (stats.levels) {
-        this.currentMaxLevel = stats.levels.length;
+    this.maxLevel$ = this.buildService.getAmountOfLevels().subscribe((levels) => {
+      if (levels) {
+        this.currentMaxLevel = levels;
         this.selectAccessorySlotToFilterAndRename();
       }
     });
@@ -132,7 +132,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.accessoriesFetched$.unsubscribe();
     this.viewLegendEquipment$.unsubscribe();
-    this.tableStats$.unsubscribe();
+    this.maxLevel$.unsubscribe();
     this.chosenAccessory$.unsubscribe();
     this.incomingAccessory$.unsubscribe();
     this.wipeBonus$.unsubscribe();

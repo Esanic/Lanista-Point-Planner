@@ -62,7 +62,6 @@ export class TableComponent implements OnInit, OnDestroy {
 
     this.getRace$ = this.buildService.getChosenRace().subscribe((race) => {
       this.race = race;
-      // this.commonHelper.selectRaceFromRaceName(race.name);
       this.weaponSkillPicker(this.weaponSkill);
       this.summarizeEachColumn();
     });
@@ -333,9 +332,7 @@ export class TableComponent implements OnInit, OnDestroy {
     if (this.race.weaponSkills) {
       switch (weaponSkill) {
         case weaponSkills.Axe:
-          console.log('Axe');
           this.weaponSkillMultiplier = this.race.weaponSkills.axe;
-          console.log(this.weaponSkillMultiplier);
           break;
         case weaponSkills.Sword:
           this.weaponSkillMultiplier = this.race.weaponSkills.sword;
@@ -375,14 +372,16 @@ export class TableComponent implements OnInit, OnDestroy {
       arrOfLevels.push(level);
     });
 
-    const build: IBuild = {
-      race: this.race.name,
-      weaponSkill: convertWeaponSkillIdToName(this.weaponSkill),
-      levels: arrOfLevels,
-    };
+    this.buildService.setLevelPoints(arrOfLevels);
 
-    this.build = build;
-    this.buildService.setStatsFromTable(this.build);
+    // const build: IBuild = {
+    //   race: this.race.name,
+    //   weaponSkill: convertWeaponSkillIdToName(this.weaponSkill),
+    //   levels: arrOfLevels,
+    // };
+
+    // this.build = build;
+    // this.buildService.setStatsFromTable(this.build);
   }
 
   private getImportedPoints(levels: any): void {

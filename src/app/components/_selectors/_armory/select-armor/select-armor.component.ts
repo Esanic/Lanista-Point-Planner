@@ -31,7 +31,7 @@ export class SelectArmorComponent implements OnInit {
 
   private armorsFetched$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
-  private tableStats$: Subscription = new Subscription();
+  private maxLevel$: Subscription = new Subscription();
   private chosenArmor$: Subscription = new Subscription();
   private incomingArmor$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
@@ -50,9 +50,9 @@ export class SelectArmorComponent implements OnInit {
       this.selectArmorSlotToFilterAndRename();
     });
 
-    this.tableStats$ = this.buildService.getStatsFromTable().subscribe((stats) => {
-      if (stats.levels) {
-        this.currentMaxLevel = stats.levels.length;
+    this.maxLevel$ = this.buildService.getAmountOfLevels().subscribe((levels) => {
+      if (levels) {
+        this.currentMaxLevel = levels;
         this.selectArmorSlotToFilterAndRename();
       }
     });
@@ -132,7 +132,7 @@ export class SelectArmorComponent implements OnInit {
   ngOnDestroy(): void {
     this.armorsFetched$.unsubscribe();
     this.viewLegendEquipment$.unsubscribe();
-    this.tableStats$.unsubscribe();
+    this.maxLevel$.unsubscribe();
     this.chosenArmor$.unsubscribe();
     this.incomingArmor$.unsubscribe();
     this.wipeBonus$.unsubscribe();

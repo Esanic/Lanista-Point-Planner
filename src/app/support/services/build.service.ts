@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
 import { IBuild } from '../interfaces/build';
 import { IRace } from '../interfaces/race';
 import { defaultRace, dwarf, elf, goblin, human, orc, salamanth, troll, undead } from '../constants/templates';
-import { convertWeaponSkillNameToId } from '../helpers/armory.helper';
+import { convertWeaponSkillIdToName, convertWeaponSkillNameToId, getGearNamesObject } from '../helpers/armory.helper';
+import { ILevel } from '../interfaces/level';
+import { ArmoryService } from './armory.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +15,11 @@ export class BuildService {
   private deslectBuildEmit: Subject<any> = new Subject<any>();
   private selectedBuildVariable: IBuild = {} as IBuild;
 
-  private buildFromTable: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
+  // private buildFromTable: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
 
   private chosenRace: BehaviorSubject<IRace> = new BehaviorSubject<IRace>({} as IRace);
   private chosenWeaponSkill: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  private levelPoints: BehaviorSubject<ILevel[]> = new BehaviorSubject<ILevel[]>([]);
   private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);
   private chosenLevelsSubject: Subject<number> = new Subject<number>();
   private importedStats: Subject<any> = new Subject<any>();
@@ -35,7 +38,7 @@ export class BuildService {
   private salamanth: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(salamanth);
   private default: BehaviorSubject<IRace> = new BehaviorSubject<IRace>(defaultRace);
 
-  constructor() {}
+  constructor(private armoryService: ArmoryService) {}
 
   //* Select build *//
   public setSelectedBuild(build: IBuild): void {
@@ -106,7 +109,7 @@ export class BuildService {
   }
 
   public setChosenWeaponSkill(skill: string) {
-    const weaponSkillId = convertWeaponSkillNameToId(skill.split(' ')[0]); //TODO: Add the split to a helper function
+    const weaponSkillId = convertWeaponSkillNameToId(skill.split(' ')[0]);
     this.chosenWeaponSkill.next(weaponSkillId);
   }
 
@@ -114,12 +117,12 @@ export class BuildService {
     return this.chosenWeaponSkill.asObservable();
   }
 
-  public setStatsFromTable(build: IBuild): void {
-    this.buildFromTable.next(build);
+  public setLevelPoints(levels: ILevel[]): void {
+    this.levelPoints.next(levels);
   }
 
-  public getStatsFromTable(): Observable<IBuild> {
-    return this.buildFromTable.asObservable();
+  public getLevelPoints(): Observable<ILevel[]> {
+    return this.levelPoints.asObservable();
   }
 
   public setAmountOfLevels(levels: number): void {
@@ -131,8 +134,20 @@ export class BuildService {
     return this.chosenLevels.asObservable();
   }
 
+  //TODO: Evaluate if this is needed
   public getAmountOfLevelsSubject(): Observable<number> {
     return this.chosenLevelsSubject.asObservable();
+  }
+
+  public async getCurrentBuild(): Promise<IBuild> {
+    const build = {} as IBuild;
+
+    build.race = this.chosenRace.value.name;
+    build.weaponSkill = convertWeaponSkillIdToName(this.chosenWeaponSkill.value);
+    build.levels = this.levelPoints.value;
+    build.equipment = getGearNamesObject(await firstValueFrom(this.armoryService.getGear()));
+
+    return build;
   }
 
   //#region Races

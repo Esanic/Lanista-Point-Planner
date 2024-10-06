@@ -27,7 +27,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
   private currentMaxLevel: number = 25;
 
   private consumablesFetched$: Subscription = new Subscription();
-  private tableStats$: Subscription = new Subscription();
+  private maxLevel$: Subscription = new Subscription();
   private chosenConsumable$: Subscription = new Subscription();
   private incomingConsumable$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
@@ -41,9 +41,9 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.tableStats$ = this.buildService.getStatsFromTable().subscribe((stats) => {
-      if (stats.levels) {
-        this.currentMaxLevel = stats.levels.length;
+    this.maxLevel$ = this.buildService.getAmountOfLevels().subscribe((levels) => {
+      if (levels) {
+        this.currentMaxLevel = levels;
         this.filterAndRenameConsumables();
       }
     });
@@ -97,7 +97,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.consumablesFetched$.unsubscribe();
-    this.tableStats$.unsubscribe();
+    this.maxLevel$.unsubscribe();
     this.chosenConsumable$.unsubscribe();
     this.incomingConsumable$.unsubscribe();
     this.wipeBonus$.unsubscribe();

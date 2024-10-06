@@ -6,6 +6,9 @@ import { BuildNameModalComponent } from '../../_modals/build-name-modal/build-na
 import { NgbPopover, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { emptyString } from '../../../support/constants/common';
 import { getBuilds, setBuilds } from '../../../support/helpers/common.helper';
+import { convertWeaponSkillIdToName } from '../../../support/helpers/armory.helper';
+import { ArmoryService } from '../../../support/services/armory.service';
+import { IGear } from '../../../support/interfaces/_armory/gear';
 
 @Component({
   selector: 'app-save-build-button',
@@ -23,7 +26,7 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
 
   private listenToDeselectBuild$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService) {}
+  constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
     this.listenToDeselectBuild$ = this.buildService.listenDeselectBuild().subscribe(() => {
@@ -41,9 +44,10 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.build = await firstValueFrom(this.buildService.getStatsFromTable());
+    this.build = await this.buildService.getCurrentBuild();
+
     this.build.name = this.buildName;
-    let builds = getBuilds();
+    const builds = getBuilds();
 
     if (saved) {
       builds[builds.findIndex((b) => b.name === this.build.name)] = this.build;

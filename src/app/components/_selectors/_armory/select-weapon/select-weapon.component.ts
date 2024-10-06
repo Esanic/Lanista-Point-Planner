@@ -38,7 +38,7 @@ export class SelectWeaponComponent {
   private shieldBuild$: Subscription = new Subscription();
   private twoHandedBuild$: Subscription = new Subscription();
   private viewLegendEquipment$: Subscription = new Subscription();
-  private tableStats$: Subscription = new Subscription();
+  private maxLevel$: Subscription = new Subscription();
   private chosenWeapon$: Subscription = new Subscription();
   private incomingWeapon$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
@@ -47,7 +47,6 @@ export class SelectWeaponComponent {
 
   ngOnInit(): void {
     this.chosenWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
-      console.log(weaponSkill);
       if (weaponSkill !== -1) {
         this.selectedWeaponSkill = weaponSkill;
         this.chosenWeapon.enable();
@@ -68,7 +67,7 @@ export class SelectWeaponComponent {
         this.chosenWeapon.patchValue(emptyString);
         this.resetBonus();
         this.shieldBuild = shieldBuild;
-        this.selectOffhand();
+        this.selectOffhandArray();
       }
     });
 
@@ -82,13 +81,13 @@ export class SelectWeaponComponent {
 
     this.viewLegendEquipment$ = this.armoryService.getLegendEquipmentViewStatus().subscribe((legendEquipmentViewStatus) => {
       this.viewLegendEquipment = legendEquipmentViewStatus;
-      this.selectOffhand();
+      this.selectOffhandArray();
     });
 
-    this.tableStats$ = this.buildService.getStatsFromTable().subscribe((stats) => {
-      if (stats.levels) {
-        this.currentMaxLevel = stats.levels.length;
-        this.selectOffhand();
+    this.maxLevel$ = this.buildService.getAmountOfLevels().subscribe((levels) => {
+      if (levels) {
+        this.currentMaxLevel = levels;
+        this.selectOffhandArray();
       }
     });
 
@@ -149,7 +148,7 @@ export class SelectWeaponComponent {
     this.shieldBuild$.unsubscribe();
     this.twoHandedBuild$.unsubscribe();
     this.viewLegendEquipment$.unsubscribe();
-    this.tableStats$.unsubscribe();
+    this.maxLevel$.unsubscribe();
     this.chosenWeapon$.unsubscribe();
     this.incomingWeapon$.unsubscribe();
     this.wipeBonus$.unsubscribe();
@@ -171,7 +170,7 @@ export class SelectWeaponComponent {
   }
 
   //* If shieldBuild is true, then shield is selected, otherwise the selectedWeaponSkill is selected
-  private selectOffhand(): void {
+  private selectOffhandArray(): void {
     if (this.shieldBuild) {
       this.selectWeaponArray(weaponSkills.Shield);
     } else {

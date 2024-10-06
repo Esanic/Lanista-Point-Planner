@@ -5,4 +5,5 @@ export interface IBuild {
   race: string;
   weaponSkill: string;
   levels: ILevel[];
+  equipment?: object;
 }

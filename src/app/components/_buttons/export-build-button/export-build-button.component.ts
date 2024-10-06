@@ -18,7 +18,7 @@ export class ExportBuildButtonComponent {
   constructor(private buildService: BuildService, private clipboard: Clipboard) {}
 
   async exportBuild(): Promise<void> {
-    this.build = await firstValueFrom(this.buildService.getStatsFromTable());
+    this.build = await this.buildService.getCurrentBuild();
     this.clipboard.copy(JSON.stringify(this.build, null, 2));
   }
 }
