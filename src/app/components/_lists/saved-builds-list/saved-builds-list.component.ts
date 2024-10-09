@@ -82,10 +82,11 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
       if (selectedBuild.name !== undefined) this.selectedBuildName = selectedBuild.name;
 
       this.buildService.setSelectedBuild(selectedBuild);
-      this.buildService.setAmountOfLevels(selectedBuild.levels.length);
       this.buildService.setChosenRace(this.buildService.selectRaceFromRaceName(selectedBuild.race));
       this.buildService.setChosenWeaponSkill(selectedBuild.weaponSkill);
       this.buildService.setImportedLevelPoints(selectedBuild.levels);
+      this.buildService.setAmountOfLevels(selectedBuild.levels.length);
+      this.armoryService.setLegendEquipmentViewStatus(selectedBuild.showLegendEquipment);
       this.armoryService.setImportedGear(selectedBuild.equipment);
     }
   }

@@ -7,4 +7,5 @@ export interface IBuild {
   weaponSkill: string;
   levels: ILevel[];
   equipment: IGearNames;
+  showLegendEquipment: boolean;
 }

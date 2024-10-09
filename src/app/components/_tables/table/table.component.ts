@@ -89,6 +89,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.addLevels(25 + 1);
     this.addData();
     this.subscribeToEachLevel();
+    this.setCurrentPoints();
 
     this.importPoints$ = this.buildService.getImportedLevelPoints().subscribe((levels) => {
       this.getImportedPoints(levels);

@@ -46,7 +46,6 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
     }
 
     this.build = await this.buildService.getCurrentBuild();
-    console.log(this.build);
 
     this.build.name = this.buildName;
     const builds = getBuilds();

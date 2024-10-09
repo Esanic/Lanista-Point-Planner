@@ -119,7 +119,6 @@ export const convertWeaponSkillNameToId = (weaponSkill: string): number => {
 };
 
 export const getGearNamesObject = (gear: IGear): IGearNames => {
-  console.log(gear);
   return {
     mainhand: gear['mainhand'].name.split('(')[0].trimEnd() ?? emptyString,
     offhand: gear['offhand'].name.split('(')[0].trimEnd() ?? emptyString,

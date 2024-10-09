@@ -34,6 +34,7 @@ export class ImportModalComponent implements AfterViewInit {
           this.buildService.setChosenWeaponSkill(jsonObject.weaponSkill);
           this.buildService.setImportedLevelPoints(jsonObject.levels);
           this.buildService.setAmountOfLevels(jsonObject.levels.length);
+          this.armoryService.setLegendEquipmentViewStatus(jsonObject.showLegendEquipment);
           this.armoryService.setImportedGear(jsonObject.equipment);
 
           this.buildService.emitDeselectBuild(emptyString);
