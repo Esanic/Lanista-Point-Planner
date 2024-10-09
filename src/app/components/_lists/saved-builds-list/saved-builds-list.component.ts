@@ -43,6 +43,7 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
 
     this.listenWipeData$ = this.buildService.listenWipeData().subscribe(() => {
       this.selectedBuildName = emptyString;
+      this.buildService.setSelectedBuild({} as IBuild);
     });
 
     this.deselectBuild$ = this.buildService.listenDeselectBuild().subscribe(() => {
