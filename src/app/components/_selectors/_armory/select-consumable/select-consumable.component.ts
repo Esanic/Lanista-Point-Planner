@@ -9,6 +9,7 @@ import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { ConsumablePipe } from '../../../../support/pipes/consumable.pipe';
 import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
 import { deepCopy } from '../../../../support/helpers/common.helper';
+import { consumableTemplate } from '../../../../support/constants/templates';
 
 @Component({
   selector: 'app-select-consumable',
@@ -30,6 +31,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
   private maxLevel$: Subscription = new Subscription();
   private chosenConsumable$: Subscription = new Subscription();
   private incomingConsumable$: Subscription = new Subscription();
+  private importedConsumable$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
   constructor(private armoryService: ArmoryService, private buildService: BuildService) {}
@@ -90,6 +92,20 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.importedConsumable$ = this.armoryService.getImportedGear().subscribe((gear) => {
+      switch (this.consumableSlot) {
+        case 1:
+          this.handleImportedConsumable(gear.consumableOne, 'consumableOne');
+          break;
+        case 2:
+          this.handleImportedConsumable(gear.consumableTwo, 'consumableTwo');
+          break;
+        case 3:
+          this.handleImportedConsumable(gear.consumableThree, 'consumableThree');
+          break;
+      }
+    });
+
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
       this.chosenConsumable.patchValue(emptyString);
     });
@@ -100,6 +116,7 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
     this.maxLevel$.unsubscribe();
     this.chosenConsumable$.unsubscribe();
     this.incomingConsumable$.unsubscribe();
+    this.importedConsumable$.unsubscribe();
     this.wipeBonus$.unsubscribe();
   }
 
@@ -118,5 +135,22 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
     const sortedEquipment = renamedEquipment.sort((a, b) => a.required_level - b.required_level);
 
     this.filteredAndRenamedConsumablesArray = sortedEquipment;
+  }
+
+  /** Helper function to handle the imported armor
+   *
+   * @param consumableName - The name of the armor to find in the array
+   * @param gearSlot - The gear slot to set the armor to
+   */
+  private handleImportedConsumable(consumableName: string, gearSlot: string): void {
+    const consumable = this.filteredAndRenamedConsumablesArray.find((accessory) => accessory.name.split('(')[0].trimEnd() === consumableName);
+
+    if (consumable) {
+      this.chosenConsumable.patchValue(consumable.name);
+      this.armoryService.setGear(gearSlot, consumable);
+    } else {
+      this.chosenConsumable.patchValue(emptyString);
+      this.armoryService.setGear(gearSlot, consumableTemplate);
+    }
   }
 }

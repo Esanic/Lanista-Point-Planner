@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { weaponSkillStr, weaponSkills } from '../../../../support/enums/weapon-skills.enums';
-import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
+import { additiveBonus, multiplierBonus, weaponTemplate } from '../../../../support/constants/templates';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
@@ -41,6 +41,7 @@ export class SelectWeaponComponent {
   private maxLevel$: Subscription = new Subscription();
   private chosenWeapon$: Subscription = new Subscription();
   private incomingWeapon$: Subscription = new Subscription();
+  private importedWeapon$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
@@ -137,6 +138,16 @@ export class SelectWeaponComponent {
       }
     });
 
+    this.importedWeapon$ = this.armoryService.getImportedGear().subscribe((gear) => {
+      if (this.isOffhand) {
+        const importedOffhand = this.weaponArray.value.find((weapon) => weapon.name.split('(')[0].trimEnd() == gear.offhand);
+        this.handleImportedWeapon(importedOffhand, 'offhand');
+      } else {
+        const importedMainhand = this.weaponArray.value.find((weapon) => weapon.name.split('(')[0].trimEnd() == gear.mainhand);
+        this.handleImportedWeapon(importedMainhand, 'mainhand');
+      }
+    });
+
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
       this.chosenWeapon.patchValue(emptyString);
     });
@@ -151,6 +162,7 @@ export class SelectWeaponComponent {
     this.maxLevel$.unsubscribe();
     this.chosenWeapon$.unsubscribe();
     this.incomingWeapon$.unsubscribe();
+    this.importedWeapon$.unsubscribe();
     this.wipeBonus$.unsubscribe();
   }
 
@@ -299,5 +311,20 @@ export class SelectWeaponComponent {
         return true;
       }
     }));
+  }
+
+  /** Helper function to handle the imported weapons
+   *
+   * @param weapon - The imported weapon
+   * @param gearSlot - The gear slot to set the weapon to
+   */
+  private handleImportedWeapon(weapon: IWeapon | undefined, gearSlot: string): void {
+    if (weapon) {
+      this.chosenWeapon.patchValue(weapon.name);
+      this.armoryService.setGear(gearSlot, weapon);
+    } else {
+      this.chosenWeapon.patchValue(emptyString);
+      this.armoryService.setGear(gearSlot, weaponTemplate);
+    }
   }
 }

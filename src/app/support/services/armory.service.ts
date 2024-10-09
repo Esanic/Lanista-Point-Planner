@@ -3,13 +3,13 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBonus, ITotalBonus } from '../interfaces/_armory/bonus';
 
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
-import { additiveBonus, gear, multiplierBonus } from '../constants/templates';
+import { additiveBonus, gear as emptyGearTemplate, multiplierBonus } from '../constants/templates';
 import { IWeapon } from '../interfaces/_armory/weapon';
 import { IArmor } from '../interfaces/_armory/armor';
 import { IAccessory } from '../interfaces/_armory/accessory';
 import { IConsumable } from '../interfaces/_armory/consumables';
 import { IEnchant } from '../interfaces/_armory/enchants';
-import { IGear } from '../interfaces/_armory/gear';
+import { IGear, IGearNames } from '../interfaces/_armory/gear';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,8 @@ export class ArmoryService {
   private armorsAndAccessoriesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private weaponsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private consumablesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private gear: BehaviorSubject<IGear> = new BehaviorSubject<IGear>({ ...gear });
+  private gear: BehaviorSubject<IGear> = new BehaviorSubject<IGear>({ ...emptyGearTemplate });
+  private importedGear: BehaviorSubject<IGearNames> = new BehaviorSubject<IGearNames>({} as IGearNames);
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 
@@ -135,12 +136,17 @@ export class ArmoryService {
     this.gear.next(this.gear.value);
   }
 
-  public emitGear(): void {
-    this.gear.next(this.gear.value);
-  }
-
   public getGear(): Observable<IGear> {
     return this.gear.asObservable();
+  }
+
+  //TODO: Look into how it would be possible to incoperate this into the gear object
+  public setImportedGear(value: IGearNames): void {
+    this.importedGear.next(value);
+  }
+
+  public getImportedGear(): Observable<IGearNames> {
+    return this.importedGear.asObservable();
   }
 
   //* Gear arrays fetched */
@@ -187,6 +193,7 @@ export class ArmoryService {
   }
 
   /** Returns the total additive bonuses from all equipment */
+  //TODO: Move this to helper
   public getBonusesAdditive(): IBonus {
     let totalBonuses: IBonus = { ...additiveBonus };
 
@@ -200,6 +207,7 @@ export class ArmoryService {
   }
 
   /** Returns the total multiplicative bonuses from all equipment */
+  //TODO: Move this to helper
   public getBonusesMultiplier(): IBonus {
     let totalBonuses: IBonus = { ...multiplierBonus };
 

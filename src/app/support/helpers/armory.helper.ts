@@ -1,9 +1,10 @@
+import { emptyString } from '../constants/common';
 import { additiveBonus, multiplierBonus } from '../constants/templates';
 import { weaponSkillsNames } from '../constants/weaponSkills';
 import { weaponSkillStr, weaponSkills } from '../enums/weapon-skills.enums';
 import { IBonus, ITotalBonus } from '../interfaces/_armory/bonus';
 import { IEquipment } from '../interfaces/_armory/equipment';
-import { IGear } from '../interfaces/_armory/gear';
+import { IGear, IGearNames } from '../interfaces/_armory/gear';
 
 export const calculateBonusesFromEquipment = (equipment: IEquipment, selectedWeaponSkill?: number): ITotalBonus => {
   const additiveBonuses: IBonus = { ...additiveBonus };
@@ -117,26 +118,27 @@ export const convertWeaponSkillNameToId = (weaponSkill: string): number => {
   }
 };
 
-export const getGearNamesObject = (gear: IGear): object => {
+export const getGearNamesObject = (gear: IGear): IGearNames => {
+  console.log(gear);
   return {
-    mainhand: gear['mainhand'].name.split('(')[0].trimEnd(),
-    offhand: gear['offhand'].name.split('(')[0].trimEnd(),
-    head: gear['head'].name.split('(')[0].trimEnd(),
-    shoulders: gear['shoulders'].name.split('(')[0].trimEnd(),
-    chest: gear['chest'].name.split('(')[0].trimEnd(),
-    gloves: gear['gloves'].name.split('(')[0].trimEnd(),
-    legs: gear['legs'].name.split('(')[0].trimEnd(),
-    boots: gear['boots'].name.split('(')[0].trimEnd(),
-    cloak: gear['cloak'].name.split('(')[0].trimEnd(),
-    necklace: gear['necklace'].name.split('(')[0].trimEnd(),
-    ring: gear['ring'].name.split('(')[0].trimEnd(),
-    amulet: gear['amulet'].name.split('(')[0].trimEnd(),
-    bracelet: gear['bracelet'].name.split('(')[0].trimEnd(),
-    trinket: gear['trinket'].name.split('(')[0].trimEnd(),
-    consumableOne: gear['consumableOne'].name.split('(')[0].trimEnd(),
-    consumableTwo: gear['consumableTwo'].name.split('(')[0].trimEnd(),
-    consumableThree: gear['consumableThree'].name.split('(')[0].trimEnd(),
-    enchantOne: gear['enchantOne'].name.split('(')[0].trimEnd(),
-    enchantTwo: gear['enchantTwo'].name.split('(')[0].trimEnd(),
+    mainhand: gear['mainhand'].name.split('(')[0].trimEnd() ?? emptyString,
+    offhand: gear['offhand'].name.split('(')[0].trimEnd() ?? emptyString,
+    head: gear['head'].name.split('(')[0].trimEnd() ?? emptyString,
+    shoulders: gear['shoulders'].name.split('(')[0].trimEnd() ?? emptyString,
+    chest: gear['chest'].name.split('(')[0].trimEnd() ?? emptyString,
+    gloves: gear['gloves'].name.split('(')[0].trimEnd() ?? emptyString,
+    legs: gear['legs'].name.split('(')[0].trimEnd() ?? emptyString,
+    boots: gear['boots'].name.split('(')[0].trimEnd() ?? emptyString,
+    cloak: gear['cloak'].name.split('(')[0].trimEnd() ?? emptyString,
+    necklace: gear['necklace'].name.split('(')[0].trimEnd() ?? emptyString,
+    ring: gear['ring'].name.split('(')[0].trimEnd() ?? emptyString,
+    amulet: gear['amulet'].name.split('(')[0].trimEnd() ?? emptyString,
+    bracelet: gear['bracelet'].name.split('(')[0].trimEnd() ?? emptyString,
+    trinket: gear['trinket'].name.split('(')[0].trimEnd() ?? emptyString,
+    consumableOne: gear['consumableOne'].name.split('(')[0].trimEnd() ?? emptyString,
+    consumableTwo: gear['consumableTwo'].name.split('(')[0].trimEnd() ?? emptyString,
+    consumableThree: gear['consumableThree'].name.split('(')[0].trimEnd() ?? emptyString,
+    enchantOne: gear['enchantOne'].name.split('(')[0].trimEnd() ?? emptyString,
+    enchantTwo: gear['enchantTwo'].name.split('(')[0].trimEnd() ?? emptyString,
   };
 };

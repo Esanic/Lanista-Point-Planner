@@ -41,10 +41,12 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
 
   public async saveBuild(saved?: boolean): Promise<void> {
     if (this.build.race === 'Default' && this.build.weaponSkill === emptyString) {
+      //TODO: Add error message
       return;
     }
 
     this.build = await this.buildService.getCurrentBuild();
+    console.log(this.build);
 
     this.build.name = this.buildName;
     const builds = getBuilds();

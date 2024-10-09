@@ -7,7 +7,7 @@ import { IArmor } from '../../../../support/interfaces/_armory/armor';
 import { armorSlots } from '../../../../support/enums/armor.enums';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { ArmorPipe } from '../../../../support/pipes/armor.pipe';
-import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
+import { additiveBonus, armorTemplate, multiplierBonus } from '../../../../support/constants/templates';
 import { emptyString } from '../../../../support/constants/common';
 import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
 import { deepCopy } from '../../../../support/helpers/common.helper';
@@ -34,6 +34,7 @@ export class SelectArmorComponent implements OnInit {
   private maxLevel$: Subscription = new Subscription();
   private chosenArmor$: Subscription = new Subscription();
   private incomingArmor$: Subscription = new Subscription();
+  private importedArmor$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
@@ -124,6 +125,29 @@ export class SelectArmorComponent implements OnInit {
       }
     });
 
+    this.importedArmor$ = this.armoryService.getImportedGear().subscribe((gear) => {
+      switch (this.armorSlot) {
+        case armorSlots.Head:
+          this.handleImportedArmor(gear.head, 'head');
+          break;
+        case armorSlots.Shoulders:
+          this.handleImportedArmor(gear.shoulders, 'shoulders');
+          break;
+        case armorSlots.Chest:
+          this.handleImportedArmor(gear.chest, 'chest');
+          break;
+        case armorSlots.Hands:
+          this.handleImportedArmor(gear.gloves, 'gloves');
+          break;
+        case armorSlots.Legs:
+          this.handleImportedArmor(gear.legs, 'legs');
+          break;
+        case armorSlots.Feet:
+          this.handleImportedArmor(gear.boots, 'boots');
+          break;
+      }
+    });
+
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
       this.chosenArmor.patchValue(emptyString);
     });
@@ -135,6 +159,7 @@ export class SelectArmorComponent implements OnInit {
     this.maxLevel$.unsubscribe();
     this.chosenArmor$.unsubscribe();
     this.incomingArmor$.unsubscribe();
+    this.importedArmor$.unsubscribe();
     this.wipeBonus$.unsubscribe();
   }
 
@@ -221,5 +246,22 @@ export class SelectArmorComponent implements OnInit {
     const sortedEquipment = renamedEquipment.sort((a, b) => a.required_level - b.required_level);
 
     return sortedEquipment;
+  }
+
+  /** Helper function to handle the imported armor
+   *
+   * @param armorName - The name of the armor to find in the array
+   * @param gearSlot - The gear slot to set the armor to
+   */
+  private handleImportedArmor(armorName: string, gearSlot: string): void {
+    const accessory = this.filteredAndRenamedArmorArray.find((accessory) => accessory.name.split('(')[0].trimEnd() === armorName);
+
+    if (accessory) {
+      this.chosenArmor.patchValue(accessory.name);
+      this.armoryService.setGear(gearSlot, accessory);
+    } else {
+      this.chosenArmor.patchValue(emptyString);
+      this.armoryService.setGear(gearSlot, armorTemplate);
+    }
   }
 }

@@ -90,7 +90,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.addData();
     this.subscribeToEachLevel();
 
-    this.importPoints$ = this.buildService.getImportedStats().subscribe((levels) => {
+    this.importPoints$ = this.buildService.getImportedLevelPoints().subscribe((levels) => {
       this.getImportedPoints(levels);
     });
 
@@ -373,15 +373,6 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.buildService.setLevelPoints(arrOfLevels);
-
-    // const build: IBuild = {
-    //   race: this.race.name,
-    //   weaponSkill: convertWeaponSkillIdToName(this.weaponSkill),
-    //   levels: arrOfLevels,
-    // };
-
-    // this.build = build;
-    // this.buildService.setStatsFromTable(this.build);
   }
 
   private getImportedPoints(levels: any): void {

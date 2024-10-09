@@ -45,7 +45,7 @@ export const multiplierBonus: IBonus = {
 };
 
 //#region Gear
-const weaponTemplate: IWeapon = {
+export const weaponTemplate: IWeapon = {
   id: 0,
   name: '',
   bonuses: [],
@@ -60,7 +60,7 @@ const weaponTemplate: IWeapon = {
   is_weapon: true,
 };
 
-const armorTemplate: IArmor = {
+export const armorTemplate: IArmor = {
   id: 0,
   name: '',
   bonuses: [],
@@ -71,7 +71,7 @@ const armorTemplate: IArmor = {
   weight: 0,
 };
 
-const accessoryTemplate: IAccessory = {
+export const accessoryTemplate: IAccessory = {
   id: 0,
   name: '',
   bonuses: [],
@@ -82,7 +82,7 @@ const accessoryTemplate: IAccessory = {
   weight: 0,
 };
 
-const consumableTemplate: IConsumable = {
+export const consumableTemplate: IConsumable = {
   id: 0,
   name: '',
   bonuses: [],
@@ -99,7 +99,7 @@ const consumableTemplate: IConsumable = {
   instant_points: [],
 };
 
-const enchantTemplate: IEnchant = {
+export const enchantTemplate: IEnchant = {
   absorption: 0,
   name: '',
   enchant_modifiers: [],

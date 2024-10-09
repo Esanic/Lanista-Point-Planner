@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
+import { accessoryTemplate, additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
 import { emptyString } from '../../../../support/constants/common';
 import { accessoriesSlots } from '../../../../support/enums/accessories.enums';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
@@ -34,6 +34,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
   private maxLevel$: Subscription = new Subscription();
   private chosenAccessory$: Subscription = new Subscription();
   private incomingAccessory$: Subscription = new Subscription();
+  private importedAccessory$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
@@ -124,6 +125,29 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.importedAccessory$ = this.armoryService.getImportedGear().subscribe((gear) => {
+      switch (this.accessorySlot) {
+        case accessoriesSlots.Cloak:
+          this.handleImportedAccessory(gear.cloak, 'cloak');
+          break;
+        case accessoriesSlots.Necklace:
+          this.handleImportedAccessory(gear.necklace, 'necklace');
+          break;
+        case accessoriesSlots.Ring:
+          this.handleImportedAccessory(gear.ring, 'ring');
+          break;
+        case accessoriesSlots.Amulet:
+          this.handleImportedAccessory(gear.amulet, 'amulet');
+          break;
+        case accessoriesSlots.Bracelet:
+          this.handleImportedAccessory(gear.bracelet, 'bracelet');
+          break;
+        case accessoriesSlots.Trinket:
+          this.handleImportedAccessory(gear.trinket, 'trinket');
+          break;
+      }
+    });
+
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
       this.chosenAccessory.patchValue(emptyString);
     });
@@ -135,6 +159,7 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
     this.maxLevel$.unsubscribe();
     this.chosenAccessory$.unsubscribe();
     this.incomingAccessory$.unsubscribe();
+    this.importedAccessory$.unsubscribe();
     this.wipeBonus$.unsubscribe();
   }
 
@@ -221,5 +246,22 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
     const sortedEquipment = renamedEquipment.sort((a, b) => a.required_level - b.required_level);
 
     return sortedEquipment;
+  }
+
+  /** Helper function to handle the imported accessory
+   *
+   * @param accessoryName - The name of the accessory to find in the array
+   * @param gearSlot - The gear slot to set the accessory to
+   */
+  private handleImportedAccessory(accessoryName: string, gearSlot: string): void {
+    const accessory = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name.split('(')[0].trimEnd() === accessoryName);
+
+    if (accessory) {
+      this.chosenAccessory.patchValue(accessory.name);
+      this.armoryService.setGear(gearSlot, accessory);
+    } else {
+      this.chosenAccessory.patchValue(emptyString);
+      this.armoryService.setGear(gearSlot, accessoryTemplate);
+    }
   }
 }

@@ -6,7 +6,7 @@ import { IEnchant } from '../../../../support/interfaces/_armory/enchants';
 import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
-import { additiveBonus, multiplierBonus } from '../../../../support/constants/templates';
+import { additiveBonus, enchantTemplate, multiplierBonus } from '../../../../support/constants/templates';
 import { weaponSkills } from '../../../../support/enums/weapon-skills.enums';
 import { deepCopy } from '../../../../support/helpers/common.helper';
 
@@ -27,11 +27,11 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
   public filteredAndRenamedEnchants: IEnchant[] = [];
 
   private chosenWeaponSkill$: Subscription = new Subscription();
-  private importedEnchant$: Subscription = new Subscription();
   private shieldBuild$: Subscription = new Subscription();
   private twoHandedBuild$: Subscription = new Subscription();
   private chosenEnchant$: Subscription = new Subscription();
   private incomingEnchant$: Subscription = new Subscription();
+  private importedEnchant$: Subscription = new Subscription();
   private wipeBonus$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
@@ -192,6 +192,19 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.importedEnchant$ = this.armoryService.getImportedGear().subscribe((gear) => {
+      switch (this.enchantSlot) {
+        case 1:
+          const enchantOne = this.filteredAndRenamedEnchants.find((enchant) => enchant.name.split('(')[0].trimEnd() === gear.enchantOne);
+          this.handleImportedEnchant(enchantOne, 'enchantOne');
+          break;
+        case 2:
+          const enchantTwo = this.filteredAndRenamedEnchants.find((enchant) => enchant.name.split('(')[0].trimEnd() === gear.enchantTwo);
+          this.handleImportedEnchant(enchantTwo, 'enchantTwo');
+          break;
+      }
+    });
+
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
       this.chosenEnchant.patchValue(emptyString);
     });
@@ -199,11 +212,11 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.chosenWeaponSkill$.unsubscribe();
-    this.importedEnchant$.unsubscribe();
     this.shieldBuild$.unsubscribe();
     this.twoHandedBuild$.unsubscribe();
     this.chosenEnchant$.unsubscribe();
     this.incomingEnchant$.unsubscribe();
+    this.importedEnchant$.unsubscribe();
     this.wipeBonus$.unsubscribe();
   }
 
@@ -266,5 +279,20 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
     let multiplierBonus = Number(value.split('%')[0]);
 
     return multiplierBonus / 100;
+  }
+
+  /** Helper function to handle the imported enchants
+   *
+   * @param enchant - The imported enchant
+   * @param gearSlot - The gear slot to set the enchant to
+   */
+  private handleImportedEnchant(enchant: IEnchant | undefined, gearSlot: string): void {
+    if (enchant) {
+      this.chosenEnchant.patchValue(enchant.name);
+      this.armoryService.setGear(gearSlot, enchant);
+    } else {
+      this.chosenEnchant.patchValue(emptyString);
+      this.armoryService.setGear(gearSlot, enchantTemplate);
+    }
   }
 }

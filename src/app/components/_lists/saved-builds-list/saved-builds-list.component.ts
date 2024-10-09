@@ -6,6 +6,7 @@ import { ConfirmActionModalComponent } from '../../_modals/confirm-action-modal/
 import { Subscription } from 'rxjs';
 import { emptyString } from '../../../support/constants/common';
 import { getBuilds, setBuilds } from '../../../support/helpers/common.helper';
+import { ArmoryService } from '../../../support/services/armory.service';
 
 @Component({
   selector: 'app-saved-builds-list',
@@ -26,7 +27,7 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
   private listenWipeData$: Subscription = new Subscription();
   private deselectBuild$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService) {}
+  constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
     this.builds = getBuilds();
@@ -83,7 +84,8 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
       this.buildService.setAmountOfLevels(selectedBuild.levels.length);
       this.buildService.setChosenRace(this.buildService.selectRaceFromRaceName(selectedBuild.race));
       this.buildService.setChosenWeaponSkill(selectedBuild.weaponSkill);
-      this.buildService.setImportedStats(selectedBuild.levels);
+      this.buildService.setImportedLevelPoints(selectedBuild.levels);
+      this.armoryService.setImportedGear(selectedBuild.equipment);
     }
   }
 

@@ -3,6 +3,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal, NgbModalModule, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuildService } from '../../../support/services/build.service';
 import { emptyString } from '../../../support/constants/common';
+import { ArmoryService } from '../../../support/services/armory.service';
 
 @Component({
   selector: 'app-import-modal',
@@ -20,7 +21,7 @@ export class ImportModalComponent implements AfterViewInit {
   @ViewChild('modalContent') modalContent!: ElementRef<any>;
   modal!: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private buildService: BuildService) {}
+  constructor(private modalService: NgbModal, private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngAfterViewInit(): void {
     this.openModal(this.modalContent);
@@ -31,8 +32,9 @@ export class ImportModalComponent implements AfterViewInit {
           const jsonObject = JSON.parse(this.jsonString.value);
           this.buildService.setChosenRace(this.buildService.selectRaceFromRaceName(jsonObject.race));
           this.buildService.setChosenWeaponSkill(jsonObject.weaponSkill);
-          this.buildService.setImportedStats(jsonObject.levels);
+          this.buildService.setImportedLevelPoints(jsonObject.levels);
           this.buildService.setAmountOfLevels(jsonObject.levels.length);
+          this.armoryService.setImportedGear(jsonObject.equipment);
 
           this.buildService.emitDeselectBuild(emptyString);
         }

@@ -26,3 +26,25 @@ export interface IGear {
   enchantTwo: IEnchant;
   [key: string]: IWeapon | IArmor | IAccessory | IConsumable | IEnchant;
 }
+
+export interface IGearNames {
+  mainhand: string;
+  offhand: string;
+  head: string;
+  shoulders: string;
+  chest: string;
+  gloves: string;
+  legs: string;
+  boots: string;
+  cloak: string;
+  necklace: string;
+  ring: string;
+  amulet: string;
+  bracelet: string;
+  trinket: string;
+  consumableOne: string;
+  consumableTwo: string;
+  consumableThree: string;
+  enchantOne: string;
+  enchantTwo: string;
+}

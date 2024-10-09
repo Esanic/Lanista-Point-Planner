@@ -22,7 +22,7 @@ export class BuildService {
   private levelPoints: BehaviorSubject<ILevel[]> = new BehaviorSubject<ILevel[]>([]);
   private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);
   private chosenLevelsSubject: Subject<number> = new Subject<number>();
-  private importedStats: Subject<any> = new Subject<any>();
+  private importedLevelPoints: Subject<any> = new Subject<any>();
 
   private updateBuildListEmit: Subject<any> = new Subject<any>();
   private wipeDataEmit: Subject<any> = new Subject<any>();
@@ -90,13 +90,13 @@ export class BuildService {
     return this.wipeTableEmit.asObservable();
   }
 
-  //* Imported Stats *//
-  public setImportedStats(stats: any) {
-    this.importedStats.next(stats);
+  //* Imported Level Points *//
+  public setImportedLevelPoints(stats: any) {
+    this.importedLevelPoints.next(stats);
   }
 
-  public getImportedStats(): Observable<any> {
-    return this.importedStats.asObservable();
+  public getImportedLevelPoints(): Observable<any> {
+    return this.importedLevelPoints.asObservable();
   }
 
   //* Set and Gets from race, weaponskill, levels and table *//
@@ -146,6 +146,7 @@ export class BuildService {
     build.weaponSkill = convertWeaponSkillIdToName(this.chosenWeaponSkill.value);
     build.levels = this.levelPoints.value;
     build.equipment = getGearNamesObject(await firstValueFrom(this.armoryService.getGear()));
+    console.log(build.equipment);
 
     return build;
   }
