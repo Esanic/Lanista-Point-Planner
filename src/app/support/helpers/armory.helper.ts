@@ -102,16 +102,16 @@ export const convertWeaponSkillNameToId = (weaponSkill: string): number => {
     case 'svärd':
       return weaponSkills.Sword;
     case 'mace':
-    case 'klubba':
+    case 'hammare':
       return weaponSkills.Mace;
     case 'stave':
     case 'stav':
       return weaponSkills.Stave;
     case 'spear':
-    case 'spjut':
+    case 'stick':
       return weaponSkills.Spear;
     case 'chain':
-    case 'kedja':
+    case 'kätting':
       return weaponSkills.Chain;
     default:
       return -1;
