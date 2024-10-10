@@ -57,6 +57,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
     this.twoHandedBuild$ = this.armoryService.getTwoHandedBuild().subscribe((twoHandedBuild) => {
       if (!twoHandedBuild && this.enchantSlot === 2) {
         this.chosenEnchant.patchValue(emptyString);
+        this.armoryService.setGear('enchantTwo', enchantTemplate);
       }
     });
 
@@ -207,6 +208,14 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
 
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
       this.chosenEnchant.patchValue(emptyString);
+      switch (this.enchantSlot) {
+        case 1:
+          this.armoryService.setGear('enchantOne', enchantTemplate);
+          break;
+        case 2:
+          this.armoryService.setGear('enchantTwo', enchantTemplate);
+          break;
+      }
     });
   }
 
