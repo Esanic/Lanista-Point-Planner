@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBonus, ITotalBonus } from '../interfaces/_armory/bonus';
 
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
-import { additiveBonus, gear as emptyGearTemplate, multiplierBonus } from '../constants/templates';
+import { additiveBonus, gear as emptyGearTemplate, multiplierBonus, weaponTemplate } from '../constants/templates';
 import { IWeapon } from '../interfaces/_armory/weapon';
 import { IArmor } from '../interfaces/_armory/armor';
 import { IAccessory } from '../interfaces/_armory/accessory';
@@ -114,8 +114,12 @@ export class ArmoryService {
   }
 
   //* Shield build
-  public setShieldBuild(event: boolean): void {
-    this.shieldBuild.next(event);
+  public setShieldBuild(value: boolean): void {
+    this.shieldBuild.next(value);
+    if (value && this.twoHandedBuild.value) {
+      this.setTwoHandedBuild(false);
+      this.setGear('mainhand', weaponTemplate);
+    }
   }
 
   public getShieldBuild(): Observable<boolean> {

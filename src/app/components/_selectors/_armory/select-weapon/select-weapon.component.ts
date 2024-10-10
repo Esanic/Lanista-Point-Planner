@@ -64,11 +64,17 @@ export class SelectWeaponComponent {
     });
 
     this.shieldBuild$ = this.armoryService.getShieldBuild().subscribe((shieldBuild) => {
-      if (this.isOffhand && shieldBuild) {
+      this.shieldBuild = shieldBuild;
+      if (this.isOffhand && this.shieldBuild) {
         this.chosenWeapon.patchValue(emptyString);
         this.resetBonus();
-        this.shieldBuild = shieldBuild;
         this.selectOffhandArray();
+      } else {
+        if (this.shieldBuild && this.twoHandedBuild && !this.isOffhand) {
+          this.chosenWeapon.patchValue(emptyString);
+          this.resetBonus();
+        }
+        this.selectWeaponArray(this.selectedWeaponSkill);
       }
     });
 
@@ -183,7 +189,7 @@ export class SelectWeaponComponent {
 
   //* If shieldBuild is true, then shield is selected, otherwise the selectedWeaponSkill is selected
   private selectOffhandArray(): void {
-    if (this.shieldBuild) {
+    if (this.shieldBuild && this.isOffhand) {
       this.selectWeaponArray(weaponSkills.Shield);
     } else {
       this.selectWeaponArray(this.selectedWeaponSkill);
@@ -242,39 +248,11 @@ export class SelectWeaponComponent {
       }
     }
 
-    switch (this.selectedRace) {
-      case Races.human: {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.human);
-        break;
-      }
-      case Races.dwarf: {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.dwarf);
-        break;
-      }
-      case Races.elf: {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.elf);
-        break;
-      }
-      case Races.orc: {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.orc);
-        break;
-      }
-      case Races.troll: {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.troll);
-        break;
-      }
-      case Races.goblin: {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.goblin);
-        break;
-      }
-      case Races.undead: {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.undead);
-        break;
-      }
-      case Races.salamanth: {
-        filteredWeapons = this.filterWeaponsByRace(filteredWeapons, Races.salamanth);
-      }
+    if (this.shieldBuild) {
+      filteredWeapons = filteredWeapons.filter((weapon: IWeapon) => !weapon.is_two_handed);
     }
+
+    filteredWeapons = this.filterWeaponsByRace(filteredWeapons, this.selectedRace);
 
     const renamedWeapons: IWeapon[] = filteredWeapons.map((weapon) => {
       weapon.name = `${weapon.name} (G${weapon.required_level}${weapon.max_level ? '-' + weapon.max_level : emptyString}) ${weapon.requires_legend ? '(L)' : emptyString}`;

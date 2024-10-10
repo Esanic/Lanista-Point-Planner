@@ -13,6 +13,7 @@ export class WipeButtonComponent {
   constructor(private buildService: BuildService) {}
 
   wipeTable() {
-    this.buildService.emitWipeData(emptyString);
+    this.buildService.emitWipeData({});
+    this.buildService.emitWipeTable({});
   }
 }
