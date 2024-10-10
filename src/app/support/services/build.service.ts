@@ -11,9 +11,9 @@ import { ArmoryService } from './armory.service';
   providedIn: 'root',
 })
 export class BuildService {
-  private selectedBuild: Subject<IBuild> = new Subject<IBuild>();
+  // private selectedBuild: Subject<IBuild> = new Subject<IBuild>();
+  private selectedBuild: BehaviorSubject<IBuild> = new BehaviorSubject<IBuild>({} as IBuild);
   private deslectBuildEmit: Subject<any> = new Subject<any>();
-  private selectedBuildVariable: IBuild = {} as IBuild;
 
   private chosenRace: BehaviorSubject<IRace> = new BehaviorSubject<IRace>({} as IRace);
   private chosenWeaponSkill: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
@@ -40,21 +40,14 @@ export class BuildService {
   //* Select build *//
   public setSelectedBuild(build: IBuild): void {
     this.selectedBuild.next(build);
-    this.selectedBuildVariable = build;
   }
 
   public getSelectedBuild(): Observable<IBuild> {
     return this.selectedBuild.asObservable();
   }
 
-  //TODO: Should be reworked
-  public getSelectedBuildVar(): IBuild {
-    return this.selectedBuildVariable;
-  }
-
   public emitDeselectBuild(event: any): void {
     this.deslectBuildEmit.next(event);
-    this.selectedBuildVariable = {} as IBuild;
   }
 
   public listenDeselectBuild(): Observable<any> {
