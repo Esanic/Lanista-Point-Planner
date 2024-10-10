@@ -15,13 +15,10 @@ export class BuildService {
   private deslectBuildEmit: Subject<any> = new Subject<any>();
   private selectedBuildVariable: IBuild = {} as IBuild;
 
-  // private buildFromTable: BehaviorSubject<IBuild> = new BehaviorSubject({} as IBuild);
-
   private chosenRace: BehaviorSubject<IRace> = new BehaviorSubject<IRace>({} as IRace);
   private chosenWeaponSkill: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   private levelPoints: BehaviorSubject<ILevel[]> = new BehaviorSubject<ILevel[]>([]);
   private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);
-  private chosenLevelsSubject: Subject<number> = new Subject<number>();
   private importedLevelPoints: Subject<any> = new Subject<any>();
 
   private updateBuildListEmit: Subject<any> = new Subject<any>();
@@ -127,16 +124,10 @@ export class BuildService {
 
   public setAmountOfLevels(levels: number): void {
     this.chosenLevels.next(levels);
-    this.chosenLevelsSubject.next(levels);
   }
 
   public getAmountOfLevels(): Observable<number> {
     return this.chosenLevels.asObservable();
-  }
-
-  //TODO: Evaluate if this is needed
-  public getAmountOfLevelsSubject(): Observable<number> {
-    return this.chosenLevelsSubject.asObservable();
   }
 
   public async getCurrentBuild(): Promise<IBuild> {

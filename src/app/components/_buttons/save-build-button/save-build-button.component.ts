@@ -66,6 +66,7 @@ export class SaveBuildButtonComponent implements OnInit, OnDestroy {
   //* Methods for opening and closing the modal
   public openBuildNameModal(popover: NgbPopover): void {
     const selectedBuild = this.buildService.getSelectedBuildVar();
+    // const selectedBuild = await firstValueFrom(this.buildService.getSelectedBuild());
 
     if (selectedBuild !== undefined && selectedBuild.name !== undefined) {
       this.buildName = selectedBuild.name;

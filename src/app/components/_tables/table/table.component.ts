@@ -16,6 +16,7 @@ import { weaponSkills } from '../../../support/enums/weapon-skills.enums';
 import { WeaponSkillsPipe } from '../../../support/pipes/weapon-skills.pipe';
 import { selectRaceBonusFromWeaponSkill } from '../../../support/helpers/build.helper';
 import { convertWeaponSkillIdToName } from '../../../support/helpers/armory.helper';
+import { ITotal } from '../../../support/interfaces/total';
 @Component({
   selector: 'app-table',
   standalone: true,
@@ -24,27 +25,24 @@ import { convertWeaponSkillIdToName } from '../../../support/helpers/armory.help
   styleUrl: './table.component.scss',
 })
 export class TableComponent implements OnInit, OnDestroy {
+  Object = Object;
+
   public headers: string[] = tableHeaders;
-  public levels: ILevel[] = [];
-  public desiredLevels: number = 25 + 1;
   public tableForm!: FormGroup;
   public formNames: string[] = ['stamina', 'strength', 'endurance', 'initiative', 'dodge', 'weaponSkill', 'shield'];
 
-  public build: IBuild = {} as IBuild;
-
-  // public race: IRace = this.globalService.defaultRace;
+  public levels: ILevel[] = [];
+  private savedLevelPoints: ILevel[] = [];
   public race: IRace = {} as IRace;
   public weaponSkill: number = -1;
   public weaponSkillMultiplier: number = 1;
 
-  public total = { ...total };
-  public totalPlacedPoints = 0;
-  public totalWithBonuses = { ...total };
-  public totalWithBonusesPlacedPoints = 0;
+  public total: ITotal = { ...total };
+  public totalPlacedPoints: number = 0;
+  public totalWithBonuses: ITotal = { ...total };
+  public totalWithBonusesPlacedPoints: number = 0;
 
   private shieldBuild: boolean = false;
-
-  Object = Object;
 
   private getRace$: Subscription = new Subscription();
   private getWeaponSkill$: Subscription = new Subscription();
@@ -76,20 +74,13 @@ export class TableComponent implements OnInit, OnDestroy {
       this.summarizeEachColumn();
     });
 
-    this.getLevels$ = this.buildService.getAmountOfLevelsSubject().subscribe((levels) => {
-      const saveBuild = this.build;
-
+    this.getLevels$ = this.buildService.getAmountOfLevels().subscribe((levels) => {
       this.wipeLevels();
       this.addLevels(levels + 1);
-      this.addData(saveBuild.levels, true);
+      this.addData(this.savedLevelPoints, true);
       this.subscribeToEachLevel();
       this.setCurrentPoints();
     });
-
-    this.addLevels(25 + 1);
-    this.addData();
-    this.subscribeToEachLevel();
-    this.setCurrentPoints();
 
     this.importPoints$ = this.buildService.getImportedLevelPoints().subscribe((levels) => {
       this.getImportedPoints(levels);
@@ -373,6 +364,8 @@ export class TableComponent implements OnInit, OnDestroy {
       arrOfLevels.push(level);
     });
 
+    this.savedLevelPoints = arrOfLevels;
+
     this.buildService.setLevelPoints(arrOfLevels);
   }
 
@@ -382,6 +375,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.summarizeEachColumn().then(() => {
       this.setCurrentPoints();
     });
+    this.setCurrentPoints();
   }
 
   private wipeTable(): void {
