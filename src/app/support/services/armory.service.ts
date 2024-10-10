@@ -114,20 +114,20 @@ export class ArmoryService {
   }
 
   //* Shield build
-  public emitShieldBuild(event: boolean): void {
+  public setShieldBuild(event: boolean): void {
     this.shieldBuild.next(event);
   }
 
-  public listenShieldBuild(): Observable<boolean> {
+  public getShieldBuild(): Observable<boolean> {
     return this.shieldBuild.asObservable();
   }
 
   //* Two handed build
-  public emitTwoHandedBuild(event: boolean): void {
-    this.twoHandedBuild.next(event);
+  public setTwoHandedBuild(value: boolean): void {
+    this.twoHandedBuild.next(value);
   }
 
-  public listenTwoHandedBuild(): Observable<boolean> {
+  public getTwoHandedBuild(): Observable<boolean> {
     return this.twoHandedBuild.asObservable();
   }
 

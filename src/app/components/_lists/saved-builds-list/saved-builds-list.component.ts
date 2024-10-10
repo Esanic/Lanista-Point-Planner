@@ -87,6 +87,7 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
       this.buildService.setImportedLevelPoints(selectedBuild.levels);
       this.buildService.setAmountOfLevels(selectedBuild.levels.length);
       this.armoryService.setLegendEquipmentViewStatus(selectedBuild.showLegendEquipment);
+      this.armoryService.setTwoHandedBuild(selectedBuild.twoHandedBuild);
       this.armoryService.setImportedGear(selectedBuild.equipment);
     }
   }

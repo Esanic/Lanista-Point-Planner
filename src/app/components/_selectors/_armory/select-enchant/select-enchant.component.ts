@@ -46,7 +46,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.shieldBuild$ = this.armoryService.listenShieldBuild().subscribe((shieldBuild) => {
+    this.shieldBuild$ = this.armoryService.getShieldBuild().subscribe((shieldBuild) => {
       if (this.enchantSlot === 2 && shieldBuild) {
         this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('shield');
       } else {
@@ -54,7 +54,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.twoHandedBuild$ = this.armoryService.listenTwoHandedBuild().subscribe((twoHandedBuild) => {
+    this.twoHandedBuild$ = this.armoryService.getTwoHandedBuild().subscribe((twoHandedBuild) => {
       if (!twoHandedBuild && this.enchantSlot === 2) {
         this.chosenEnchant.patchValue(emptyString);
       }

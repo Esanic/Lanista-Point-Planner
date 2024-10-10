@@ -63,7 +63,7 @@ export class SelectWeaponComponent {
       }
     });
 
-    this.shieldBuild$ = this.armoryService.listenShieldBuild().subscribe((shieldBuild) => {
+    this.shieldBuild$ = this.armoryService.getShieldBuild().subscribe((shieldBuild) => {
       if (this.isOffhand && shieldBuild) {
         this.chosenWeapon.patchValue(emptyString);
         this.resetBonus();
@@ -72,7 +72,7 @@ export class SelectWeaponComponent {
       }
     });
 
-    this.twoHandedBuild$ = this.armoryService.listenTwoHandedBuild().subscribe((twoHandedBuild) => {
+    this.twoHandedBuild$ = this.armoryService.getTwoHandedBuild().subscribe((twoHandedBuild) => {
       this.twoHandedBuild = twoHandedBuild;
       if (this.isOffhand && this.twoHandedBuild) {
         this.chosenWeapon.patchValue(emptyString);
@@ -95,7 +95,7 @@ export class SelectWeaponComponent {
     this.chosenWeapon$ = this.chosenWeapon.valueChanges.subscribe((selectedWeapon) => {
       //* If no weapon is selected, reset bonuses and emit that two handed weapon is not selected
       if (selectedWeapon === 'none') {
-        this.armoryService.emitTwoHandedBuild(false);
+        this.armoryService.setTwoHandedBuild(false);
         this.resetBonus();
         return;
       }
@@ -107,10 +107,10 @@ export class SelectWeaponComponent {
 
         //* If two handed weapon is selected, emit that event
         if (chosenWeapon.is_two_handed) {
-          this.armoryService.emitTwoHandedBuild(true);
+          this.armoryService.setTwoHandedBuild(true);
           this.resetBonus();
         } else {
-          this.armoryService.emitTwoHandedBuild(false);
+          this.armoryService.setTwoHandedBuild(false);
           this.resetBonus();
         }
 

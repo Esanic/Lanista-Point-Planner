@@ -8,4 +8,5 @@ export interface IBuild {
   levels: ILevel[];
   equipment: IGearNames;
   showLegendEquipment: boolean;
+  twoHandedBuild: boolean;
 }

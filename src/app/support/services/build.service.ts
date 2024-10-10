@@ -126,11 +126,17 @@ export class BuildService {
   public async getCurrentBuild(): Promise<IBuild> {
     const build = {} as IBuild;
 
+    build.name = this.selectedBuild.value.name;
     build.race = this.chosenRace.value.name;
     build.weaponSkill = convertWeaponSkillIdToName(this.chosenWeaponSkill.value);
     build.levels = this.levelPoints.value;
     build.showLegendEquipment = await firstValueFrom(this.armoryService.getLegendEquipmentViewStatus());
+    build.twoHandedBuild = await firstValueFrom(this.armoryService.getTwoHandedBuild());
     build.equipment = getGearNamesObject(await firstValueFrom(this.armoryService.getGear()));
+
+    if (build.twoHandedBuild && build.equipment.offhand) {
+      build.equipment.offhand = '';
+    }
 
     return build;
   }

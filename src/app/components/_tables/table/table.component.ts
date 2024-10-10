@@ -257,13 +257,13 @@ export class TableComponent implements OnInit, OnDestroy {
       if (this.total.shield > 0) {
         if (!this.shieldBuild) {
           this.shieldBuild = true;
-          this.armoryService.emitShieldBuild(true);
+          this.armoryService.setShieldBuild(true);
         }
       }
       if (this.total.shield === 0) {
         if (this.shieldBuild) {
           this.shieldBuild = false;
-          this.armoryService.emitShieldBuild(false);
+          this.armoryService.setShieldBuild(false);
         }
       }
 
