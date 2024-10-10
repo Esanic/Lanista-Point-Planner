@@ -31,7 +31,6 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
         const race = this.buildService.selectRaceFromRaceName(raceName);
 
         this.buildService.setChosenRace(race);
-        this.buildService.emitDeselectBuild({});
       }
     });
 

@@ -58,7 +58,6 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
     this.chosenWeaponSkill$ = this.chooseWeaponSkill.valueChanges.subscribe((weaponSkill) => {
       if (weaponSkill) {
         this.buildService.setChosenWeaponSkill(weaponSkill);
-        this.buildService.emitDeselectBuild({});
       }
     });
 
