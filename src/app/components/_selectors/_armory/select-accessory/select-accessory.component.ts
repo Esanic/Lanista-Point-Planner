@@ -127,25 +127,27 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.importedAccessory$ = this.armoryService.getImportedGear().subscribe((gear) => {
+    this.importedAccessory$ = this.armoryService.getImportedGear().subscribe((gearNames) => {
+      if (Object.keys(gearNames).length === 0) return;
+
       switch (this.accessorySlot) {
         case accessoriesSlots.Cloak:
-          this.handleImportedAccessory(gear.cloak, 'cloak');
+          this.handleImportedAccessory(gearNames.cloak, 'cloak');
           break;
         case accessoriesSlots.Necklace:
-          this.handleImportedAccessory(gear.necklace, 'necklace');
+          this.handleImportedAccessory(gearNames.necklace, 'necklace');
           break;
         case accessoriesSlots.Ring:
-          this.handleImportedAccessory(gear.ring, 'ring');
+          this.handleImportedAccessory(gearNames.ring, 'ring');
           break;
         case accessoriesSlots.Amulet:
-          this.handleImportedAccessory(gear.amulet, 'amulet');
+          this.handleImportedAccessory(gearNames.amulet, 'amulet');
           break;
         case accessoriesSlots.Bracelet:
-          this.handleImportedAccessory(gear.bracelet, 'bracelet');
+          this.handleImportedAccessory(gearNames.bracelet, 'bracelet');
           break;
         case accessoriesSlots.Trinket:
-          this.handleImportedAccessory(gear.trinket, 'trinket');
+          this.handleImportedAccessory(gearNames.trinket, 'trinket');
           break;
       }
     });

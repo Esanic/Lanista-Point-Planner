@@ -23,6 +23,7 @@ export class ArmoryService {
   private consumablesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private gear: BehaviorSubject<IGear> = new BehaviorSubject<IGear>({ ...emptyGearTemplate });
   private importedGear: BehaviorSubject<IGearNames> = new BehaviorSubject<IGearNames>({} as IGearNames);
+  // private importedGear: Subject<IGearNames> = new Subject<IGearNames>();
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
 

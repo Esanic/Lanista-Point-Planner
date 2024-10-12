@@ -195,14 +195,16 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.importedEnchant$ = this.armoryService.getImportedGear().subscribe((gear) => {
+    this.importedEnchant$ = this.armoryService.getImportedGear().subscribe((gearNames) => {
+      if (Object.keys(gearNames).length === 0) return;
+
       switch (this.enchantSlot) {
         case 1:
-          const enchantOne = this.filteredAndRenamedEnchants.find((enchant) => enchant.name.split('(')[0].trimEnd() === gear.enchantOne);
+          const enchantOne = this.filteredAndRenamedEnchants.find((enchant) => enchant.name.split('(')[0].trimEnd() === gearNames.enchantOne);
           this.handleImportedEnchant(enchantOne, 'enchantOne');
           break;
         case 2:
-          const enchantTwo = this.filteredAndRenamedEnchants.find((enchant) => enchant.name.split('(')[0].trimEnd() === gear.enchantTwo);
+          const enchantTwo = this.filteredAndRenamedEnchants.find((enchant) => enchant.name.split('(')[0].trimEnd() === gearNames.enchantTwo);
           this.handleImportedEnchant(enchantTwo, 'enchantTwo');
           break;
       }

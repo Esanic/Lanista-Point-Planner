@@ -127,25 +127,27 @@ export class SelectArmorComponent implements OnInit {
       }
     });
 
-    this.importedArmor$ = this.armoryService.getImportedGear().subscribe((gear) => {
+    this.importedArmor$ = this.armoryService.getImportedGear().subscribe((gearNames) => {
+      if (Object.keys(gearNames).length === 0) return;
+
       switch (this.armorSlot) {
         case armorSlots.Head:
-          this.handleImportedArmor(gear.head, 'head');
+          this.handleImportedArmor(gearNames.head, 'head');
           break;
         case armorSlots.Shoulders:
-          this.handleImportedArmor(gear.shoulders, 'shoulders');
+          this.handleImportedArmor(gearNames.shoulders, 'shoulders');
           break;
         case armorSlots.Chest:
-          this.handleImportedArmor(gear.chest, 'chest');
+          this.handleImportedArmor(gearNames.chest, 'chest');
           break;
         case armorSlots.Hands:
-          this.handleImportedArmor(gear.gloves, 'gloves');
+          this.handleImportedArmor(gearNames.gloves, 'gloves');
           break;
         case armorSlots.Legs:
-          this.handleImportedArmor(gear.legs, 'legs');
+          this.handleImportedArmor(gearNames.legs, 'legs');
           break;
         case armorSlots.Feet:
-          this.handleImportedArmor(gear.boots, 'boots');
+          this.handleImportedArmor(gearNames.boots, 'boots');
           break;
       }
     });

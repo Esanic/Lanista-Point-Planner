@@ -11,6 +11,7 @@ import { emptyString } from '../../../../support/constants/common';
 import { Races } from '../../../../support/enums/races';
 import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
 import { deepCopy } from '../../../../support/helpers/common.helper';
+import { IGearNames } from '../../../../support/interfaces/_armory/gear';
 
 @Component({
   selector: 'app-select-weapon',
@@ -148,12 +149,14 @@ export class SelectWeaponComponent {
       }
     });
 
-    this.importedWeapon$ = this.armoryService.getImportedGear().subscribe((gear) => {
+    this.importedWeapon$ = this.armoryService.getImportedGear().subscribe((gearNames) => {
+      if (Object.keys(gearNames).length === 0) return;
+
       if (this.isOffhand) {
-        const importedOffhand = this.weaponArray.value.find((weapon) => weapon.name.split('(')[0].trimEnd() == gear.offhand);
+        const importedOffhand = this.weaponArray.value.find((weapon) => weapon.name.split('(')[0].trimEnd() == gearNames.offhand);
         this.handleImportedWeapon(importedOffhand, 'offhand');
       } else {
-        const importedMainhand = this.weaponArray.value.find((weapon) => weapon.name.split('(')[0].trimEnd() == gear.mainhand);
+        const importedMainhand = this.weaponArray.value.find((weapon) => weapon.name.split('(')[0].trimEnd() == gearNames.mainhand);
         this.handleImportedWeapon(importedMainhand, 'mainhand');
       }
     });

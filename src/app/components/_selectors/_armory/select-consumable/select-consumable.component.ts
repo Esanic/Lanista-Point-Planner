@@ -94,16 +94,18 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.importedConsumable$ = this.armoryService.getImportedGear().subscribe((gear) => {
+    this.importedConsumable$ = this.armoryService.getImportedGear().subscribe((gearNames) => {
+      if (Object.keys(gearNames).length === 0) return;
+
       switch (this.consumableSlot) {
         case 1:
-          this.handleImportedConsumable(gear.consumableOne, 'consumableOne');
+          this.handleImportedConsumable(gearNames.consumableOne, 'consumableOne');
           break;
         case 2:
-          this.handleImportedConsumable(gear.consumableTwo, 'consumableTwo');
+          this.handleImportedConsumable(gearNames.consumableTwo, 'consumableTwo');
           break;
         case 3:
-          this.handleImportedConsumable(gear.consumableThree, 'consumableThree');
+          this.handleImportedConsumable(gearNames.consumableThree, 'consumableThree');
           break;
       }
     });
