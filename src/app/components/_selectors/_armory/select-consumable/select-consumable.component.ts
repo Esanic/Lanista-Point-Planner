@@ -51,6 +51,8 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
     });
 
     this.chosenConsumable$ = this.chosenConsumable.valueChanges.subscribe(() => {
+      if (this.chosenConsumable.value === emptyString) return;
+
       const chosenConsumable = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === this.chosenConsumable.value);
 
       if (chosenConsumable) {

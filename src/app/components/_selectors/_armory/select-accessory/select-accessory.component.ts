@@ -58,8 +58,10 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.chosenAccessory$ = this.chosenAccessory.valueChanges.subscribe((armor) => {
-      const chosenAccessory = this.filteredAndRenamedAccessoriesArray.find((accesoryToLookAt) => accesoryToLookAt.name === armor);
+    this.chosenAccessory$ = this.chosenAccessory.valueChanges.subscribe((accessory) => {
+      if (accessory === emptyString) return;
+
+      const chosenAccessory = this.filteredAndRenamedAccessoriesArray.find((accesoryToLookAt) => accesoryToLookAt.name === accessory);
 
       if (chosenAccessory) {
         const bonusesToAdd: ITotalBonus = calculateBonusesFromEquipment(chosenAccessory);

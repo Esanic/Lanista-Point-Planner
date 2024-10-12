@@ -62,6 +62,8 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
     });
 
     this.chosenEnchant$ = this.chosenEnchant.valueChanges.subscribe((selectedEnchant) => {
+      if (selectedEnchant === emptyString) return;
+
       const chosenEnchant = this.filteredAndRenamedEnchants.find((enchant) => enchant.name === selectedEnchant);
 
       let bonus: ITotalBonus = { additiveBonus: { ...additiveBonus }, multiplierBonus: { ...multiplierBonus } };

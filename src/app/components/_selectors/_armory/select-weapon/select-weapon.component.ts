@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { weaponSkillStr, weaponSkills } from '../../../../support/enums/weapon-skills.enums';
-import { additiveBonus, multiplierBonus, weaponTemplate } from '../../../../support/constants/templates';
+import { additiveBonus, gear, multiplierBonus, weaponTemplate } from '../../../../support/constants/templates';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
@@ -99,6 +99,10 @@ export class SelectWeaponComponent {
     });
 
     this.chosenWeapon$ = this.chosenWeapon.valueChanges.subscribe((selectedWeapon) => {
+      if (selectedWeapon === '') {
+        return;
+      }
+
       //* If no weapon is selected, reset bonuses and emit that two handed weapon is not selected
       if (selectedWeapon === 'none') {
         this.armoryService.setTwoHandedBuild(false);
