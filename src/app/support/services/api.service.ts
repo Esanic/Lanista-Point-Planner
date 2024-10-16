@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-  private url: string = 'https://beta.lanista.se/api'
+  private url: string = 'https://beta.lanista.se/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getRaces(): Observable<any> {
     return this.http.get<any>(`${this.url}/config`);
@@ -24,5 +24,9 @@ export class ApiService {
 
   getConsumables() {
     return this.http.get<any>(`${this.url}/external/items/consumables/all`);
+  }
+
+  getEnchants() {
+    return this.http.get<any>(`${this.url}/external/items/enchants/all`);
   }
 }

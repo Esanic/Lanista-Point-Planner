@@ -1,3 +1,4 @@
+import { IGearNames } from './_armory/gear';
 import { ILevel } from './level';
 
 export interface IBuild {
@@ -5,4 +6,7 @@ export interface IBuild {
   race: string;
   weaponSkill: string;
   levels: ILevel[];
+  equipment: IGearNames;
+  showLegendEquipment: boolean;
+  twoHandedBuild: boolean;
 }

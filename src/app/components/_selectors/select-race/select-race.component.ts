@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { GlobalService } from '../../../support/services/global.service';
 import { Subscription } from 'rxjs';
 import { BuildService } from '../../../support/services/build.service';
-import { IRace } from '../../../support/interfaces/race';
+import { emptyString } from '../../../support/constants/common';
 
 @Component({
   selector: 'select-race',
@@ -13,26 +12,25 @@ import { IRace } from '../../../support/interfaces/race';
   styleUrl: './select-race.component.css',
 })
 export class SelectRaceComponent implements OnInit, OnDestroy {
-  public chooseRace = new FormControl('');
-  public races: string[] = this.globalService.races.map((race) => race.name!);
+  public chooseRace = new FormControl(emptyString);
+  public races: string[] = this.buildService.getRaces().map((race) => race.name);
 
   private incomingRace$: Subscription = new Subscription();
-  private localRace$: Subscription = new Subscription();
+  private chosenRace$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private globalService: GlobalService) {}
+  constructor(private buildService: BuildService) {}
 
   ngOnInit(): void {
     this.incomingRace$ = this.buildService.getChosenRace().subscribe((race) => {
       this.chooseRace.patchValue(race.name, { emitEvent: false });
     });
 
-    this.localRace$ = this.chooseRace.valueChanges.subscribe((raceName) => {
-      const race = this.globalService.selectRaceFromRaceName(raceName!);
-
+    this.chosenRace$ = this.chooseRace.valueChanges.subscribe((raceName) => {
       if (raceName) {
+        const race = this.buildService.selectRaceFromRaceName(raceName);
+
         this.buildService.setChosenRace(race);
-        this.buildService.emitDeselectBuild({});
       }
     });
 
@@ -43,7 +41,7 @@ export class SelectRaceComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.incomingRace$.unsubscribe();
-    this.localRace$.unsubscribe();
+    this.chosenRace$.unsubscribe();
     this.wipeData$.unsubscribe();
   }
 }

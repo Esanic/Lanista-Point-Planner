@@ -3,9 +3,10 @@ import { IBuild } from '../../../support/interfaces/build';
 import { BuildService } from '../../../support/services/build.service';
 import { CommonModule } from '@angular/common';
 import { ConfirmActionModalComponent } from '../../_modals/confirm-action-modal/confirm-action-modal.component';
-import { StorageService } from '../../../support/services/storage.service';
-import { Subscription } from 'rxjs';
-import { GlobalService } from '../../../support/services/global.service';
+import { first, firstValueFrom, Subscription } from 'rxjs';
+import { emptyString } from '../../../support/constants/common';
+import { getBuilds, setBuilds } from '../../../support/helpers/common.helper';
+import { ArmoryService } from '../../../support/services/armory.service';
 
 @Component({
   selector: 'app-saved-builds-list',
@@ -16,7 +17,7 @@ import { GlobalService } from '../../../support/services/global.service';
 })
 export class SavedBuildsListComponent implements OnInit, OnDestroy {
   public builds: IBuild[] = [];
-  public selectedBuildName: string = '';
+  public selectedBuildName: string = emptyString;
 
   private buildToDelete: IBuild = {} as IBuild;
 
@@ -26,26 +27,27 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
   private listenWipeData$: Subscription = new Subscription();
   private deselectBuild$: Subscription = new Subscription();
 
-  constructor(private buildService: BuildService, private storageService: StorageService, private globalService: GlobalService) {}
+  constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
 
   ngOnInit(): void {
-    this.builds = this.storageService.getBuilds();
+    this.builds = getBuilds();
 
     this.selectBuildUponInit();
 
     this.listenToUpdateBuildList$ = this.buildService.listenToUpdateBuildList().subscribe((buildName) => {
-      this.builds = this.storageService.getBuilds();
-      if (buildName !== '') {
+      this.builds = getBuilds();
+      if (buildName !== emptyString) {
         this.selectBuild({ name: buildName } as IBuild, true);
       }
     });
 
     this.listenWipeData$ = this.buildService.listenWipeData().subscribe(() => {
-      this.selectedBuildName = '';
+      this.selectedBuildName = emptyString;
+      this.buildService.setSelectedBuild({} as IBuild);
     });
 
     this.deselectBuild$ = this.buildService.listenDeselectBuild().subscribe(() => {
-      this.selectedBuildName = '';
+      this.selectedBuildName = emptyString;
     });
   }
 
@@ -55,8 +57,8 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
     this.deselectBuild$.unsubscribe();
   }
 
-  private selectBuildUponInit() {
-    const selectedBuild: IBuild | null = this.buildService.getSelectedBuildVar();
+  private async selectBuildUponInit() {
+    const selectedBuild = await firstValueFrom(this.buildService.getSelectedBuild());
     if (selectedBuild) {
       this.selectBuild(selectedBuild);
     }
@@ -66,8 +68,8 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
     //* If the build is already selected, deselect it
     if (updateList === false || updateList === undefined) {
       if (build.name === this.selectedBuildName) {
-        this.selectedBuildName = '';
-        this.buildService.emitWipeData('');
+        this.selectedBuildName = emptyString;
+        this.buildService.emitWipeData(emptyString);
         this.buildService.setSelectedBuild({} as IBuild);
         return;
       }
@@ -80,10 +82,13 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
       if (selectedBuild.name !== undefined) this.selectedBuildName = selectedBuild.name;
 
       this.buildService.setSelectedBuild(selectedBuild);
-      this.buildService.setAmountOfLevels(selectedBuild.levels.length);
-      this.buildService.setChosenRace(this.globalService.selectRaceFromRaceName(selectedBuild.race));
+      this.buildService.setChosenRace(this.buildService.selectRaceFromRaceName(selectedBuild.race));
       this.buildService.setChosenWeaponSkill(selectedBuild.weaponSkill);
-      this.buildService.setImportedStats(selectedBuild.levels);
+      this.buildService.setImportedLevelPoints(selectedBuild.levels);
+      this.buildService.setAmountOfLevels(selectedBuild.levels.length);
+      this.armoryService.setLegendEquipmentViewStatus(selectedBuild.showLegendEquipment);
+      this.armoryService.setTwoHandedBuild(selectedBuild.twoHandedBuild);
+      this.armoryService.setImportedGear(selectedBuild.equipment);
     }
   }
 
@@ -92,12 +97,12 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
 
     this.builds.splice(buildToDelete, 1);
 
-    this.storageService.setBuilds(this.builds);
+    setBuilds(this.builds);
 
-    this.buildService.emitUpdateBuildList('');
+    this.buildService.emitUpdateBuildList(emptyString);
 
     if (this.selectedBuildName === build.name) {
-      this.buildService.emitWipeData('');
+      this.buildService.emitWipeData(emptyString);
     }
 
     this.buildService.setSelectedBuild({} as IBuild);

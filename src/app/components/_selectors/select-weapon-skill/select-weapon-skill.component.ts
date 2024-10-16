@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { GlobalService } from '../../../support/services/global.service';
 import { Subscription } from 'rxjs';
 import { BuildService } from '../../../support/services/build.service';
 import { IRace } from '../../../support/interfaces/race';
+import { emptyString } from '../../../support/constants/common';
+import { weaponSkillsNames } from '../../../support/constants/weaponSkills';
+import { selectRaceBonusFromWeaponSkill } from '../../../support/helpers/build.helper';
+import { convertWeaponSkillIdToName } from '../../../support/helpers/armory.helper';
 
 @Component({
   selector: 'select-weapon-skill',
@@ -13,52 +16,48 @@ import { IRace } from '../../../support/interfaces/race';
   styleUrl: './select-weapon-skill.component.css',
 })
 export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
-  public chooseWeaponSkill = new FormControl('');
-  public weaponSkills: string[] = this.globalService.weaponSkills;
+  public chooseWeaponSkill = new FormControl(emptyString);
+  public weaponSkills: string[] = [...weaponSkillsNames];
   private selectedRace: IRace = {} as IRace;
 
-  private incomingWeaponSkill$: Subscription = new Subscription();
-  private internalWeaponSkill$: Subscription = new Subscription();
   private selectedRace$: Subscription = new Subscription();
+  private incomingWeaponSkill$: Subscription = new Subscription();
+  private chosenWeaponSkill$: Subscription = new Subscription();
   private wipeData$: Subscription = new Subscription();
 
-  constructor(private globalService: GlobalService, private buildService: BuildService) {}
+  constructor(private buildService: BuildService) {}
 
   ngOnInit(): void {
     this.selectedRace$ = this.buildService.getChosenRace().subscribe((race: IRace) => {
-      let selectedWeaponSkill: string = '';
-      if (this.chooseWeaponSkill.value !== '' && this.chooseWeaponSkill.value !== null) {
-        selectedWeaponSkill = this.chooseWeaponSkill.value.split(' ')[0];
+      let selectedWeaponSkill: string = emptyString;
+      if (this.chooseWeaponSkill.value !== emptyString && this.chooseWeaponSkill.value !== null) {
+        selectedWeaponSkill = this.chooseWeaponSkill.value.split(' ')[0]; //TODO: Add this to a helper function
       }
 
       this.selectedRace = race;
-      this.weaponSkills = this.globalService.weaponSkills;
+      this.weaponSkills = weaponSkillsNames;
 
       if (race.weaponSkills) {
         this.weaponSkills = this.weaponSkills.map((weaponSkill: string) => {
-          return `${weaponSkill} (${this.globalService.selectRaceBonusFromWeaponSkill(weaponSkill, race)}%)`;
+          return `${weaponSkill} (${selectRaceBonusFromWeaponSkill(weaponSkill, race)}%)`;
         });
 
-        this.chooseWeaponSkill.patchValue(`${selectedWeaponSkill} (${this.globalService.selectRaceBonusFromWeaponSkill(selectedWeaponSkill, race)}%)`, { emitEvent: false });
+        this.chooseWeaponSkill.patchValue(`${selectedWeaponSkill} (${selectRaceBonusFromWeaponSkill(selectedWeaponSkill, race)}%)`, { emitEvent: false });
       }
     });
 
     this.incomingWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
+      const weaponSkillString = convertWeaponSkillIdToName(weaponSkill);
       if (this.selectedRace.weaponSkills) {
-        if (weaponSkill.split(' ').length >= 2) {
-          this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
-        } else {
-          this.chooseWeaponSkill.patchValue(`${weaponSkill} (${this.globalService.selectRaceBonusFromWeaponSkill(weaponSkill, this.selectedRace)}%)`, { emitEvent: false });
-        }
+        this.chooseWeaponSkill.patchValue(`${weaponSkillString} (${selectRaceBonusFromWeaponSkill(weaponSkillString, this.selectedRace)}%)`, { emitEvent: false });
       } else {
-        this.chooseWeaponSkill.patchValue(weaponSkill, { emitEvent: false });
+        this.chooseWeaponSkill.patchValue(weaponSkillString, { emitEvent: false });
       }
     });
 
-    this.internalWeaponSkill$ = this.chooseWeaponSkill.valueChanges.subscribe((weaponSkill) => {
+    this.chosenWeaponSkill$ = this.chooseWeaponSkill.valueChanges.subscribe((weaponSkill) => {
       if (weaponSkill) {
         this.buildService.setChosenWeaponSkill(weaponSkill);
-        this.buildService.emitDeselectBuild({});
       }
     });
 
@@ -68,9 +67,9 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.incomingWeaponSkill$.unsubscribe();
-    this.internalWeaponSkill$.unsubscribe();
-    this.wipeData$.unsubscribe();
     this.selectedRace$.unsubscribe();
+    this.incomingWeaponSkill$.unsubscribe();
+    this.chosenWeaponSkill$.unsubscribe();
+    this.wipeData$.unsubscribe();
   }
 }

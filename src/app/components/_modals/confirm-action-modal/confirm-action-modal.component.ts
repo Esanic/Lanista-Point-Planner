@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuildService } from '../../../support/services/build.service';
+import { emptyString } from '../../../support/constants/common';
 
 @Component({
   selector: 'app-confirm-action-modal',
@@ -11,7 +11,7 @@ import { BuildService } from '../../../support/services/build.service';
   styleUrl: './confirm-action-modal.component.css',
 })
 export class ConfirmActionModalComponent {
-  @Input() texts = { title: '', body: '', confirm: '', cancel: '' };
+  @Input() texts = { title: emptyString, body: emptyString, confirm: emptyString, cancel: emptyString };
 
   @Output() closeModal = new EventEmitter();
   @Output() dismissModal = new EventEmitter();

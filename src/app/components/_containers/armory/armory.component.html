@@ -1,5 +1,50 @@
 <div class="d-flex flex-column justify-content-between bg-white p-lg-4 px-4">
   <h3 class="d-none d-lg-block">Utrustning</h3>
   <hr class="d-none d-lg-block" />
-  <p>Kommer så småningom... :)</p>
+  <app-legend-equipment-switch></app-legend-equipment-switch>
+  <hr />
+
+  <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+    <li [ngbNavItem]="1" [destroyOnHide]="false">
+      <button ngbNavLink>Vapen</button>
+      <ng-template ngbNavContent>
+        <app-select-weapon></app-select-weapon>
+        <app-select-enchant [enchantSlot]="1"></app-select-enchant>
+        <app-select-weapon [isOffhand]="true"></app-select-weapon>
+        <app-select-enchant [enchantSlot]="2"></app-select-enchant>
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="2" [destroyOnHide]="false">
+      <button ngbNavLink>Rustning</button>
+      <ng-template ngbNavContent>
+        <app-select-armor [armorSlot]="armorSlots.Head"></app-select-armor>
+        <app-select-armor [armorSlot]="armorSlots.Shoulders"></app-select-armor>
+        <app-select-armor [armorSlot]="armorSlots.Chest"></app-select-armor>
+        <app-select-armor [armorSlot]="armorSlots.Hands"></app-select-armor>
+        <app-select-armor [armorSlot]="armorSlots.Legs"></app-select-armor>
+        <app-select-armor [armorSlot]="armorSlots.Feet"></app-select-armor>
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="3" [destroyOnHide]="false">
+      <button ngbNavLink>Föremål</button>
+      <ng-template ngbNavContent>
+        <app-select-accessory [accessorySlot]="accessoriesSlots.Cloak"></app-select-accessory>
+        <app-select-accessory [accessorySlot]="accessoriesSlots.Necklace"></app-select-accessory>
+        <app-select-accessory [accessorySlot]="accessoriesSlots.Ring"></app-select-accessory>
+        <app-select-accessory [accessorySlot]="accessoriesSlots.Amulet"></app-select-accessory>
+        <app-select-accessory [accessorySlot]="accessoriesSlots.Bracelet"></app-select-accessory>
+        <app-select-accessory [accessorySlot]="accessoriesSlots.Trinket"></app-select-accessory>
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="4" [destroyOnHide]="false">
+      <button ngbNavLink>Mixturer</button>
+      <ng-template ngbNavContent>
+        <app-select-consumable [consumableSlot]="1"></app-select-consumable>
+        <app-select-consumable [consumableSlot]="2"></app-select-consumable>
+        <app-select-consumable [consumableSlot]="3"></app-select-consumable>
+      </ng-template>
+    </li>
+  </ul>
+
+  <div [ngbNavOutlet]="nav" class="my-3"></div>
 </div>
