@@ -103,26 +103,32 @@ export class SelectArmorComponent implements OnInit {
         case armorSlots.Head:
           const head = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.head.name);
           if (head) this.chosenArmor.patchValue(head.name, { emitEvent: false });
+          if (gear.head === armorTemplate) this.chosenArmor.patchValue(emptyString, { emitEvent: false });
           break;
         case armorSlots.Shoulders:
           const shoulders = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.shoulders.name);
           if (shoulders) this.chosenArmor.patchValue(shoulders.name, { emitEvent: false });
+          if (gear.shoulders === armorTemplate) this.chosenArmor.patchValue(emptyString, { emitEvent: false });
           break;
         case armorSlots.Chest:
           const chest = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.chest.name);
           if (chest) this.chosenArmor.patchValue(chest.name, { emitEvent: false });
+          if (gear.chest === armorTemplate) this.chosenArmor.patchValue(emptyString, { emitEvent: false });
           break;
         case armorSlots.Hands:
           const gloves = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.gloves.name);
           if (gloves) this.chosenArmor.patchValue(gloves.name, { emitEvent: false });
+          if (gear.gloves === armorTemplate) this.chosenArmor.patchValue(emptyString, { emitEvent: false });
           break;
         case armorSlots.Legs:
           const legs = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.legs.name);
           if (legs) this.chosenArmor.patchValue(legs.name, { emitEvent: false });
+          if (gear.legs === armorTemplate) this.chosenArmor.patchValue(emptyString, { emitEvent: false });
           break;
         case armorSlots.Feet:
           const boots = this.filteredAndRenamedArmorArray.find((armor) => armor.name === gear.boots.name);
           if (boots) this.chosenArmor.patchValue(boots.name, { emitEvent: false });
+          if (gear.boots === armorTemplate) this.chosenArmor.patchValue(emptyString, { emitEvent: false });
           break;
       }
     });

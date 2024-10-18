@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { weaponSkillStr, weaponSkills } from '../../../../support/enums/weapon-skills.enums';
-import { additiveBonus, gear, multiplierBonus, weaponTemplate } from '../../../../support/constants/templates';
+import { additiveBonus, gearTemplate, multiplierBonus, weaponTemplate } from '../../../../support/constants/templates';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
@@ -143,9 +143,13 @@ export class SelectWeaponComponent {
       if (this.isOffhand) {
         const offHand = this.weaponArray.value.find((weapon) => weapon.name === gear.offhand.name);
         if (offHand) this.chosenWeapon.patchValue(offHand.name, { emitEvent: false });
+
+        if (gear.offhand === weaponTemplate) this.chosenWeapon.patchValue(emptyString, { emitEvent: false }); //
       } else {
         const mainHand = this.weaponArray.value.find((weapon) => weapon.name === gear.mainhand.name);
         if (mainHand) this.chosenWeapon.patchValue(mainHand.name, { emitEvent: false });
+
+        if (gear.mainhand === weaponTemplate) this.chosenWeapon.patchValue(emptyString, { emitEvent: false });
       }
     });
 

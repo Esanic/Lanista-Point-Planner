@@ -187,10 +187,12 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
         case 1:
           const enchantOne = this.filteredAndRenamedEnchants.find((enchant) => enchant.name === gear.enchantOne.name);
           if (enchantOne) this.chosenEnchant.patchValue(enchantOne.name, { emitEvent: false });
+          if (gear.enchantOne === enchantTemplate) this.chosenEnchant.patchValue(emptyString, { emitEvent: false });
           break;
         case 2:
           const enchantTwo = this.filteredAndRenamedEnchants.find((enchant) => enchant.name === gear.enchantTwo.name);
           if (enchantTwo) this.chosenEnchant.patchValue(enchantTwo.name, { emitEvent: false });
+          if (gear.enchantTwo === enchantTemplate) this.chosenEnchant.patchValue(emptyString, { emitEvent: false });
           break;
       }
     });

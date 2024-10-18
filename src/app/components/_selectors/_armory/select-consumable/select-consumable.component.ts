@@ -82,14 +82,17 @@ export class SelectConsumableComponent implements OnInit, OnDestroy {
         case 1:
           const consumableOne = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === gear.consumableOne.name);
           if (consumableOne) this.chosenConsumable.patchValue(consumableOne.name, { emitEvent: false });
+          if (gear.consumableOne === consumableTemplate) this.chosenConsumable.patchValue(emptyString, { emitEvent: false });
           break;
         case 2:
           const consumableTwo = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === gear.consumableTwo.name);
           if (consumableTwo) this.chosenConsumable.patchValue(consumableTwo.name, { emitEvent: false });
+          if (gear.consumableTwo === consumableTemplate) this.chosenConsumable.patchValue(emptyString, { emitEvent: false });
           break;
         case 3:
           const consumableThree = this.filteredAndRenamedConsumablesArray.find((consumable) => consumable.name === gear.consumableThree.name);
           if (consumableThree) this.chosenConsumable.patchValue(consumableThree.name, { emitEvent: false });
+          if (gear.consumableThree === consumableTemplate) this.chosenConsumable.patchValue(emptyString, { emitEvent: false });
           break;
       }
     });

@@ -3,7 +3,7 @@ import { IBuild } from '../../../support/interfaces/build';
 import { BuildService } from '../../../support/services/build.service';
 import { CommonModule } from '@angular/common';
 import { ConfirmActionModalComponent } from '../../_modals/confirm-action-modal/confirm-action-modal.component';
-import { first, firstValueFrom, Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { emptyString } from '../../../support/constants/common';
 import { getBuilds, setBuilds } from '../../../support/helpers/common.helper';
 import { ArmoryService } from '../../../support/services/armory.service';
@@ -69,7 +69,9 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
     if (updateList === false || updateList === undefined) {
       if (build.name === this.selectedBuildName) {
         this.selectedBuildName = emptyString;
-        this.buildService.emitWipeData(emptyString);
+        this.buildService.emitWipeData({});
+        this.buildService.emitWipeTable({});
+        this.armoryService.resetGear();
         this.buildService.setSelectedBuild({} as IBuild);
         return;
       }

@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IBonus, ITotalBonus } from '../interfaces/_armory/bonus';
 
 import { IEquipmentBonusSlots } from '../interfaces/_armory/equipmentBonus';
-import { additiveBonus, gear as emptyGearTemplate, multiplierBonus, weaponTemplate } from '../constants/templates';
+import { additiveBonus, gearTemplate as gearTemplate, multiplierBonus, weaponTemplate } from '../constants/templates';
 import { IWeapon } from '../interfaces/_armory/weapon';
 import { IArmor } from '../interfaces/_armory/armor';
 import { IAccessory } from '../interfaces/_armory/accessory';
@@ -21,7 +21,7 @@ export class ArmoryService {
   private armorsAndAccessoriesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private weaponsFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private consumablesFetched: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private gear: BehaviorSubject<IGear> = new BehaviorSubject<IGear>({ ...emptyGearTemplate });
+  private gear: BehaviorSubject<IGear> = new BehaviorSubject<IGear>({ ...gearTemplate });
   private importedGear: BehaviorSubject<IGearNames> = new BehaviorSubject<IGearNames>({} as IGearNames);
 
   private emitBonusAdded: Subject<boolean> = new Subject<boolean>();
@@ -138,6 +138,10 @@ export class ArmoryService {
   public setGear(key: string, value: IWeapon | IArmor | IAccessory | IConsumable | IEnchant): void {
     this.gear.value[key] = value;
     this.gear.next(this.gear.value);
+  }
+
+  public resetGear(): void {
+    this.gear.next({ ...gearTemplate });
   }
 
   public getGear(): Observable<IGear> {

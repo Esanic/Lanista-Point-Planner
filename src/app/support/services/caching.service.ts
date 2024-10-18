@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ICaching } from '../interfaces/caching';
 import { HttpEvent } from '@angular/common/http';
 
-// 7 days
+// 3 days
 const TTL = 1000 * 60 * 60 * 24 * 3;
 
 @Injectable({
@@ -13,8 +13,6 @@ export class CachingService {
 
   get(key: string): HttpEvent<unknown> | undefined {
     const cached = this.#cache.get(key);
-
-    console.log(cached);
 
     if (!cached) {
       return undefined;

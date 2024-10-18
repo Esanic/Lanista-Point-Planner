@@ -101,28 +101,34 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
     this.incomingAccessory$ = this.armoryService.getGear().subscribe((gear) => {
       switch (this.accessorySlot) {
         case accessoriesSlots.Cloak:
-          const back = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.cloak.name);
-          if (back) this.chosenAccessory.patchValue(back.name, { emitEvent: false });
+          const cloak = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.cloak.name);
+          if (cloak) this.chosenAccessory.patchValue(cloak.name, { emitEvent: false });
+          if (gear.cloak === accessoryTemplate) this.chosenAccessory.patchValue(emptyString, { emitEvent: false });
           break;
         case accessoriesSlots.Necklace:
-          const neck = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.necklace.name);
-          if (neck) this.chosenAccessory.patchValue(neck.name, { emitEvent: false });
+          const necklace = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.necklace.name);
+          if (necklace) this.chosenAccessory.patchValue(necklace.name, { emitEvent: false });
+          if (gear.necklace === accessoryTemplate) this.chosenAccessory.patchValue(emptyString, { emitEvent: false });
           break;
         case accessoriesSlots.Ring:
           const finger = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.ring.name);
           if (finger) this.chosenAccessory.patchValue(finger.name, { emitEvent: false });
+          if (gear.ring === accessoryTemplate) this.chosenAccessory.patchValue(emptyString, { emitEvent: false });
           break;
         case accessoriesSlots.Amulet:
           const amulet = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.amulet.name);
           if (amulet) this.chosenAccessory.patchValue(amulet.name, { emitEvent: false });
+          if (gear.amulet === accessoryTemplate) this.chosenAccessory.patchValue(emptyString, { emitEvent: false });
           break;
         case accessoriesSlots.Bracelet:
           const bracelet = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.bracelet.name);
           if (bracelet) this.chosenAccessory.patchValue(bracelet.name, { emitEvent: false });
+          if (gear.bracelet === accessoryTemplate) this.chosenAccessory.patchValue(emptyString, { emitEvent: false });
           break;
         case accessoriesSlots.Trinket:
           const trinket = this.filteredAndRenamedAccessoriesArray.find((accessory) => accessory.name === gear.trinket.name);
           if (trinket) this.chosenAccessory.patchValue(trinket.name, { emitEvent: false });
+          if (gear.trinket === accessoryTemplate) this.chosenAccessory.patchValue(emptyString, { emitEvent: false });
           break;
       }
     });

@@ -117,7 +117,7 @@ export const enchantTemplate: IEnchant = {
   weight: 0,
 };
 
-export const gear: IGear = {
+export const gearTemplate: IGear = {
   mainhand: weaponTemplate,
   offhand: weaponTemplate,
   head: armorTemplate,
