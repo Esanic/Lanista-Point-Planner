@@ -1,5 +1,5 @@
 <div class="d-flex my-2">
-  <label class="form-label my-auto" for="accessorySelect" style="width: 30%">{{ accessorySlot | accessories }}:</label>
+  <label class="form-label my-auto col-3" for="accessorySelect">{{ accessorySlot | accessories }}:</label>
   <select class="form-select" name="accessorySelect" [formControl]="chosenAccessory">
     <option value="none" selected></option>
     @for(accessory of filteredAndRenamedAccessoriesArray; track accessory){

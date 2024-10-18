@@ -1,8 +1,9 @@
 <div class="d-flex flex-column justify-content-between bg-white p-lg-4 px-4">
   <h3 class="d-none d-lg-block">Utrustning</h3>
   <hr class="d-none d-lg-block" />
-  <app-legend-equipment-switch></app-legend-equipment-switch>
-  <hr />
+  <div class="mb-3">
+    <app-legend-equipment-switch></app-legend-equipment-switch>
+  </div>
 
   <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
     <li [ngbNavItem]="1" [destroyOnHide]="false">

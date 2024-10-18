@@ -2,7 +2,7 @@
 @if(twoHandedBuild){ 
   @if(!isOffhand){
 <div class="d-flex my-2">
-  <label class="form-label my-auto" for="weaponSelector" style="width: 30%">Tvåhand:</label>
+  <label class="form-label my-auto col-3" for="weaponSelector">Tvåhand:</label>
   <select class="form-select" name="weaponSelector" [formControl]="chosenWeapon">
     <option value="none" selected></option>
     @for(weapon of weaponArray.value; track weapon){
@@ -13,7 +13,7 @@
 
 } } @else {
 <div class="d-flex my-2">
-  <label class="form-label my-auto" for="weaponSelector" style="width: 30%">{{ isOffhand ? "Sköldhand:" : "Vapenhand:" }}</label>
+  <label class="form-label my-auto col-3" for="weaponSelector">{{ isOffhand ? "Sköldhand:" : "Vapenhand:" }}</label>
   <select class="form-select" name="weaponSelector" [formControl]="chosenWeapon">
     <option value="none" selected></option>
     @for(weapon of weaponArray.value; track weapon){
