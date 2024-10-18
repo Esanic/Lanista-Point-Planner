@@ -14,12 +14,15 @@
         <li class="nav-item">
           <button class="btn" data-bs-toggle="offcanvas" href="#armory" role="button" aria-controls="settings"><i class="armory-button-icon"></i></button>
         </li>
+        <li class="nav-item">
+          <button class="btn" data-bs-toggle="offcanvas" href="#donate" role="button" aria-controls="settings"><i class="bi bi-heart-fill"></i></button>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
 
-<div class="offcanvas offcanvas-start w-50" tabindex="-1" id="settings" aria-labelledby="settings">
+<div class="offcanvas offcanvas-start" [ngClass]="widthOfCanvas()" tabindex="-1" id="settings" aria-labelledby="settings">
   <div class="offcanvas-header">
     <h4 class="offcanvas-title">Inställningar</h4>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -30,7 +33,7 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-start w-50" tabindex="-1" id="builds" aria-labelledby="builds">
+<div class="offcanvas offcanvas-start" [ngClass]="widthOfCanvas()" tabindex="-1" id="builds" aria-labelledby="builds">
   <div class="offcanvas-header" style="box-shadow: 5px black">
     <h4 class="offcanvas-title">Sparade builds</h4>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -41,7 +44,7 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-start w-50" tabindex="-1" id="armory" aria-labelledby="armory">
+<div class="offcanvas offcanvas-start w-50" [ngClass]="widthOfCanvas()" tabindex="-1" id="armory" aria-labelledby="armory">
   <div class="offcanvas-header">
     <h4 class="offcanvas-title">Utrustning</h4>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -49,5 +52,16 @@
   <hr class="mt-0" />
   <div class="offcanvas-body p-0">
     <app-armory></app-armory>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-start w-50" [ngClass]="widthOfCanvas()" tabindex="-1" id="donate" aria-labelledby="donate">
+  <div class="offcanvas-header">
+    <h4 class="offcanvas-title">Donera</h4>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <hr class="mt-0" />
+  <div class="offcanvas-body p-0">
+    <app-donate></app-donate>
   </div>
 </div>
