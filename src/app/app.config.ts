@@ -3,12 +3,9 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { cachingInterceptor } from './support/interceptors/caching.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideRouter(routes), 
-    provideAnimationsAsync(),
-    provideHttpClient()
-  ]
+  providers: [provideRouter(routes), provideAnimationsAsync(), provideHttpClient(withInterceptors([cachingInterceptor]))],
 };
