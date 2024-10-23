@@ -4,11 +4,12 @@ import { BuildsComponent } from '../../_containers/builds/builds/builds.componen
 import { TableComponent } from '../../_tables/table/table.component';
 import { ArmoryComponent } from '../../_containers/armory/armory.component';
 import { DonateComponent } from '../../_containers/donate/donate.component';
+import { DesktopNavComponent } from '../../_nav/desktop-nav/desktop-nav.component';
 
 @Component({
   selector: 'app-desktop-view',
   standalone: true,
-  imports: [SettingsComponent, BuildsComponent, TableComponent, ArmoryComponent, DonateComponent],
+  imports: [SettingsComponent, BuildsComponent, TableComponent, ArmoryComponent, DonateComponent, DesktopNavComponent],
   templateUrl: './desktop-view.component.html',
   styleUrl: './desktop-view.component.css',
 })
