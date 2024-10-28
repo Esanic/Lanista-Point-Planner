@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand bg-white shadow">
+<nav class="navbar bg-white shadow">
   <div class="container-fluid">
-    <div class="row">
+    <div>
       <app-navbar-brand></app-navbar-brand>
     </div>
     <div class="row">
@@ -14,8 +14,8 @@
         <li class="nav-item">
           <button class="btn p-2" data-bs-toggle="offcanvas" href="#armory" role="button" aria-controls="settings"><i class="armory-button-icon"></i></button>
         </li>
-        <li class="nav-item">
-          <button class="btn p-2" data-bs-toggle="offcanvas" href="#donate" role="button" aria-controls="settings"><i class="bi bi-heart-fill"></i></button>
+        <li>
+          <button class="btn p-2" data-bs-toggle="offcanvas" href="#statistics" role="button" aria-controls="settings"><i class="bi bi-bar-chart-fill"></i></button>
         </li>
       </ul>
     </div>
@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-start w-50" [ngClass]="widthOfCanvas()" tabindex="-1" id="armory" aria-labelledby="armory">
+<div class="offcanvas offcanvas-start" [ngClass]="widthOfCanvas()" tabindex="-1" id="armory" aria-labelledby="armory">
   <div class="offcanvas-header">
     <h4 class="offcanvas-title">Utrustning</h4>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -55,13 +55,13 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-start w-50" [ngClass]="widthOfCanvas()" tabindex="-1" id="donate" aria-labelledby="donate">
+<div class="offcanvas offcanvas-start" [ngClass]="widthOfCanvas()" tabindex="-1" id="statistics" aria-labelledby="statistics">
   <div class="offcanvas-header">
-    <h4 class="offcanvas-title">Donera</h4>
+    <h4 class="offcanvas-title">Statistik</h4>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <hr class="mt-0" />
   <div class="offcanvas-body p-0">
-    <app-donate></app-donate>
+    <app-statistics></app-statistics>
   </div>
 </div>

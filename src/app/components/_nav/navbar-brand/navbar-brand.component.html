@@ -1,14 +1,27 @@
-<div class="navbar-brand row">
+<div class="navbar-brand d-flex flex-row">
   <div class="col-3 my-auto">
     <img src="../../../../assets/icons/armor.png" alt="Logo" [width]="getIconSize()" />
   </div>
-  <div class="col-9">
-    <div class="row">
-      <div class="row">Lanista Point Planner</div>
-    </div>
-
+  <div class="col-9 ms-2">
+    <div class="row">Lanista Point Planner</div>
     <div class="row" style="font-size: 0.7rem">
-      <div class="row">Made by Esanic | v{{ version }}</div>
+      <div class="p-0">
+        Made by Esanic | v{{ version }} |
+        <button class="btn p-0 fs-7" style="font-size: x-small" data-bs-toggle="offcanvas" data-bs-target="#donate" role="button" aria-controls="settings">
+          <i class="bi bi-heart-fill heart-color" style="font-size: small"></i>
+        </button>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-start" [ngClass]="widthOfCanvas()" tabindex="-1" id="donate" aria-labelledby="donate">
+  <div class="offcanvas-header">
+    <h4 class="offcanvas-title">Donera</h4>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <hr class="mt-0" />
+  <div class="offcanvas-body p-0">
+    <app-donate></app-donate>
   </div>
 </div>
