@@ -20,7 +20,6 @@ export class NavbarBrandComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
-    console.log('event', event);
     this.screenWidth = event.target.innerWidth;
   }
 

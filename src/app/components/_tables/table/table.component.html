@@ -45,24 +45,24 @@
         <ng-container formArrayName="rows">
           <tr *ngFor="let level of tableFormArr.controls; let i = index; let l = last" [formGroupName]="i" class="">
             <!-- Levels -->
-            <td class="col-1 m-0 p-0 position-sticky">
+            <td class="m-0 p-0 position-sticky">
               <input class="form-control-plaintext text-center p-0 default-cursor" id="level" formControlName="level" readonly />
             </td>
 
             @for(column of formNames; track column){
-            <td class="col-1 m-0 p-0">
+            <td class="m-0 p-0">
               <input type="text" class="form-control text-center border-0 p-0 m-0" [id]="column" [formControlName]="column" onlyNumber />
             </td>
             }
 
             <!-- Placed Points-->
             @if(level.valid){
-            <td class="col-1 p-0 m-0">
-              <div class="col-12 text-center p-0 m-0 default-cursor">{{ level.value.placedPoints }}/{{ level.value.level === 1 ? "150" : "20" }}</div>
+            <td class="p-0 m-0">
+              <div class="text-center p-0 m-0 default-cursor">{{ level.value.placedPoints }}/{{ level.value.level === 1 ? "150" : "20" }}</div>
             </td>
             } @if(level.invalid){
-            <td class="col-1 p-0 m-0 bg-danger-subtle">
-              <div class="col-12 text-center p-0 m-0 default-cursor">{{ level.value.placedPoints }}/{{ level.value.level === 1 ? "150" : "20" }}</div>
+            <td class="p-0 m-0 bg-danger-subtle">
+              <div class="text-center p-0 m-0 default-cursor">{{ level.value.placedPoints }}/{{ level.value.level === 1 ? "150" : "20" }}</div>
             </td>
             }
           </tr>
