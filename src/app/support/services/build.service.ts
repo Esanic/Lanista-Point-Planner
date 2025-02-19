@@ -66,6 +66,7 @@ export class BuildService {
   //* Wipe data *//
   public emitWipeData(event: any): void {
     this.wipeDataEmit.next(event);
+    this.armoryService.resetGear();
     this.armoryService.setTwoHandedBuild(false);
     this.armoryService.setLegendEquipmentViewStatus(false);
   }

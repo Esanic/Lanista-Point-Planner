@@ -59,7 +59,10 @@ export class SelectArmorComponent implements OnInit {
     });
 
     this.chosenArmor$ = this.chosenArmor.valueChanges.subscribe((armor) => {
-      if (armor === emptyString) return;
+      if (armor === emptyString) {
+        this.resetBonus();
+        return;
+      }
 
       const chosenArmor = this.filteredAndRenamedArmorArray.find((armorToLookAt) => armorToLookAt.name === armor);
 

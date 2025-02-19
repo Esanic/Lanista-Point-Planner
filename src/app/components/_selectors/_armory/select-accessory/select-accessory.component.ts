@@ -59,7 +59,10 @@ export class SelectAccessoryComponent implements OnInit, OnDestroy {
     });
 
     this.chosenAccessory$ = this.chosenAccessory.valueChanges.subscribe((accessory) => {
-      if (accessory === emptyString) return;
+      if (accessory === emptyString) {
+        this.resetBonus();
+        return;
+      }
 
       const chosenAccessory = this.filteredAndRenamedAccessoriesArray.find((accesoryToLookAt) => accesoryToLookAt.name === accessory);
 

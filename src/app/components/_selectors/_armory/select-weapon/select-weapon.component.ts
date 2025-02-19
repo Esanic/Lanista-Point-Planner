@@ -101,6 +101,7 @@ export class SelectWeaponComponent {
 
     this.chosenWeapon$ = this.chosenWeapon.valueChanges.subscribe((selectedWeapon) => {
       if (selectedWeapon === '') {
+        this.resetBonus();
         return;
       }
 
@@ -118,6 +119,7 @@ export class SelectWeaponComponent {
 
         //* If two handed weapon is selected, emit that event
         if (chosenWeapon.is_two_handed) {
+          console.log('test');
           this.armoryService.setTwoHandedBuild(true);
           this.resetBonus();
         } else {
@@ -144,7 +146,7 @@ export class SelectWeaponComponent {
         const offHand = this.weaponArray.value.find((weapon) => weapon.name === gear.offhand.name);
         if (offHand) this.chosenWeapon.patchValue(offHand.name, { emitEvent: false });
 
-        if (gear.offhand === weaponTemplate) this.chosenWeapon.patchValue(emptyString, { emitEvent: false }); //
+        if (gear.offhand === weaponTemplate) this.chosenWeapon.patchValue(emptyString, { emitEvent: false });
       } else {
         const mainHand = this.weaponArray.value.find((weapon) => weapon.name === gear.mainhand.name);
         if (mainHand) this.chosenWeapon.patchValue(mainHand.name, { emitEvent: false });
@@ -272,7 +274,12 @@ export class SelectWeaponComponent {
 
     const sortedWeapons = renamedWeapons.sort((a, b) => a.required_level - b.required_level);
 
-    return sortedWeapons;
+    const trimmedWeapons = sortedWeapons.map((weapon) => {
+      weapon.name = weapon.name.trim();
+      return weapon;
+    });
+
+    return trimmedWeapons;
   }
 
   /**
