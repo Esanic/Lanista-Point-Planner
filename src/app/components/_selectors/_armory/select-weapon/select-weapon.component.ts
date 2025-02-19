@@ -119,7 +119,6 @@ export class SelectWeaponComponent {
 
         //* If two handed weapon is selected, emit that event
         if (chosenWeapon.is_two_handed) {
-          console.log('test');
           this.armoryService.setTwoHandedBuild(true);
           this.resetBonus();
         } else {

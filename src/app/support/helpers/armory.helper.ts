@@ -12,6 +12,11 @@ export const calculateBonusesFromEquipment = (equipment: IEquipment, selectedWea
   const weaponSkillTypes = ['axe', 'sword', 'mace', 'stave', 'spear', 'chain'];
 
   equipment.bonuses.forEach((bonus) => {
+    // If bonus is of type null, it is not a bonus that should be calculated - Example is "Lärlingshandskar".
+    if (bonus.type === null) {
+      return;
+    }
+
     if (bonus.additive !== undefined) {
       if (selectedWeaponSkill !== undefined && weaponSkillTypes.includes(bonus.type.toLowerCase())) {
         additiveBonuses.weaponSkill += bonus.additive;
