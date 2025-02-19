@@ -261,15 +261,15 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
   private filterAndRenameEnchants(weaponTag: string): IEnchant[] {
     const enchants = deepCopy(this.armoryService.enchants);
 
-    let filteredEnchants: IEnchant[] = [];
+    // let filteredEnchants: IEnchant[] = [];
 
-    filteredEnchants = enchants.filter((enchant: IEnchant) => {
-      return enchant.enchant_tags.some((tag) => {
-        return tag.default_weapon_types.includes(weaponTag);
-      });
-    });
+    // filteredEnchants = enchants.filter((enchant: IEnchant) => {
+    //   return enchant.enchant_tags.some((tag) => {
+    //     return tag.default_weapon_types.includes(weaponTag);
+    //   });
+    // });
 
-    const renamedEnchants: IEnchant[] = filteredEnchants.map((enchant: IEnchant) => {
+    const renamedEnchants: IEnchant[] = enchants.map((enchant: IEnchant) => {
       enchant.name = `${enchant.name} (G${enchant.required_level})`;
       return enchant;
     });
