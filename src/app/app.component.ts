@@ -21,7 +21,7 @@ import { bonusAssigner } from './support/helpers/build.helper';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, DesktopViewComponent, MobileViewComponent, TabletViewComponent],
+  imports: [DesktopViewComponent, MobileViewComponent, TabletViewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

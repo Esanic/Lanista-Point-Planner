@@ -10,7 +10,7 @@ import { StatisticsComponent } from '../../_containers/statistics/statistics.com
 @Component({
   selector: 'app-desktop-view',
   standalone: true,
-  imports: [SettingsComponent, BuildsComponent, TableComponent, ArmoryComponent, DonateComponent, DesktopNavComponent, StatisticsComponent],
+  imports: [SettingsComponent, BuildsComponent, TableComponent, ArmoryComponent, DesktopNavComponent, StatisticsComponent],
   templateUrl: './desktop-view.component.html',
   styleUrl: './desktop-view.component.css',
 })
