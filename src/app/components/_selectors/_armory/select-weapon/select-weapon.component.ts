@@ -12,11 +12,12 @@ import { Races } from '../../../../support/enums/races';
 import { calculateBonusesFromEquipment } from '../../../../support/helpers/armory.helper';
 import { deepCopy } from '../../../../support/helpers/common.helper';
 import { IGearNames } from '../../../../support/interfaces/_armory/gear';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-select-weapon',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgbTooltipModule],
   templateUrl: './select-weapon.component.html',
   styleUrl: './select-weapon.component.css',
 })

@@ -14,6 +14,9 @@
 } } @else {
 <div class="d-flex flex-row my-2">
   <label class="form-label my-auto me-2" for="weaponSelector">{{ isOffhand ? "Sköldhand:" : "Vapenhand:" }}</label>
+  @if(isOffhand){
+  <i class="bi bi-question-circle" style="font-size: 12px; align-self: center" placement="end" ngbTooltip="För att visa sköldar, placera poäng i kolumnen 'Sköld'"></i>
+  }
   <select class="form-select ms-auto w-60" name="weaponSelector" [formControl]="chosenWeapon">
     <option value="none" selected></option>
     @for(weapon of weaponArray.value; track weapon){
