@@ -78,6 +78,7 @@ export class AppComponent implements OnInit {
     /** Fetching enchants from API */
     this.apiService.getEnchants().subscribe({
       next: (res) => {
+        console.log(res);
         this.armoryService.enchants = res;
       },
       error: (err) => {},

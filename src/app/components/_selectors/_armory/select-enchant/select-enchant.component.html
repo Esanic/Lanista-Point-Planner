@@ -1,9 +1,26 @@
-<div class="d-flex my-1">
-  <label class="form-label my-auto me-2 fs-7 text-nowrap" for="armorSelector">{{ this.enchantSlot === 1 ? "Besvärjelse 1:" : "Besvärjelse 2:" }}</label>
-  <select class="form-select form-select-sm ms-auto w-60" name="armorSelector" [formControl]="chosenEnchant">
+<div class="d-flex my-2">
+  @if(enchantSlot === 1 || enchantSlot === 2) {
+  <label class="form-label my-auto me-2 fs-7 text-nowrap" for="enchantSelector">
+    <!-- prettier-ignore -->
+    @if(enchantSlot === 1) { Besvärjelse 1: } 
+    @if(enchantSlot === 2) { Besvärjelse 2: }
+  </label>
+  <select class="form-select form-select-sm ms-auto w-60" name="enchantSelector" [formControl]="chosenEnchant">
     <option value="none" selected></option>
-    @for(armor of filteredAndRenamedEnchants; track armor){
-    <option [value]="armor.name">{{ armor.name }}</option>
+    @for(enchant of filteredAndRenamedEnchants; track enchant){
+    <option [value]="enchant.name">{{ enchant.name }}</option>
     }
   </select>
+  }
+
+  <!-- prettier-ignore -->
+  @if(enchantSlot === 3) {
+  <label class="form-label my-auto me-2 text-nowrap" for="enchantSelector">Distansvapen:</label>
+  <select class="form-select ms-auto w-60" name="enchantSelector" [formControl]="chosenEnchant">
+    <option value="none" selected></option>
+    @for(enchant of filteredAndRenamedEnchants; track enchant){
+    <option [value]="enchant.name">{{ enchant.name }}</option>
+    }
+  </select>
+  }
 </div>

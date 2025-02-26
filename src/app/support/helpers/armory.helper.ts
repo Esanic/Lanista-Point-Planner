@@ -144,5 +144,6 @@ export const getGearNamesObject = (gear: IGear): IGearNames => {
     consumableThree: gear['consumableThree'].name.split('(')[0].trimEnd() ?? emptyString,
     enchantOne: gear['enchantOne'].name.split('(')[0].trimEnd() ?? emptyString,
     enchantTwo: gear['enchantTwo'].name.split('(')[0].trimEnd() ?? emptyString,
+    distanceWeapon: gear['distanceWeapon'].name.split('(')[0].trimEnd() ?? emptyString,
   };
 };

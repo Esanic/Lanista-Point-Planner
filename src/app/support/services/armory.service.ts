@@ -77,6 +77,7 @@ export class ArmoryService {
     consumableThree: { ...additiveBonus },
     enchantOne: { ...additiveBonus },
     enchantTwo: { ...additiveBonus },
+    distanceWeapon: { ...additiveBonus },
   };
 
   public equipmentBonusesMultiplier: IEquipmentBonusSlots = {
@@ -99,6 +100,7 @@ export class ArmoryService {
     consumableThree: { ...multiplierBonus },
     enchantOne: { ...multiplierBonus },
     enchantTwo: { ...multiplierBonus },
+    distanceWeapon: { ...multiplierBonus },
   };
   //#endregion
 

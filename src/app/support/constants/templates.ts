@@ -137,6 +137,7 @@ export const gearTemplate: IGear = {
   consumableThree: consumableTemplate,
   enchantOne: enchantTemplate,
   enchantTwo: enchantTemplate,
+  distanceWeapon: enchantTemplate,
 };
 //#endregion
 

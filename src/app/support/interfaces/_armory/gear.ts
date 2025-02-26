@@ -24,6 +24,7 @@ export interface IGear {
   consumableThree: IConsumable;
   enchantOne: IEnchant;
   enchantTwo: IEnchant;
+  distanceWeapon: IEnchant;
   [key: string]: IWeapon | IArmor | IAccessory | IConsumable | IEnchant;
 }
 
@@ -47,4 +48,5 @@ export interface IGearNames {
   consumableThree: string;
   enchantOne: string;
   enchantTwo: string;
+  distanceWeapon: string;
 }

@@ -84,7 +84,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
                 bonus.multiplierBonus.stamina += this.addMultiplierBonusesFromModifiers(modifier.enchant_value);
               }
               break;
-            case 'Undvika Anfall':
+            case 'Undvika anfall':
               if (typeof modifier.enchant_value === 'number') {
                 bonus.additiveBonus.dodge += modifier.enchant_value;
               }
@@ -172,10 +172,18 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
 
       this.addEnchantBonusesToArmory(bonus);
       if (chosenEnchant) {
-        if (this.enchantSlot === 1) {
-          this.armoryService.setGear('enchantOne', chosenEnchant);
-        } else {
-          this.armoryService.setGear('enchantTwo', chosenEnchant);
+        switch (this.enchantSlot) {
+          case 1:
+            this.armoryService.setGear('enchantOne', chosenEnchant);
+            break;
+          case 2:
+            this.armoryService.setGear('enchantTwo', chosenEnchant);
+            break;
+          case 3:
+            this.armoryService.setGear('distanceWeapon', chosenEnchant);
+            break;
+          default:
+            break;
         }
       }
 
@@ -194,6 +202,11 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
           if (enchantTwo) this.chosenEnchant.patchValue(enchantTwo.name, { emitEvent: false });
           if (gear.enchantTwo === enchantTemplate) this.chosenEnchant.patchValue(emptyString, { emitEvent: false });
           break;
+        case 3:
+          // Distansförstärkningar
+          const enchantThree = this.filteredAndRenamedEnchants.find((enchant) => enchant.name === gear.distanceWeapon.name);
+          if (enchantThree) this.chosenEnchant.patchValue(enchantThree.name, { emitEvent: false });
+          if (gear.distanceWeapon === enchantTemplate) this.chosenEnchant.patchValue(emptyString, { emitEvent: false });
       }
     });
 
@@ -209,6 +222,11 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
           const enchantTwo = this.filteredAndRenamedEnchants.find((enchant) => enchant.name.split('(')[0].trimEnd() === gearNames.enchantTwo);
           this.handleImportedEnchant(enchantTwo, 'enchantTwo');
           break;
+        case 3:
+          // Distansförstärkningar
+          const enchantThree = this.filteredAndRenamedEnchants.find((enchant) => enchant.name.split('(')[0].trimEnd() === gearNames.distanceWeapon);
+          this.handleImportedEnchant(enchantThree, 'distanceWeapon');
+          break;
       }
     });
 
@@ -221,6 +239,10 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
         case 2:
           this.armoryService.setGear('enchantTwo', enchantTemplate);
           break;
+        case 3:
+          this.armoryService.setGear('distanceWeapon', enchantTemplate);
+          break;
+        // Distansförstärkningar
       }
     });
   }
@@ -261,7 +283,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
   private filterAndRenameEnchants(weaponTag: string): IEnchant[] {
     const enchants = deepCopy(this.armoryService.enchants);
 
-    // let filteredEnchants: IEnchant[] = [];
+    let filteredEnchants: IEnchant[] = [];
 
     // filteredEnchants = enchants.filter((enchant: IEnchant) => {
     //   return enchant.enchant_tags.some((tag) => {
@@ -269,7 +291,23 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
     //   });
     // });
 
-    const renamedEnchants: IEnchant[] = enchants.map((enchant: IEnchant) => {
+    // Remove enchants with the tag 'Distansförstärkningar'
+
+    if (this.enchantSlot === 3) {
+      filteredEnchants = enchants.filter((enchant: IEnchant) => {
+        return enchant.enchant_tags.some((tag) => {
+          return tag.name === 'Distansförstärkningar';
+        });
+      });
+    } else {
+      filteredEnchants = enchants.filter((enchant: IEnchant) => {
+        return enchant.enchant_tags.some((tag) => {
+          return tag.name !== 'Distansförstärkningar';
+        });
+      });
+    }
+
+    const renamedEnchants: IEnchant[] = filteredEnchants.map((enchant: IEnchant) => {
       enchant.name = `${enchant.name} (G${enchant.required_level})`;
       return enchant;
     });
@@ -284,6 +322,9 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
         break;
       case 2:
         this.armoryService.addBonus('enchantTwo', bonus);
+        break;
+      case 3:
+        this.armoryService.addBonus('distanceWeapon', bonus);
         break;
       default:
         break;
