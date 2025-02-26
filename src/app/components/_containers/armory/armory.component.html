@@ -6,8 +6,8 @@
   </div>
 
   <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
-    <li [ngbNavItem]="1" [destroyOnHide]="false">
-      <button ngbNavLink>Vapen</button>
+    <li [ngbNavItem]="1" [destroyOnHide]="true">
+      <button ngbNavLink class="px-2">Vapen</button>
       <ng-template ngbNavContent>
         <app-select-weapon></app-select-weapon>
         <app-select-enchant [enchantSlot]="1"></app-select-enchant>
@@ -16,8 +16,8 @@
         <app-select-enchant [enchantSlot]="3"></app-select-enchant>
       </ng-template>
     </li>
-    <li [ngbNavItem]="2" [destroyOnHide]="false">
-      <button ngbNavLink>Rustning</button>
+    <li [ngbNavItem]="2" [destroyOnHide]="true">
+      <button ngbNavLink class="px-2">Rustning</button>
       <ng-template ngbNavContent>
         <app-select-armor [armorSlot]="armorSlots.Head"></app-select-armor>
         <app-select-armor [armorSlot]="armorSlots.Shoulders"></app-select-armor>
@@ -27,8 +27,8 @@
         <app-select-armor [armorSlot]="armorSlots.Feet"></app-select-armor>
       </ng-template>
     </li>
-    <li [ngbNavItem]="3" [destroyOnHide]="false">
-      <button ngbNavLink>Föremål</button>
+    <li [ngbNavItem]="3" [destroyOnHide]="true">
+      <button ngbNavLink class="px-2">Föremål</button>
       <ng-template ngbNavContent>
         <app-select-accessory [accessorySlot]="accessoriesSlots.Cloak"></app-select-accessory>
         <app-select-accessory [accessorySlot]="accessoriesSlots.Necklace"></app-select-accessory>
@@ -38,8 +38,8 @@
         <app-select-accessory [accessorySlot]="accessoriesSlots.Trinket"></app-select-accessory>
       </ng-template>
     </li>
-    <li [ngbNavItem]="4" [destroyOnHide]="false">
-      <button ngbNavLink>Mixturer</button>
+    <li [ngbNavItem]="4" [destroyOnHide]="true">
+      <button ngbNavLink class="px-2">Mixturer</button>
       <ng-template ngbNavContent>
         <app-select-consumable [consumableSlot]="1"></app-select-consumable>
         <app-select-consumable [consumableSlot]="2"></app-select-consumable>
