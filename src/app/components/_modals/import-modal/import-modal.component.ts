@@ -31,6 +31,7 @@ export class ImportModalComponent implements AfterViewInit {
         if (this.jsonString.value !== null) {
           const jsonObject = JSON.parse(this.jsonString.value);
           this.buildService.setChosenRace(this.buildService.selectRaceFromRaceName(jsonObject.race));
+          this.buildService.setChosenAge(jsonObject.age);
           this.buildService.setChosenWeaponSkill(jsonObject.weaponSkill);
           this.buildService.setImportedLevelPoints(jsonObject.levels);
           this.buildService.setAmountOfLevels(jsonObject.levels.length);

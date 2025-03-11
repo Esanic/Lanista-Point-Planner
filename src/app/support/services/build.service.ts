@@ -6,6 +6,7 @@ import { defaultRace, dwarf, elf, goblin, human, orc, salamanth, troll, undead }
 import { convertWeaponSkillIdToName, convertWeaponSkillNameToId, getGearNamesObject } from '../helpers/armory.helper';
 import { ILevel } from '../interfaces/level';
 import { ArmoryService } from './armory.service';
+import { emptyString } from '../constants/common';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class BuildService {
   private deslectBuildEmit: Subject<any> = new Subject<any>();
 
   private chosenRace: BehaviorSubject<IRace> = new BehaviorSubject<IRace>({} as IRace);
+  private chosenAge: BehaviorSubject<string> = new BehaviorSubject<string>(emptyString);
   private chosenWeaponSkill: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   private levelPoints: BehaviorSubject<ILevel[]> = new BehaviorSubject<ILevel[]>([]);
   private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);
@@ -101,6 +103,14 @@ export class BuildService {
     return this.chosenRace.asObservable();
   }
 
+  public setChosenAge(age: string) {
+    this.chosenAge.next(age);
+  }
+
+  public getChosenAge(): Observable<string> {
+    return this.chosenAge.asObservable();
+  }
+
   public setChosenWeaponSkill(skill: string) {
     const weaponSkillId = convertWeaponSkillNameToId(skill.split(' ')[0]);
     this.chosenWeaponSkill.next(weaponSkillId);
@@ -131,6 +141,7 @@ export class BuildService {
 
     build.name = this.selectedBuild.value.name;
     build.race = this.chosenRace.value.name;
+    build.age = this.chosenAge.value;
     build.weaponSkill = convertWeaponSkillIdToName(this.chosenWeaponSkill.value);
     build.levels = this.levelPoints.value;
     build.showLegendEquipment = await firstValueFrom(this.armoryService.getLegendEquipmentViewStatus());

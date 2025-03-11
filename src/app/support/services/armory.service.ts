@@ -78,6 +78,7 @@ export class ArmoryService {
     enchantOne: { ...additiveBonus },
     enchantTwo: { ...additiveBonus },
     distanceWeapon: { ...additiveBonus },
+    age: { ...additiveBonus },
   };
 
   public equipmentBonusesMultiplier: IEquipmentBonusSlots = {
@@ -101,6 +102,7 @@ export class ArmoryService {
     enchantOne: { ...multiplierBonus },
     enchantTwo: { ...multiplierBonus },
     distanceWeapon: { ...multiplierBonus },
+    age: { ...multiplierBonus },
   };
   //#endregion
 
