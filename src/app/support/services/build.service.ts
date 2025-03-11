@@ -141,6 +141,7 @@ export class BuildService {
 
     build.name = this.selectedBuild.value.name;
     build.race = this.chosenRace.value.name;
+    build.age = this.chosenAge.value;
     build.weaponSkill = convertWeaponSkillIdToName(this.chosenWeaponSkill.value);
     build.levels = this.levelPoints.value;
     build.showLegendEquipment = await firstValueFrom(this.armoryService.getLegendEquipmentViewStatus());
