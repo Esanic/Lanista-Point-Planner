@@ -12,7 +12,17 @@
                 
                 <!-- If race has stats, weaponSkill is set (is not -1), if header is not `Grad` or `Utplacerade Poäng`-->
                 @if(race.stats && weaponSkill !== -1 && header !== 'Grad' && header !== 'Utplacerade Poäng'){
-                  <div class="race-bonus-text">({{ getRaceBonusFromStats(header, race) }}%)</div>
+                  <div class="race-bonus-text">
+                    <span class="misc-bonus">(</span>
+                    <span class="race-bonus-text">{{ getRaceBonusFromStats(header, race)}}%</span>
+                    @if(getAgeBonusFromStats(header, age) > 0){
+                      <span class="misc-bonus">+</span>
+                    }
+                    @if(getAgeBonusFromStats(header, age) !== 0){
+                      <span class="age-bonus-text">{{ getAgeBonusFromStats(header, age)}}%</span>
+                    }
+                    <span class="misc-bonus">)</span>
+                  </div>
                 }
               </div>
             } 
@@ -29,7 +39,18 @@
                 @if(race.weaponSkills && weaponSkill !== -1){
                   
                   {{ weaponSkill | weaponSkills }}
-                  <div class="race-bonus-text">({{ getRaceBonusFromWeaponSkill(weaponSkill, race) }}%)</div>
+                  <!-- <div class="race-bonus-text">({{ getRaceBonusFromWeaponSkill(weaponSkill, race) }}%)</div> -->
+                  <div class="race-bonus-text">
+                    <span class="misc-bonus">(</span>
+                    <span class="race-bonus-text">{{ getRaceBonusFromWeaponSkill(weaponSkill, race)}}%</span>
+                    @if(getAgeBonusFromStats(convertWeaponSkillIdToName(weaponSkill), age) > 0){
+                      <span class="misc-bonus">+</span>
+                    }
+                    @if(getAgeBonusFromStats(convertWeaponSkillIdToName(weaponSkill), age) !== 0){
+                      <span class="age-bonus-text">{{ getAgeBonusFromStats(convertWeaponSkillIdToName(weaponSkill), age)}}%</span>
+                    }
+                    <span class="misc-bonus">)</span>
+                  </div>
                 } 
                 @else {
                   <!-- If no race is selected, just show weaponSkill -->

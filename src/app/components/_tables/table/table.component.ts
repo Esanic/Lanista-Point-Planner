@@ -4,7 +4,7 @@ import { ILevel } from '../../../support/interfaces/level';
 import { Subscription, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OnlyNumbersDirective } from '../../../support/directives/only-numbers.directive';
-import { IRace } from '../../../support/interfaces/race';
+import { IAgeModifier, IRace } from '../../../support/interfaces/race';
 import { BuildService } from '../../../support/services/build.service';
 import { IBuild } from '../../../support/interfaces/build';
 import { ArmoryService } from '../../../support/services/armory.service';
@@ -34,6 +34,8 @@ export class TableComponent implements OnInit, OnDestroy {
   public levels: ILevel[] = [];
   private savedLevelPoints: ILevel[] = [];
   public race: IRace = {} as IRace;
+  public age: IAgeModifier = {} as IAgeModifier;
+
   public weaponSkill: number = -1;
   public weaponSkillMultiplier: number = 1;
 
@@ -45,6 +47,7 @@ export class TableComponent implements OnInit, OnDestroy {
   private shieldBuild: boolean = false;
 
   private getRace$: Subscription = new Subscription();
+  private getAge$: Subscription = new Subscription();
   private getWeaponSkill$: Subscription = new Subscription();
   private getLevels$: Subscription = new Subscription();
   private importPoints$: Subscription = new Subscription();
@@ -62,6 +65,13 @@ export class TableComponent implements OnInit, OnDestroy {
       this.race = race;
       this.weaponSkillPicker(this.weaponSkill);
       this.summarizeEachColumn();
+    });
+
+    this.getAge$ = this.buildService.getChosenAge().subscribe((age) => {
+      if (this.race.ageModifications !== undefined) {
+        this.age = this.race.ageModifications.find((a) => a.name === age) as IAgeModifier;
+        this.summarizeEachColumn();
+      }
     });
 
     this.getWeaponSkill$ = this.buildService.getChosenWeaponSkill().subscribe((weaponSkill) => {
@@ -421,5 +431,43 @@ export class TableComponent implements OnInit, OnDestroy {
         return 0;
       }
     }
+  }
+
+  public getAgeBonusFromStats(stat: string, age: IAgeModifier): number {
+    switch (stat) {
+      case 'KP': {
+        return Math.round((age.stamina - 1) * 100);
+      }
+      case 'SB': {
+        return Math.round((age.strength - 1) * 100);
+      }
+      case 'UTH': {
+        return Math.round((age.endurance - 1) * 100);
+      }
+      case 'INI': {
+        return Math.round((age.initiative - 1) * 100);
+      }
+      case 'UA': {
+        return Math.round((age.dodge - 1) * 100);
+      }
+      case 'Sköld': {
+        return Math.round((age.shield - 1) * 100);
+      }
+      case 'Yxa':
+      case 'Svärd':
+      case 'Hammare':
+      case 'Stav':
+      case 'Stick':
+      case 'Kätting': {
+        return Math.round((age.weaponSkill - 1) * 100);
+      }
+      default: {
+        return 0;
+      }
+    }
+  }
+
+  public convertWeaponSkillIdToName(weaponSkill: number): string {
+    return convertWeaponSkillIdToName(weaponSkill);
   }
 }

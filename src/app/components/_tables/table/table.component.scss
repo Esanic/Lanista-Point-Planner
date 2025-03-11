@@ -6,11 +6,22 @@ input:focus {
     cursor: default;
 }
 
-.race-bonus-text {
+.misc-bonus {
     font-size: 11px;
     color: #a3a4a6;
     font-weight: normal
+}
 
+.race-bonus-text {
+    font-size: 11px;
+    color: #5689e9;
+    font-weight: normal
+}
+
+.age-bonus-text {
+    font-size: 11px;
+    color: #e96c56;
+    font-weight: normal
 }
 
 table th {

@@ -1,0 +1,6 @@
+<label class="form-label" for="weaponSkillSelector">Välj ålder</label>
+<select class="form-select" name="weaponSkillSelector" [formControl]="chooseAge">
+  @for(age of ages; track age){
+  <option [value]="age.name">{{ age.name | age }} ({{ age.age }} d)</option>
+  }
+</select>

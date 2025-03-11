@@ -1,3 +1,4 @@
+import { IBonus } from './_armory/bonus';
 import { ICritChances } from './crit-chances';
 import { IStats } from './stats';
 import { IWeaponSkills } from './weapon-skills';
@@ -10,6 +11,7 @@ export interface IRace {
   critChances: ICritChances;
   stats: IStats;
   weaponSkills: IWeaponSkills;
+  ageModifications: IAgeModifier[];
 }
 
 export interface IApiRace {
@@ -21,4 +23,16 @@ export interface IApiRace {
 export interface IApiBonuses {
   type: number;
   value: number;
+}
+
+export interface IAgeModifier {
+  name: 'young' | 'adult' | 'middle' | 'old' | 'ancient';
+  age: number;
+  stamina: number;
+  strength: number;
+  endurance: number;
+  initiative: number;
+  dodge: number;
+  weaponSkill: number;
+  shield: number;
 }
