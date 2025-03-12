@@ -1,6 +1,6 @@
 {
   "name": "lanista-point-planner",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
