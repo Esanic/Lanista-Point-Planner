@@ -2,13 +2,14 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { emptyString } from '../../../../support/constants/common';
-import { IEnchant } from '../../../../support/interfaces/_armory/enchants';
+import { IEnchant, IEnchantTag } from '../../../../support/interfaces/_armory/enchants';
 import { ArmoryService } from '../../../../support/services/armory.service';
 import { BuildService } from '../../../../support/services/build.service';
 import { ITotalBonus } from '../../../../support/interfaces/_armory/bonus';
 import { additiveBonus, enchantTemplate, multiplierBonus } from '../../../../support/constants/templates';
 import { weaponSkills } from '../../../../support/enums/weapon-skills.enums';
 import { deepCopy } from '../../../../support/helpers/common.helper';
+import { IWeapon } from '../../../../support/interfaces/_armory/weapon';
 
 @Component({
   selector: 'app-select-enchant',
@@ -23,6 +24,8 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
   public chosenEnchant = new FormControl({ value: emptyString, disabled: true });
 
   private selectedWeaponSkill: number = -1;
+  private mainhand: IWeapon = {} as IWeapon;
+  private offhand: IWeapon = {} as IWeapon;
 
   public filteredAndRenamedEnchants: IEnchant[] = [];
 
@@ -48,7 +51,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
 
     this.shieldBuild$ = this.armoryService.getShieldBuild().subscribe((shieldBuild) => {
       if (this.enchantSlot === 2 && shieldBuild) {
-        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('shield');
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants([], 'shield');
       } else {
         this.selectEnchantsFromWeaponSkill(this.selectedWeaponSkill);
       }
@@ -191,6 +194,21 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
     });
 
     this.incomingEnchant$ = this.armoryService.getGear().subscribe((gear) => {
+      if (gear.mainhand.name !== emptyString && this.enchantSlot === 1) {
+        this.mainhand = gear.mainhand;
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants(this.mainhand.enchant_tags, this.mainhand.type_name);
+      }
+
+      if (gear.mainhand.name !== emptyString && this.enchantSlot === 2 && gear.mainhand.is_two_handed) {
+        this.mainhand = gear.mainhand;
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants(this.mainhand.enchant_tags, this.mainhand.type_name);
+      }
+
+      if (gear.offhand.name !== emptyString && this.enchantSlot === 2 && !gear.mainhand.is_two_handed) {
+        this.offhand = gear.offhand;
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants(this.offhand.enchant_tags, this.offhand.type_name);
+      }
+
       switch (this.enchantSlot) {
         case 1:
           const enchantOne = this.filteredAndRenamedEnchants.find((enchant) => enchant.name === gear.enchantOne.name);
@@ -260,36 +278,48 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
   private selectEnchantsFromWeaponSkill(weaponSkill: number): void {
     switch (weaponSkill) {
       case weaponSkills.Axe:
-        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('sword');
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants([], 'sword');
         break;
       case weaponSkills.Sword:
-        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('axe');
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants([], 'axe');
         break;
       case weaponSkills.Mace:
-        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('mace');
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants([], 'mace');
         break;
       case weaponSkills.Stave:
-        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('stave');
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants([], 'stave');
         break;
       case weaponSkills.Spear:
-        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('spear');
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants([], 'spear');
         break;
       case weaponSkills.Chain:
-        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants('chain');
+        this.filteredAndRenamedEnchants = this.filterAndRenameEnchants([], 'chain');
         break;
     }
   }
 
-  private filterAndRenameEnchants(weaponTag: string): IEnchant[] {
+  private filterAndRenameEnchants(enchantTags: IEnchantTag[], weaponTag?: string): IEnchant[] {
     const enchants = deepCopy(this.armoryService.enchants);
 
     let filteredEnchants: IEnchant[] = [];
 
-    // filteredEnchants = enchants.filter((enchant: IEnchant) => {
-    //   return enchant.enchant_tags.some((tag) => {
-    //     return tag.default_weapon_types.includes(weaponTag);
-    //   });
-    // });
+    if (enchantTags.length === 0 && weaponTag) {
+      filteredEnchants = enchants.filter((enchant: IEnchant) => {
+        return enchant.enchant_tags.some((tag) => {
+          return tag.default_weapon_types.includes(weaponTag);
+        });
+      });
+    } else {
+      if (this.enchantSlot === 1 || this.enchantSlot === 2) {
+        filteredEnchants = enchants.filter((enchant: IEnchant) => {
+          return enchant.enchant_tags.some((tag) => {
+            return enchantTags.some((enchantTag) => {
+              return enchantTag.name === tag.name;
+            });
+          });
+        });
+      }
+    }
 
     // Remove enchants with the tag 'Distansförstärkningar'
 
@@ -297,12 +327,6 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
       filteredEnchants = enchants.filter((enchant: IEnchant) => {
         return enchant.enchant_tags.some((tag) => {
           return tag.name === 'Distansförstärkningar';
-        });
-      });
-    } else {
-      filteredEnchants = enchants.filter((enchant: IEnchant) => {
-        return enchant.enchant_tags.some((tag) => {
-          return tag.name !== 'Distansförstärkningar';
         });
       });
     }

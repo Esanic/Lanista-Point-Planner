@@ -85,6 +85,7 @@ export class SavedBuildsListComponent implements OnInit, OnDestroy {
 
       this.buildService.setSelectedBuild(selectedBuild);
       this.buildService.setChosenRace(this.buildService.selectRaceFromRaceName(selectedBuild.race));
+      selectedBuild.age ? this.buildService.setChosenAge(selectedBuild.age) : this.buildService.setChosenAge('young'); //Special case for old builds
       this.buildService.setChosenWeaponSkill(selectedBuild.weaponSkill);
       this.buildService.setImportedLevelPoints(selectedBuild.levels);
       this.buildService.setAmountOfLevels(selectedBuild.levels.length);

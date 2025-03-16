@@ -6,7 +6,6 @@ import { defaultRace, dwarf, elf, goblin, human, orc, salamanth, troll, undead }
 import { convertWeaponSkillIdToName, convertWeaponSkillNameToId, getGearNamesObject } from '../helpers/armory.helper';
 import { ILevel } from '../interfaces/level';
 import { ArmoryService } from './armory.service';
-import { emptyString } from '../constants/common';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +16,7 @@ export class BuildService {
   private deslectBuildEmit: Subject<any> = new Subject<any>();
 
   private chosenRace: BehaviorSubject<IRace> = new BehaviorSubject<IRace>({} as IRace);
-  private chosenAge: BehaviorSubject<string> = new BehaviorSubject<string>(emptyString);
+  private chosenAge: BehaviorSubject<string> = new BehaviorSubject<string>('young');
   private chosenWeaponSkill: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   private levelPoints: BehaviorSubject<ILevel[]> = new BehaviorSubject<ILevel[]>([]);
   private chosenLevels: BehaviorSubject<number> = new BehaviorSubject<number>(25);

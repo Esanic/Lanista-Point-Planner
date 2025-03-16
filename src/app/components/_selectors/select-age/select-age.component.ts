@@ -18,8 +18,11 @@ export class SelectAgeComponent implements OnInit, OnDestroy {
   public chooseAge = new FormControl({ value: 'young', disabled: true });
   public ages: { name: string; age: number }[] = [];
   public selectedRace: IRace = {} as IRace;
+
   private selectedRace$: Subscription = new Subscription();
   private selectedAge$: Subscription = new Subscription();
+  private importedAge$: Subscription = new Subscription();
+  private wipe$: Subscription = new Subscription();
 
   constructor(private buildService: BuildService, private armoryService: ArmoryService) {}
 
@@ -70,10 +73,23 @@ export class SelectAgeComponent implements OnInit, OnDestroy {
       this.armoryService.addBonus('age', totalBonus);
       this.armoryService.emitBonusesHaveBeenAdded();
     });
+
+    this.importedAge$ = this.buildService.getChosenAge().subscribe((age) => {
+      if (age) {
+        this.chooseAge.patchValue(age, { emitEvent: false });
+      }
+    });
+
+    this.wipe$ = this.buildService.listenWipeData().subscribe(() => {
+      this.chooseAge.reset();
+      this.chooseAge.disable();
+    });
   }
   ngOnDestroy(): void {
     this.selectedRace$.unsubscribe();
     this.selectedAge$.unsubscribe();
+    this.importedAge$.unsubscribe();
+    this.wipe$.unsubscribe();
   }
 
   private resetBonus(): void {
