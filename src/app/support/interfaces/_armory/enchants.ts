@@ -16,7 +16,7 @@ export interface IEnchant {
   weight: number;
 }
 
-interface IEnchantTag {
+export interface IEnchantTag {
   name: string;
   default_weapon_types: string[];
 }

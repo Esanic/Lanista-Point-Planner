@@ -4,6 +4,7 @@ export interface IEquipment {
   id: number;
   name: string;
   type?: number;
+  type_name?: string;
   bonuses: IEquipmentBonus[];
   max_level: number;
   required_level: number;

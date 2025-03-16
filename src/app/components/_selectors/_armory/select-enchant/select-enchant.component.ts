@@ -250,18 +250,7 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
 
     this.wipeBonus$ = this.buildService.listenWipeData().subscribe(() => {
       this.chosenEnchant.patchValue(emptyString);
-      switch (this.enchantSlot) {
-        case 1:
-          this.armoryService.setGear('enchantOne', enchantTemplate);
-          break;
-        case 2:
-          this.armoryService.setGear('enchantTwo', enchantTemplate);
-          break;
-        case 3:
-          this.armoryService.setGear('distanceWeapon', enchantTemplate);
-          break;
-        // Distansförstärkningar
-      }
+      this.resetBonus();
     });
   }
 
@@ -355,9 +344,27 @@ export class SelectEnchantComponent implements OnInit, OnDestroy {
     }
   }
 
+  private resetBonus(): void {
+    switch (this.enchantSlot) {
+      case 1:
+        this.armoryService.setGear('enchantOne', enchantTemplate);
+        this.armoryService.addBonus('enchantOne', { additiveBonus: { ...additiveBonus }, multiplierBonus: { ...multiplierBonus } });
+        break;
+      case 2:
+        this.armoryService.setGear('enchantTwo', enchantTemplate);
+        this.armoryService.addBonus('enchantTwo', { additiveBonus: { ...additiveBonus }, multiplierBonus: { ...multiplierBonus } });
+        break;
+      case 3:
+        this.armoryService.setGear('distanceWeapon', enchantTemplate);
+        this.armoryService.addBonus('distanceWeapon', { additiveBonus: { ...additiveBonus }, multiplierBonus: { ...multiplierBonus } });
+        break;
+      default:
+        break;
+    }
+  }
+
   private addMultiplierBonusesFromModifiers(value: string): number {
     let multiplierBonus = Number(value.split('%')[0]);
-
     return multiplierBonus / 100;
   }
 

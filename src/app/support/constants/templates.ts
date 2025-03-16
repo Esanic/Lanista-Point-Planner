@@ -58,6 +58,7 @@ export const weaponTemplate: IWeapon = {
   is_two_handed: false,
   is_shield: false,
   is_weapon: true,
+  enchant_tags: [],
 };
 
 export const armorTemplate: IArmor = {
