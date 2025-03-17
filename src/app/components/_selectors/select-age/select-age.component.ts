@@ -4,7 +4,7 @@ import { BuildService } from '../../../support/services/build.service';
 import { IRace } from '../../../support/interfaces/race';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AgePipe } from '../../../support/pipes/age.pipe';
-import { additiveBonus, multiplierBonus } from '../../../support/constants/templates';
+import { additiveBonus, defaultRace, multiplierBonus } from '../../../support/constants/templates';
 import { ArmoryService } from '../../../support/services/armory.service';
 
 @Component({
@@ -17,7 +17,7 @@ import { ArmoryService } from '../../../support/services/armory.service';
 export class SelectAgeComponent implements OnInit, OnDestroy {
   public chooseAge = new FormControl({ value: 'young', disabled: true });
   public ages: { name: string; age: number }[] = [];
-  public selectedRace: IRace = {} as IRace;
+  public selectedRace: IRace = defaultRace;
 
   private selectedRace$: Subscription = new Subscription();
   private selectedAge$: Subscription = new Subscription();
