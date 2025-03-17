@@ -63,6 +63,7 @@ export class SelectWeaponSkillComponent implements OnInit, OnDestroy {
 
     this.wipeData$ = this.buildService.listenWipeData().subscribe(() => {
       this.chooseWeaponSkill.patchValue(null, { emitEvent: false });
+      this.buildService.setChosenWeaponSkill('none');
     });
   }
 
